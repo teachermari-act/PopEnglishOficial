@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - The Last of Us: Talk Show Outbreak Panic by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --accent-gradient: linear-gradient(90deg, #9333ea, #a855f7);
+      --title-gradient: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 16px;
+      --radius-soft: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+      background-color: #0b0f19;
+      min-height: 60px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 32px; border-radius: 8px; }
+    .brand-text h1 { 
+      font-size: 1.2em; 
+      font-weight: 800; 
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 16px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 24px 20px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid #334155;
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 220px; 
+      object-fit: cover; 
+      object-position: center;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 14px; 
+      display: block;
+      pointer-events: none;
+    }
+
+    .hero-title { 
+      font-size: 1.4em; 
+      margin-bottom: 4px; 
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+
+    .hero-subtitle { font-size: 0.85em; color: var(--accent-pink); font-weight: 700; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.85em; color: #94a3b8; margin-bottom: 16px; }
+
+    .time-title { font-size: 0.95em; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 10px; max-width: 440px; margin: 0 auto 20px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #334155; color: white; border: 2px solid transparent;
+      padding: 12px 16px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      background: var(--accent-gradient);
+      border-color: #d8b4fe;
+      transform: scale(1.02);
+    }
+
+    .start-btn {
+      background: var(--accent-gradient); color: white; border: none;
+      padding: 12px 32px; border-radius: 10px; font-size: 1em;
+      font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    /* WORKSPACE RESPONSIVO */
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid #334155;
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #e2e8f0; padding: 8px 12px;
+      border-bottom: 1px solid #cbd5e0; overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: white;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 700;
+      color: #64748b; border: 1px solid #cbd5e0; white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #cbd5e0; color: #334155; border-radius: 50%; width: 20px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.8em;
+    }
+
+    .cool-step-pill.active { background: var(--bg-dark); color: white; border-color: var(--bg-dark); }
+    .cool-step-pill.active .step-num { background: var(--accent-purple); color: white; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #cbd5e0; padding: 4px; border-radius: 10px; margin-bottom: 12px; }
+    .part-subtab-btn {
+      flex: 1; padding: 8px 4px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.8em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { flex: 1; padding: 16px; overflow-y: auto; font-size: 0.95em; position: relative; }
+
+    .content-area h3 {
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.2em;
+      margin-bottom: 6px;
+    }
+
+    .question-block { margin-bottom: 14px; }
+    .question-block strong { display: block; font-size: 0.95em; margin-bottom: 6px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 10px 12px; font-size: 0.9em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 8px 12px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.88em; color: #334155;
+    }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    /* GRADE DE IMAGENS AJUSTADA PARA ENCAIXAR PERFEITAMENTE */
+    .pic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .pic-card { 
+      background: #f1f5f9; 
+      border: 1px solid #cbd5e0; 
+      border-radius: 8px; 
+      padding: 8px; 
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pic-card img { 
+      width: 100%; 
+      height: 90px; 
+      object-fit: contain; 
+      border-radius: 6px; 
+      margin-bottom: 8px; 
+      display: block; 
+      background: white;
+      padding: 4px;
+    }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 4px solid var(--accent-purple);
+      padding: 10px 12px; border-radius: var(--radius-soft); margin-bottom: 10px;
+    }
+    .vocab-card-example h4 { font-size: 1em; color: var(--accent-purple); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .translation-text { font-size: 0.85em; color: #64748b; font-style: italic; margin-top: 4px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
+
+    .word-bank { 
+      position: sticky; top: -14px; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px; 
+      margin-bottom: 12px; padding: 10px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 44px; 
+    }
+    .chip { background: white; padding: 5px 10px; border-radius: 14px; font-weight: 700; font-size: 0.85em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+    .gap-target {
+      display: inline-block; min-width: 75px; height: 28px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 2px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 4px; line-height: 28px; cursor: pointer; font-size: 0.88em; padding: 0 6px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 8px; margin-top: 8px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 8px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 28px; height: 38px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .retell-item {
+      background: white; padding: 8px 10px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 38px; display: flex; align-items: center; font-size: 0.85em;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 10px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 12px; font-size: 0.88em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 10px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; font-size: 0.8em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 8px; border-radius: 6px; margin-top: 4px; font-size: 0.88em; }
+
+    .panel-footer { padding: 10px 14px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 8px; }
+    .btn-group { display: flex; gap: 8px; }
+    
+    .btn-action, button {
+      background: var(--accent-gradient);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.88em;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-action:hover, button:hover {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
+
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #2563eb, #3b82f6); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 24px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    /* REGRAS CSS PARA CELULAR E DISPOSITIVOS MÓVEIS (TELA < 768px) */
+    @media (max-width: 768px) {
+      body { height: auto; overflow-y: auto; padding: 0; }
+      header { padding: 8px 12px; }
+      .brand-text h1 { font-size: 1em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 6px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 480px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; }
+      
+      .pic-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .pic-card img { height: 80px; }
+
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
+  <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
+    <a href="../index.html" style="color: #a855f7; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 0.9em; display: inline-flex; align-items: center; gap: 6px;">
+      ← Back to Homepage
+    </a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/SmGN2Hh.jpeg" class="banner-img" alt="The Last of Us Talk Show Scene">
+      <h2 class="hero-title">The Last of Us: The Fungal Pandemic Warning</h2>
+      <div class="hero-subtitle">• Season 1, Episode 1 (Opening Scene) •</div>
+      <p class="hero-desc">Bite-sized movie lessons to boost your listening, vocabulary, and speaking skills.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Part 1)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 to 3)</span> <strong>20 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/lFULfl7-9Fc?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2>CONGRATULATIONS! 🎉</h2>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 0:54)", start: 0, end: 54, vocabType: "select",
+        vocab: [
+          { 
+            term: "worry", 
+            correct: "A feeling of anxiety, apprehension, or unease about potential problems", 
+            similar: [
+              "A state of deep sadness or grief caused by past events", 
+              "A temporary feeling of anger toward an unexpected situation"
+            ] 
+          },
+          { 
+            term: "coughing", 
+            correct: "Expelling air from the lungs abruptly with a sharp, clear sound", 
+            similar: [
+              "Breathing heavily and deeply after intense physical exercise", 
+              "Inhaling air rapidly through the nose due to cold weather"
+            ] 
+          },
+          { 
+            term: "within a matter of", 
+            correct: "In a very short, brief, or rapid period of time", 
+            similar: [
+              "After a long and undetermined sequence of several months", 
+              "At an exact scheduled time agreed upon in advance"
+            ] 
+          },
+          { 
+            term: "prospect", 
+            correct: "The possibility, likelihood, or mental anticipation of a future occurrence", 
+            similar: [
+              "A definitive outcome that has already been confirmed and completed", 
+              "A detailed historical record of past scientific discoveries"
+            ] 
+          },
+          { 
+            term: "keeps you up at night", 
+            correct: "To cause significant anxiety or distress that prevents restful sleep", 
+            similar: [
+              "To stay awake voluntarily to study, work, or celebrate", 
+              "To feel energized and motivated late during the evening hours"
+            ] 
+          },
+          { 
+            term: "mankind", 
+            correct: "The entire human species considered as a single collective group", 
+            similar: [
+              "A specific group of individuals living together in a local community", 
+              "All mammalian species residing within a shared natural ecosystem"
+            ] 
+          }
+        ],
+        examples: [
+          { 
+            term: "worry", 
+            ex: "Don't worry, everything will be fine.", 
+            trans: "Não se preocupe, vai dar tudo certo." 
+          },
+          { 
+            term: "coughing", 
+            ex: "He couldn't stop coughing during the meeting.", 
+            trans: "Ele não conseguia parar de tossir durante a reunião." 
+          },
+          { 
+            term: "within a matter of", 
+            ex: "The weather changed within a matter of minutes.", 
+            trans: "O tempo mudou em questão de minutos." 
+          },
+          { 
+            term: "prospect", 
+            ex: "She was excited about the prospect of starting a new job.", 
+            trans: "Ela estava animada com a perspectiva de começar um novo emprego." 
+          },
+          { 
+            term: "keeps you up at night", 
+            ex: "Financial stress can easily keep you up at night.", 
+            trans: "Estresse financeiro pode facilmente tirar seu sono à noite." 
+          },
+          { 
+            term: "mankind", 
+            ex: "Space exploration is a huge step for mankind.", 
+            trans: "A exploração espacial é um enorme passo para a humanidade." 
+          }
+        ],
+        gaps: ["worry", "coughing", "within a matter of", "prospect", "keeps you up at night", "mankind"],
+        fullScript: `
+          <p><strong>Host:</strong> And that's your biggest <span class="gap-target" data-answer="worry"></span>?</p>
+          <p><strong>Schoenheiss:</strong> Yes, any kind of virus. But, most probably, something similar to influenza.</p>
+          <p><strong>Host:</strong> Because of air travel.</p>
+          <p><strong>Schoenheiss:</strong> Through the air. <span class="gap-target" data-answer="coughing"></span>...</p>
+          <p><strong>Host:</strong> Uh, I'm sorry. I meant people. On planes. Uh, that was something you described in your book.</p>
+          <p><strong>Schoenheiss:</strong> Yes, a new virus in Madagascar, say, could be in Chicago <span class="gap-target" data-answer="within a matter of"></span> weeks. And we end up with a global pandemic, 'pan' meaning all. The whole world becomes sick all at once.</p>
+          <p><strong>Host:</strong> Hmmm. And Dr. Neuman, you're also an epidemiologist. I presume the <span class="gap-target" data-answer="prospect"></span> of a viral pandemic <span class="gap-target" data-answer="keeps you up at night"></span> as well.</p>
+          <p><strong>Dr. Neuman:</strong> No.</p>
+          <p><strong>Host:</strong> No?</p>
+          <p><strong>Dr. Neuman:</strong> No.</p>
+          <p><strong>Host:</strong> All right, well, that's our show.</p>
+          <p><strong>Dr. Neuman:</strong> No. <span class="gap-target" data-answer="mankind"></span> has been at war with the virus from the start. Sometimes, millions of people die, as in an actual war. But in the end, we always win.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (0:54 - 1:45)", start: 54, end: 105, vocabType: "mixed",
+        pics: [
+          { term: "ant", img: "https://i.imgur.com/Arf3Jur.png" },
+          { term: "brain", img: "https://i.imgur.com/kowMXP7.jpeg" }
+        ],
+        abVocab: [
+          { 
+            term: "pose a threat", 
+            correct: "To present or constitute a danger or risk", 
+            wrong: "To offer safety, peace, or protection" 
+          },
+          { 
+            term: "dire", 
+            correct: "Extremely serious, urgent, or terrible", 
+            wrong: "Completely safe, trivial, or insignificant" 
+          },
+          { 
+            term: "harmless", 
+            correct: "Not able or likely to cause damage or injury", 
+            wrong: "Extremely dangerous, toxic, or destructive" 
+          },
+          { 
+            term: "otherwise", 
+            correct: "In a different way, or indicating a different reality", 
+            wrong: "In the exact same manner without any variation" 
+          },
+          { 
+            term: "seek", 
+            correct: "To attempt or try to achieve or obtain something", 
+            wrong: "To intentionally ignore, avoid, or reject something" 
+          },
+          { 
+            term: "floods", 
+            correct: "Overwhelms or fills a space rapidly with large quantities", 
+            wrong: "Drains completely, leaving a space empty" 
+          },
+          { 
+            term: "thus bending", 
+            correct: "Therefore forcing or reshaping something to adapt to a new form", 
+            wrong: "Consequently keeping something rigid, straight, and unchanged" 
+          },
+          { 
+            term: "will", 
+            correct: "A person's conscious intent, desire, or determination", 
+            wrong: "Complete lack of interest, apathy, or indecision" 
+          },
+          { 
+            term: "behavior", 
+            correct: "The way in which a person or animal acts or conducts oneself", 
+            wrong: "Involuntary static state with no movement or action" 
+          },
+          { 
+            term: "puppeteer", 
+            correct: "A person or entity that controls another's actions from behind the scenes", 
+            wrong: "A completely passive follower who is controlled by others" 
+          }
+        ],
+        examples: [
+          { 
+            term: "ant", 
+            ex: "An ant can carry objects much heavier than itself.", 
+            trans: "Uma formiga pode carregar objetos muito mais pesados do que ela mesma." 
+          },
+          { 
+            term: "brain", 
+            ex: "Puzzles and games are good exercises for your brain.", 
+            trans: "Quebra-cabeças e jogos são bons exercícios para o seu cérebro." 
+          },
+          { 
+            term: "pose a threat", 
+            ex: "Heavy rain can pose a threat to driver safety.", 
+            trans: "Chuva forte pode representar uma ameaça à segurança dos motoristas." 
+          },
+          { 
+            term: "dire", 
+            ex: "The situation was dire, but they managed to fix it.", 
+            trans: "A situação era terrível, mas eles conseguiram resolvê-la." 
+          },
+          { 
+            term: "harmless", 
+            ex: "Don't worry about the dog, he is completely harmless.", 
+            trans: "Não se preocupem com o cachorro, ele é completamente inofensivo." 
+          },
+          { 
+            term: "otherwise", 
+            ex: "I thought it would rain, but the weather proved otherwise.", 
+            trans: "Achei que ia chover, mas o tempo provou o contrário." 
+          },
+          { 
+            term: "seek", 
+            ex: "You should seek medical advice if you feel unwell.", 
+            trans: "Você deve procurar orientação médica se sentir mal." 
+          },
+          { 
+            term: "floods", 
+            ex: "Good memories always flood my mind when I visit home.", 
+            trans: "Boas memórias sempre inundam minha mente quando me visito em casa." 
+          },
+          { 
+            term: "thus bending", 
+            ex: "The wind blew hard, thus bending the branches of the tree.", 
+            trans: "O vento soprou forte, dobrando assim os galhos da árvore." 
+          },
+          { 
+            term: "will", 
+            ex: "She has a strong will to succeed in her career.", 
+            trans: "Ela tem uma forte vontade de vencer em sua carreira." 
+          },
+          { 
+            term: "behavior", 
+            ex: "His polite behavior impressed everyone at the dinner.", 
+            trans: "O comportamento educado dele impressionou a todos no jantar." 
+          },
+          { 
+            term: "puppeteer", 
+            ex: "The skilled puppeteer entertained children at the park.", 
+            trans: "O marionetista habilidoso entreteve as crianças no parque." 
+          }
+        ],
+        gaps: ["pose a threat", "dire", "harmless", "otherwise", "seek", "ant", "brain", "floods", "thus bending", "will", "behavior", "puppeteer"],
+        fullScript: `
+          <p><strong>Host:</strong> Uh, but you... Just to be clear, you, you do think microorganisms <span class="gap-target" data-answer="pose a threat"></span>.</p>
+          <p><strong>Dr. Neuman:</strong> Oh, in the most <span class="gap-target" data-answer="dire"></span> terms.</p>
+          <p><strong>Host:</strong> Bacteria.</p>
+          <p><strong>Dr. Neuman:</strong> No.</p>
+          <p><strong>Host:</strong> You like saying no.</p>
+          <p><em>(audience laughs)</em></p>
+          <p><strong>Host:</strong> Not bacteria. Not viruses. So...?</p>
+          <p><strong>Dr. Neuman:</strong> Fungus.</p>
+          <p><em>(audience laughs)</em></p>
+          <p><strong>Dr. Neuman:</strong> Yes, that's the usual response. Fungi seem <span class="gap-target" data-answer="harmless"></span> enough. Many species know <span class="gap-target" data-answer="otherwise"></span>. Because there are some fungi who <span class="gap-target" data-answer="seek"></span> not to kill, but to control.</p>
+          <p><strong>Dr. Neuman:</strong> Let me ask you, where do we get LSD from?</p>
+          <p><strong>Host:</strong> Where do you get it from?</p>
+          <p><em>(audience laughs)</em></p>
+          <p><strong>Dr. Neuman:</strong> It comes from ergot, a fungus. Psilocybin? Also a fungus. Viruses can make us ill, but fungi can alter our very minds.</p>
+          <p><strong>Dr. Neuman:</strong> There's a fungus that infects insects. It gets inside an <span class="gap-target" data-answer="ant"></span>, for example, travels through its circulatory system to the ant's <span class="gap-target" data-answer="brain"></span>, and then <span class="gap-target" data-answer="floods"></span> it with hallucinogens, <span class="gap-target" data-answer="thus bending"></span> the ant's mind to its <span class="gap-target" data-answer="will"></span>. The fungus starts to direct the ant's <span class="gap-target" data-answer="behavior"></span>, telling it where to go, what to do, like a <span class="gap-target" data-answer="puppeteer"></span> with a marionette.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (1:45 - 3:20)", start: 105, end: 200, vocabType: "select",
+        vocab: [
+          { 
+            term: "devour", 
+            correct: "To consume, eat, or destroy something hungrily or completely", 
+            similar: [
+              "To carefully store food reserves inside body tissues for future use", 
+              "To slowly absorb water and essential minerals from surrounding soil"
+            ] 
+          },
+          { 
+            term: "host", 
+            correct: "An organism on or in which a parasite or fungus lives and feeds", 
+            similar: [
+              "A medical professional who treats patients during an emergency", 
+              "A protective shelter built by animals to withstand cold weather"
+            ] 
+          },
+          { 
+            term: "flesh", 
+            correct: "The soft tissue, body, or muscular substance of an animal or human", 
+            similar: [
+              "The tough outer skeletal frame that provides bodily support", 
+              "The fluid substance circulating vital oxygen through living organs"
+            ] 
+          },
+          { 
+            term: "preventing", 
+            correct: "Stopping or keeping something from happening or taking place", 
+            similar: [
+              "Speeding up a process to achieve rapid completion", 
+              "Observing an event closely without interfering with its outcome"
+            ] 
+          },
+          { 
+            term: "distress", 
+            correct: "A state of severe anxiety, sorrow, pain, or discomfort", 
+            similar: [
+              "A temporary feeling of deep boredom during routine tasks", 
+              "A pleasant feeling of excitement caused by unexpected news"
+            ] 
+          },
+          { 
+            term: "currently", 
+            correct: "At the present time; right now", 
+            similar: [
+              "In the distant future after several generations pass", 
+              "A long time ago during historical times"
+            ] 
+          },
+          { 
+            term: "evolve", 
+            correct: "To adapt and develop gradually over time, especially genetically", 
+            similar: [
+              "To remain completely unchanged across generations", 
+              "To suddenly stop growing due to environmental changes"
+            ] 
+          },
+          { 
+            term: "withstand", 
+            correct: "To resist, endure, or remain undamaged by difficult conditions", 
+            similar: [
+              "To collapse immediately under external pressure", 
+              "To avoid harsh environments by migrating to new locations"
+            ] 
+          },
+          { 
+            term: "for instance", 
+            correct: "As an example or illustration of a point", 
+            similar: [
+              "As a final conclusion to a debate", 
+              "In direct opposition to an idea"
+            ] 
+          },
+          { 
+            term: "slightly", 
+            correct: "To a small degree or extent; a little bit", 
+            similar: [
+              "To an extreme and overwhelming amount", 
+              "Completely and entirely without exception"
+            ] 
+          },
+          { 
+            term: "burrowing", 
+            correct: "Digging or forcing a way deeply into something", 
+            similar: [
+              "Resting lightly on the outer surface of an object", 
+              "Floating smoothly across fluid surfaces"
+            ] 
+          },
+          { 
+            term: "poisoned", 
+            correct: "Corrupted, harmed, or intoxicated by a toxic substance", 
+            similar: [
+              "Strengthened and made immune against harmful diseases", 
+              "Purified and cleaned using natural chemical remedies"
+            ] 
+          },
+          { 
+            term: "unifying", 
+            correct: "Bringing different parts together into a single, shared whole", 
+            similar: [
+              "Dividing individuals into competing separate groups", 
+              "Isolating an idea from any outside influence"
+            ] 
+          },
+          { 
+            term: "to spread", 
+            correct: "To extend, cover, or reach a wider area or more people", 
+            similar: [
+              "To contain or shrink a threat within a confined space", 
+              "To eliminate an infection completely from a system"
+            ] 
+          },
+          { 
+            term: "by any means necessary", 
+            correct: "Using whatever action or method is needed, regardless of obstacles", 
+            similar: [
+              "Only when approved by official safety protocols", 
+              "With minimal effort and using gentle procedures"
+            ] 
+          },
+          { 
+            term: "treatments", 
+            correct: "Medical care given to a patient to heal an illness or injury", 
+            similar: [
+              "Diagnostic tests performed before symptoms appear", 
+              "Surgical instruments used exclusively for laboratory research"
+            ] 
+          },
+          { 
+            term: "preventatives", 
+            correct: "Medicines or measures taken to stop a disease before it starts", 
+            similar: [
+              "Therapeutic remedies used to soothe pain in terminally ill patients", 
+              "Emergency drugs administered during late-stage illness"
+            ] 
+          }
+        ],
+        examples: [
+          { 
+            term: "devour", 
+            ex: "Kids usually devour pizza in a few minutes.", 
+            trans: "Crianças geralmente devoram pizza em poucos minutos." 
+          },
+          { 
+            term: "host", 
+            ex: "The TV show host welcomed the guests warmly.", 
+            trans: "O apresentador do show de TV deu as boas-vindas aos convidados calorosamente." 
+          },
+          { 
+            term: "flesh", 
+            ex: "Apples have sweet flesh under their red skin.", 
+            trans: "Maçãs têm polpa/polpa doce sob sua casca vermelha." 
+          },
+          { 
+            term: "preventing", 
+            ex: "Wearing a helmet is crucial for preventing injuries.", 
+            trans: "Usar capacete é crucial para prevenir ferimentos." 
+          },
+          { 
+            term: "distress", 
+            ex: "She called her friend when she was in distress.", 
+            trans: "Ela ligou para a amiga quando estava em aflição." 
+          },
+          { 
+            term: "currently", 
+            ex: "He is currently working on a new project.", 
+            trans: "Ele está atualmente trabalhando em um novo projeto." 
+          },
+          { 
+            term: "evolve", 
+            ex: "Technology continues to evolve at a fast pace.", 
+            trans: "A tecnologia continua a evoluir em um ritmo rápido." 
+          },
+          { 
+            term: "withstand", 
+            ex: "Good boots can withstand severe winter cold.", 
+            trans: "Boas botas podem suportar o frio rigoroso do inverno." 
+          },
+          { 
+            term: "for instance", 
+            ex: "Many fruits are rich in vitamins; orange, for instance.", 
+            trans: "Muitas frutas são ricas em vitaminas; a laranja, por exemplo." 
+          },
+          { 
+            term: "slightly", 
+            ex: "Turn the volume slightly higher, please.", 
+            trans: "Aumente o volume um pouco, por favor." 
+          },
+          { 
+            term: "burrowing", 
+            ex: "Rabbits are good at burrowing into the ground.", 
+            trans: "Coelhos são bons em cavar/enterrar no solo." 
+          },
+          { 
+            term: "poisoned", 
+            ex: "The river was poisoned by factory waste.", 
+            trans: "O rio foi envenenado por resíduos fabris." 
+          },
+          { 
+            term: "unifying", 
+            ex: "Music is a unifying force that connects people.", 
+            trans: "Música é uma força unificadora que conecta as pessoas." 
+          },
+          { 
+            term: "to spread", 
+            ex: "Butter is easy to spread on warm toast.", 
+            trans: "Manteiga é fácil de espalhar na torrada quente." 
+          },
+          { 
+            term: "by any means necessary", 
+            ex: "They aimed to win the championship by any means necessary.", 
+            trans: "Eles queriam vencer o campeonato por qualquer meio necessário." 
+          },
+          { 
+            term: "treatments", 
+            ex: "Modern treatments help manage chronic health issues.", 
+            trans: "Tratamentos modernos ajudam a gerenciar problemas de saúde crônicos." 
+          },
+          { 
+            term: "preventatives", 
+            ex: "Vaccines are effective preventatives against flu.", 
+            trans: "Vacinas são preventivos eficazes contra a gripe." 
+          }
+        ],
+        gaps: ["devour", "host", "flesh", "distress", "currently", "withstand", "slightly", "burrowing", "poisoned", "unifying", "to spread", "preventatives"],
+        fullScript: `
+          <p><strong>Dr. Neuman:</strong> And it gets worse. The fungus needs food to live, so it begins to <span class="gap-target" data-answer="devour"></span> its <span class="gap-target" data-answer="host"></span> from within, replacing the ant's <span class="gap-target" data-answer="flesh"></span> with its own, but it doesn't let its victim die. No, it keeps its puppet alive by preventing decomposition.</p>
+          <p><strong>Dr. Neuman:</strong> How? Where do we get penicillin from?</p>
+          <p><strong>Host:</strong> Fungus.</p>
+          <p><strong>Schoenheiss:</strong> Oh...</p>
+          <p><strong>Host:</strong> Dr. Schoenheiss, you're in <span class="gap-target" data-answer="distress"></span>.</p>
+          <p><strong>Schoenheiss:</strong> Fungal infection of this kind is real, but not in humans.</p>
+          <p><strong>Dr. Neuman:</strong> True, fungi cannot survive if its host's internal temperature is over 94 degrees. And <span class="gap-target" data-answer="currently"></span>, there are no reasons for fungi to evolve to be able to <span class="gap-target" data-answer="withstand"></span> higher temperatures. But what if that were to change? What if, for instance, the world were to get <span class="gap-target" data-answer="slightly"></span> warmer?</p>
+          <p><strong>Dr. Neuman:</strong> Well, now there is reason to evolve. One gene mutates, and an ascomycete uh, Candida, ergot, cordyceps, aspergillus - any one of them could become capable of <span class="gap-target" data-answer="burrowing"></span> into our brains and taking control. Not of millions of us, but billions of us.</p>
+          <p><strong>Dr. Neuman:</strong> Billions of puppets with <span class="gap-target" data-answer="poisoned"></span> minds permanently fixed on one <span class="gap-target" data-answer="unifying"></span> goal: <span class="gap-target" data-answer="to spread"></span> the infection to every last human alive by any means necessary. And there are no treatments for this. No <span class="gap-target" data-answer="preventatives"></span>, no cures. They don't exist. It's not even possible to make them.</p>
+          <p><strong>Host:</strong> So if that happens?</p>
+          <p><strong>Dr. Neuman:</strong> We lose.</p>
+          <p><strong>Host:</strong> We'll be back.</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      10: [
+        { q: "1. Do you agree with Dr. Neuman that humanity will always win against viruses?", start: "I agree/disagree because ______.", ex: "I agree because modern science creates vaccines quickly whenever a new virus appears!" },
+        { q: "2. Why do you think Dr. Neuman believes fungi are a bigger threat than viruses?", start: "He believes fungi are more dangerous because ______.", ex: "He believes fungi are more dangerous because they can control and manipulate their host's mind instead of just killing them!" }
+      ],
+      20: [
+        { q: "1. Do you believe climate change could lead to new health threats or pandemics in the future?", start: "I think climate change could/couldn't cause new pandemics because ______.", ex: "I think climate change could cause new threats because warmer temperatures might force organisms to adapt and evolve!" },
+        { q: "2. Would you feel scared or skeptical if you heard Dr. Neuman's warning on TV?", start: "If I heard that warning on TV, I would feel ______ because ______.", ex: "If I heard that warning on TV, I would feel terrified because he explains the science so calmly and convincingly!" },
+        { q: "3. What is the most terrifying post-apocalyptic scenario for you in movies or series?", start: "For me, the scariest apocalyptic scenario is ______ because ______.", ex: "For me, the scariest scenario is a fungal or mind-control outbreak because infected people lose control of their actions!" },
+        { q: "4. If you had to survive a sudden global outbreak like Cordyceps, what would be your first action?", start: "If a sudden outbreak happened, my first action would be to ______.", ex: "If a sudden outbreak happened, my first action would be to get supplies and head to a secluded rural area!" }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 1 : 3;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube.com/embed/lFULfl7-9Fc?start=0&end=54&autoplay=0&enablejsapi=1";
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first snippet and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. What threat is Dr. Schoenheiss describing?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">A viral pandemic spreading rapidly via air travel</option>
+              <option value="b">A bacterial contamination of drinking water</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. How does Dr. Neuman initially react when asked if viral pandemics keep him up at night?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">He agrees that viruses are humanity's greatest fear</option>
+              <option value="b">He calmly answers 'No' because humanity always defeats viruses</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+
+          if (pData.vocabType === 'select') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([
+                { text: v.correct, val: v.correct },
+                { text: v.similar[0], val: v.similar[0] },
+                { text: v.similar[1], val: v.similar[1] }
+              ]);
+
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.correct}">
+                    <option value="">-- Select the correct meaning --</option>
+                    ${options.map(opt => `<option value="${opt.val}">${opt.text}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'ab') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([
+                { text: v.correct, correct: "true" },
+                { text: v.wrong, correct: "false" }
+              ]);
+
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'mixed') {
+            let picsHTML = pData.pics ? `
+              <div class="pic-grid">
+                ${pData.pics.map(p => `
+                  <div class="pic-card">
+                    <img src="${p.img}" alt="${p.term}">
+                    <select class="custom-select" data-correct="${p.term}">
+                      <option value="">-- Name --</option>
+                      ${shuffleArray(pData.pics.map(x=>x.term)).map(t=>`<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                  </div>
+                `).join('')}
+              </div>
+            ` : '';
+
+            let abHTML = pData.abVocab ? pData.abVocab.map(v => {
+              const options = shuffleArray([
+                { text: v.correct, correct: "true" },
+                { text: v.wrong, correct: "false" }
+              ]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('') : '';
+
+            vocabHTML = picsHTML + abHTML;
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Match each key term with its definition:</p>
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to the examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/lFULfl7-9Fc?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the argument in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = chosenTime === 10 ? 54 : 200;
+        player.src = `https://www.youtube.com/embed/lFULfl7-9Fc?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#f3e8ff; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#6b21a8; border: 1px solid #d8b4fe;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the scene.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#f3e8ff; color:#7e22ce; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#f3e8ff; border-left-color:#7e22ce;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Dr. Schoenheiss warns about viral pandemics while Dr. Neuman argues mankind always wins against viruses." },
+        { order: 2, text: "Dr. Neuman introduces fungi as the real threat, explaining how they infect insects and control their minds." },
+        { order: 3, text: "He warns that if the world warms up, mutated fungi could burrow into human brains with no cure, leading to humanity's loss." }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
