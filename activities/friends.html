@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Friends Hotel Amenities by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --accent-teal: #0d9488;
+      --accent-hover: #14b8a6;
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-size: 15px;
+    }
+
+    header {
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+      background-color: #0b0f19;
+      height: 55px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 36px; border-radius: 8px; }
+    .brand-text h1 { font-size: 1.2em; color: var(--text-light); font-weight: 700; }
+    .brand-text span { font-size: 0.8em; color: #94a3b8; }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 10px; text-align: center; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 20px 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border: 1px solid #334155;
+    }
+
+    .banner-img { width: 100%; max-height: 150px; object-fit: cover; border-radius: var(--radius-soft); margin-bottom: 12px; }
+    .hero-title { font-size: 1.35em; margin-bottom: 2px; color: #f1f5f9; }
+    .hero-subtitle { font-size: 0.9em; color: var(--accent-hover); font-weight: 600; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.85em; color: #94a3b8; margin-bottom: 14px; }
+
+    .time-title { font-size: 1em; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 6px; max-width: 440px; margin: 0 auto 18px auto; }
+    
+    .time-btn {
+      background: #334155; color: white; border: 2px solid transparent;
+      padding: 8px 14px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      background: var(--accent-teal); border-color: #5eead4; transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--accent-teal); color: white; border: none;
+      padding: 12px 32px; border-radius: 30px; font-size: 1.05em;
+      font-weight: bold; cursor: pointer; transition: background 0.2s;
+      box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
+    }
+
+    .start-btn:hover { background: var(--accent-hover); }
+
+    .workspace { display: none; flex: 1; height: calc(100vh - 55px); padding: 12px; gap: 12px; }
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #e2e8f0; padding: 10px 14px;
+      border-bottom: 1px solid #cbd5e0; overflow-x: auto; align-items: center;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: white;
+      padding: 8px 14px; border-radius: 20px; font-size: 0.88em; font-weight: 700;
+      color: #64748b; border: 1px solid #cbd5e0; white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #cbd5e0; color: #334155; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85em;
+    }
+
+    .cool-step-pill.active {
+      background: var(--bg-dark); color: white; border-color: var(--bg-dark);
+    }
+
+    .cool-step-pill.active .step-num {
+      background: var(--accent-teal); color: white;
+    }
+
+    .part-subtabs {
+      display: flex; gap: 6px; background: #cbd5e0; padding: 4px;
+      border-radius: 10px; margin-bottom: 14px;
+    }
+
+    .part-subtab-btn {
+      flex: 1; padding: 8px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.9em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+
+    .part-subtab-btn.active {
+      background: white; color: var(--accent-teal); box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    .content-area { flex: 1; padding: 18px; overflow-y: auto; font-size: 1.05em; }
+
+    .question-block { margin-bottom: 16px; }
+    .question-block strong { display: block; font-size: 1.05em; margin-bottom: 6px; color: #1e293b; }
+    
+    .custom-select {
+      width: 100%; padding: 10px 12px; font-size: 0.95em; border-radius: 8px;
+      border: 2px solid #cbd5e0; background-color: white; outline: none;
+    }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 10px 14px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.95em; color: #334155;
+    }
+    .ab-btn:hover { border-color: var(--accent-teal); background: #f0fdf4; }
+    .ab-btn.selected-option { border-color: var(--accent-teal); background: #e0f2fe; color: #0369a1; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    /* REVERTED TO COMPACT 3-COLUMN GRID */
+    .pic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .pic-card { background: white; border: 1px solid #cbd5e0; border-radius: 8px; padding: 6px; text-align: center; }
+    .pic-card img { width: 100%; height: 75px; object-fit: cover; border-radius: 4px; margin-bottom: 6px; display: block; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-teal);
+      padding: 12px 14px; border-radius: var(--radius-soft); margin-bottom: 12px;
+    }
+    .vocab-card-example h4 { font-size: 1.1em; color: var(--accent-teal); margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .translation-text { font-size: 0.9em; color: #64748b; font-style: italic; margin-top: 4px; }
+    
+    .audio-btn { background: #e0f2fe; border: none; color: #0284c7; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85em; }
+
+    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; padding: 12px; background: #e2e8f0; border-radius: var(--radius-soft); min-height: 48px; }
+    .chip { background: white; padding: 6px 14px; border-radius: 16px; font-weight: 700; font-size: 0.95em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+
+    .gap-target {
+      display: inline-block; min-width: 90px; height: 32px; border-bottom: 2px solid var(--accent-teal);
+      background: #e0f2fe; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #0369a1; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em;
+      padding: 0 8px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 10px; margin-top: 12px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 10px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 32px; height: 44px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .retell-item {
+      background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 44px; display: flex; align-items: center; font-size: 0.95em;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 5px solid var(--success); color: #14532d;
+      padding: 12px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 8px 14px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.88em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 4px solid var(--success); padding: 12px; border-radius: 6px; margin-top: 6px; font-size: 0.95em; }
+
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-action { background: var(--accent-teal); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95em; }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: #0284c7; }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; }
+    .modal-card { background: white; color: var(--text-dark); padding: 36px; border-radius: var(--radius-round); text-align: center; max-width: 440px; }
+  </style>
+</head>
+<body>
+
+  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
+  <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
+    <a href="../index.html" style="color: #38bdf8; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 0.9em; display: inline-flex; align-items: center; gap: 6px;">
+      ← Back to Homepage
+    </a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/nmDeP90.png" class="banner-img" alt="Friends Scene">
+      <h2 class="hero-title">Friends: Loading Up on Hotel Amenities</h2>
+      <div class="hero-subtitle">• Season 9, Episode 19 •</div>
+      <p class="hero-desc">Bite-sized movie lessons to boost your listening, vocabulary, and speaking skills.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Parts 1 & 2)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "Nem tão busy, nem tão free" (Parts 1 to 4)</span> <strong>20 min</strong>
+          </button>
+          <button class="time-btn" onclick="selectTime(30, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 to 5)</span> <strong>30 min</strong>
+          </button>
+          <button class="time-btn" onclick="selectTime(45, this)">
+            <span>🧠 "I'm VERY focused, me segura!" (Whole Scene)</span> <strong>45 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?enablejsapi=1" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2>CONGRATULATIONS! 🎉</h2>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (until 0:32)", start: 0, end: 32, vocabType: "ab",
+        vocab: [
+          { term: "wound up", correct: "Stressed, nervous, or full of excited energy", wrong: "Completely relaxed and sleeping deeply" },
+          { term: "no record of", correct: "No information or history about something in a system", wrong: "A special VIP discount saved in the computer" }
+        ],
+        examples: [
+          { term: "wound up", ex: "He was very wound up after work.", trans: "Ele estava muito agitado/estressado depois do trabalho." },
+          { term: "no record of", ex: "Officials said there was no record of bullying.", trans: "Autoridades disseram que não havia registro de bullying." }
+        ],
+        gaps: ["reservation", "Apple", "wound up", "no record of", "impossible"],
+        fullScript: `
+          <p><strong>Ross:</strong> Hi, Chandler Bing. I have a <span class="gap-target" data-answer="reservation"></span>.</p>
+          <p><strong>Receptionist:</strong> Welcome to the Chestnut Inn, Mr. Bing. So, where are you joining us from?</p>
+          <p><strong>Chandler:</strong> New York!</p>
+          <p><strong>Ross:</strong> The Big <span class="gap-target" data-answer="Apple"></span>!</p>
+          <p><strong>Chandler:</strong> I'm sorry, he's a little bit <span class="gap-target" data-answer="wound up"></span>. We had to stop at every maple candy stand on the way here.</p>
+          <p><strong>Ross:</strong> I ate all my gifts for everybody!</p>
+          <p><strong>Receptionist:</strong> I'm sorry, Mr. Bing, there's <span class="gap-target" data-answer="no record of"></span> your reservation on the computer.</p>
+          <p><strong>Chandler:</strong> Well, that's <span class="gap-target" data-answer="impossible"></span>. Can you check again, please?</p>
+          <p><strong>Ross:</strong> Check again, please!</p>
+          <p><strong>Receptionist:</strong> I'm sorry, it's not here.</p>
+          <p><strong>Ross:</strong> Not there!</p>
+        `
+      },
+      2: {
+        title: "Part 2 (until 1:13)", start: 32, end: 73, vocabType: "select",
+        vocab: [
+          { term: "get this straight", def: "To clarify or make sure you understand a situation correctly" },
+          { term: "refundable", def: "Money that can be returned to you if you cancel something" },
+          { term: "cheapest", def: "Costing the least amount of money" },
+          { term: "on the way back", def: "During the return journey to where you started" }
+        ],
+        examples: [
+          { term: "get this straight", ex: "Let's just get something straight off the top: I can't do that.", trans: "Vamos deixar algo claro desde o início: eu não posso fazer isso." },
+          { term: "refundable", ex: "This ticket is not refundable.", trans: "Esta passagem não é reembolsável." },
+          { term: "cheapest", ex: "All the cheapest tariffs are online.", trans: "Todas as tarifas mais baratas estão online." },
+          { term: "on the way back", ex: "On the way back, we couldn't find our tent.", trans: "No caminho de volta, não conseguimos encontrar nossa barraca." }
+        ],
+        gaps: ["get this straight", "refundable", "cheapest", "unfortunately", "insane", "on the way back", "closet"],
+        fullScript: `
+          <p><strong>Chandler:</strong> Let me <span class="gap-target" data-answer="get this straight"></span>. I called yesterday to try to cancel my reservation, was told it's not <span class="gap-target" data-answer="refundable"></span>.</p>
+          <p>then we drove six hours all the way up here, and now you're telling me that we don't have a reservation?</p>
+          <p><strong>Receptionist:</strong> I don't know what to say.</p>
+          <p><strong>Ross:</strong> She doesn't know what to say!</p>
+          <p><strong>Chandler:</strong> Just give us the <span class="gap-target" data-answer="cheapest"></span> room you have.</p>
+          <p><strong>Receptionist:</strong> Well, <span class="gap-target" data-answer="unfortunately"></span>, the only thing we have available is our Deluxe Suite. The rate is $600.</p>
+          <p><strong>Chandler:</strong> That's <span class="gap-target" data-answer="insane"></span>!</p>
+          <p><strong>Ross:</strong> That's totally insane! Dude, let's drive home. We'll hit all the maple candy stores <span class="gap-target" data-answer="on the way back"></span>, and if they're closed, then maybe we'll tap a tree and make some ourselves.</p>
+          <p><strong>Chandler:</strong> Does that room have a <span class="gap-target" data-answer="closet"></span> I can lock him in? We'll take it.</p>
+          <p><strong>Receptionist:</strong> Great.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (until 1:41)", start: 73, end: 101, vocabType: "ab",
+        vocab: [
+          { term: "ripping us off", correct: "Charging someone way too much money for something", wrong: "Giving free gifts to customers" },
+          { term: "amenities", correct: "Extra features or services in a hotel that make your stay comfortable", wrong: "The bill you pay at checkout" },
+          { term: "load up on", correct: "To gather or take a large amount of something", wrong: "To clean your room before leaving" },
+          { term: "instead of", correct: "In place of someone or something else", wrong: "At the exact same time" }
+        ],
+        examples: [
+          { term: "ripping us off", ex: "That mechanic ripped me off!", trans: "Aquele mecânico me passou a perna / cobrou demais!" },
+          { term: "amenities", ex: "This hotel has great amenities.", trans: "Este hotel tem ótimas comodidades." },
+          { term: "load up on", ex: "Residents went to the store to load up on bottled water.", trans: "Os moradores foram à loja para se estocar de água engarrafada." },
+          { term: "instead of", ex: "Drink water instead of soda.", trans: "Beba água ao invés de refrigerante." }
+        ],
+        gaps: ["ripping us off", "amenities", "load up on", "instead of", "money", "shaking", "hold"],
+        fullScript: `
+          <p><strong>Chandler:</strong> Look, they are totally <span class="gap-target" data-answer="ripping us off"></span>!</p>
+          <p><strong>Ross:</strong> Dude, don't worry about it. I know how we can make your money back. This is a nice hotel, you know? Plenty of <span class="gap-target" data-answer="amenities"></span>. We just <span class="gap-target" data-answer="load up on"></span> those! Like those apples, <span class="gap-target" data-answer="instead of"></span> taking one... I take six!</p>
+          <p><strong>Chandler:</strong> Great! At $100 an apple, we're there!</p>
+          <p><strong>Ross:</strong> Come on, you get the idea, you know? We'll make our <span class="gap-target" data-answer="money"></span> back in no time.</p>
+          <p><strong>Chandler:</strong> Dude, you're <span class="gap-target" data-answer="shaking"></span>.</p>
+          <p><strong>Ross:</strong> I think it's the sugar. Could you <span class="gap-target" data-answer="hold"></span> the apple?</p>
+        `
+      },
+      4: {
+        title: "Part 4 (until 2:35)", start: 101, end: 155, vocabType: "mixed",
+        pics: [
+          { term: "razor", img: "https://i.imgur.com/Jt56c3T.jpeg" },
+          { term: "mouthwash", img: "https://i.imgur.com/U4ffJuI.jpeg" },
+          { term: "dental floss", img: "https://i.imgur.com/HLsDGw9.jpeg" },
+          { term: "tampons", img: "https://i.imgur.com/6iidd0G.jpeg" },
+          { term: "bushel", img: "https://i.imgur.com/MPei3Zs.jpeg" },
+          { term: "complimentary toiletries", img: "https://i.imgur.com/EIG45LL.jpeg" }
+        ],
+        abVocab: [
+          { term: "go ahead", correct: "To proceed, start, or continue doing something", wrong: "To stop doing something immediately" }
+        ],
+        examples: [
+          { term: "complimentary toiletries", ex: "They offer complimentary toiletries.", trans: "Eles oferecem itens de higiene pessoal de cortesia." },
+          { term: "razor", ex: "He forgot his razor at home.", trans: "Ele esqueceu o barbeador em casa." },
+          { term: "mouthwash", ex: "I need to buy some mouthwash.", trans: "Eu preciso comprar enxaguante bucal." },
+          { term: "dental floss", ex: "Do you have any dental floss?", trans: "Você tem fio dental?" },
+          { term: "go ahead", ex: "Go ahead and ask your question.", trans: "Vá em frente e faça sua pergunta." },
+          { term: "tampons", ex: "Can you lend me some tampons?", trans: "Você pode me emprestar alguns absorventes internos?" },
+          { term: "bushel", ex: "We bought a bushel of apples.", trans: "Compramos um cesto de maçãs." }
+        ],
+        gaps: ["complimentary toiletries", "razor", "mouthwash", "dental floss", "go ahead", "tampons", "bushel"],
+        fullScript: `
+          <p><em>(In the hotel room) (Ross calling the front desk)</em></p>
+          <p><strong>Ross:</strong> Hi, this is Ross Geller in Suite 206. Um, I seem to have forgotten a couple of things. Could you have some <span class="gap-target" data-answer="complimentary toiletries"></span> sent up to my room? Thank you. Okay, um... toothbrush, toothpaste, <span class="gap-target" data-answer="razor"></span>, <span class="gap-target" data-answer="mouthwash"></span>, deodorant, <span class="gap-target" data-answer="dental floss"></span>, Band-Aids, shaving cream, aftershave... and I feel like I'm forgetting something. Um, is there anything else you have that I haven't asked for already? (...) Yeah, <span class="gap-target" data-answer="go ahead"></span>, send up some <span class="gap-target" data-answer="tampons"></span>.</p>
+          <p><strong>Ross:</strong> What'd you get?</p>
+          <p><strong>Chandler:</strong> USA Today.</p>
+          <p><strong>Ross:</strong> Nice! Put it with the others.</p>
+          <p><strong>Chandler:</strong> And I also got two more apples.</p>
+          <p><strong>Ross:</strong> We're four short of a <span class="gap-target" data-answer="bushel"></span>! God, I feel so alive! I love being in the country!</p>
+        `
+      },
+      5: {
+        title: "Part 5 (until 3:07)", start: 155, end: 187, vocabType: "mixed",
+        pics: [
+          { term: "hair dryer", img: "https://i.imgur.com/tJ51dg0.jpeg" },
+          { term: "salt and pepper shakers", img: "https://i.imgur.com/zrOPZfN.jpeg" }
+        ],
+        abVocab: [
+          { term: "stealing", correct: "Taking something that belongs to someone else without permission", wrong: "Paying cheap price in a store" },
+          { term: "owes", correct: "To have an obligation to pay or give something to someone", wrong: "To lend money to a friend" },
+          { term: "off-limits", correct: "Something that is not allowed to be taken or touched", wrong: "Something free for everyone" },
+          { term: "thought this through", correct: "To consider all details and consequences carefully", wrong: "To decide very fast without thinking" }
+        ],
+        examples: [
+          { term: "salt and pepper shakers", ex: "Pass the salt and pepper shakers, please.", trans: "Passe o saleiro e o pimenteiro, por favor." },
+          { term: "stealing", ex: "The suspect was charged with stealing a vehicle.", trans: "O suspeito foi acusado de roubar um veículo." },
+          { term: "owes", ex: "He owes $20 to his friend for yesterday's lunch.", trans: "Ele deve $20 para o amigo pelo almoço de ontem." },
+          { term: "hair dryer", ex: "She used the hair dryer.", trans: "Ela usou o secador de cabelo." },
+          { term: "off-limits", ex: "Street food was totally off-limits for her diet.", trans: "Comida de rua era totalmente proibida na dieta dela." },
+          { term: "thought this through", ex: "I need some time to think this through before I give you my final answer.", trans: "Preciso de um tempo para pensar bem nisso antes de te dar minha resposta final." }
+        ],
+        gaps: ["salt and pepper shakers", "stealing", "owes", "hair dryer", "off-limits", "thought this through"],
+        fullScript: `
+          <p><strong>Chandler:</strong> Also got these great <span class="gap-target" data-answer="salt and pepper shakers"></span> from the restaurant.</p>
+          <p><strong>Ross:</strong> Oh, that's not cool.</p>
+          <p><strong>Chandler:</strong> Dude, none of this is cool!</p>
+          <p><strong>Ross:</strong> No, Chandler, you have to find the line between <span class="gap-target" data-answer="stealing"></span> and taking what the hotel <span class="gap-target" data-answer="owes"></span> you! Um, for example: a <span class="gap-target" data-answer="hair dryer"></span>? No, no, no. But shampoos and conditioners? Oh, yes, yes, yes! Now, the salt shaker is <span class="gap-target" data-answer="off-limits"></span>, but the salt... I wish I had <span class="gap-target" data-answer="thought this through"></span>!</p>
+        `
+      },
+      6: {
+        title: "Part 6 (until 3:40)", start: 187, end: 220, vocabType: "mixed",
+        pics: [
+          { term: "bulbs", img: "https://i.imgur.com/iqrPOKU.jpeg" },
+          { term: "batteries", img: "https://i.imgur.com/7RrYREC.jpeg" }
+        ],
+        abVocab: [
+          { term: "though", correct: "Used to show contrast or introduce a surprising fact (like however)", wrong: "To think deeply about something" },
+          { term: "hid", correct: "Put something in a place where it cannot be seen easily", wrong: "To show something to everyone" },
+          { term: "at least", correct: "Not less than a particular amount; showing a minimum", wrong: "The maximum price allowed" }
+        ],
+        examples: [
+          { term: "though", ex: "The movie was long. I enjoyed it, though.", trans: "O filme foi longo. Eu gostei, no entanto." },
+          { term: "bulbs", ex: "We need new light bulbs.", trans: "Precisamos de lâmpadas novas." },
+          { term: "batteries", ex: "The remote control needs new batteries.", trans: "O controle remoto precisa de pilhas novas." },
+          { term: "hid", ex: "She hid the birthday present in the closet.", trans: "Ela escondeu o presente de aniversário no armário." },
+          { term: "at least", ex: "Drink at least two liters of water.", trans: "Beba pelo menos dois litros de água." }
+        ],
+        gaps: ["though", "bulbs", "already", "remote control", "batteries", "maple candy", "At least", "hid"],
+        fullScript: `
+          <p><strong>Chandler:</strong> I think I get what you mean, <span class="gap-target" data-answer="though"></span>. Like, the lamp is the hotel's, but the <span class="gap-target" data-answer="bulbs"></span>... Oh, you <span class="gap-target" data-answer="already"></span> got that?</p>
+          <p><strong>Ross:</strong> Not my first time in a hotel, my friend.</p>
+          <p><strong>Chandler:</strong> Okay, uh, how about this?</p>
+          <p><strong>Ross:</strong> No, no, no, you can't take the <span class="gap-target" data-answer="remote control"></span>!</p>
+          <p><strong>Chandler:</strong> Yes, but the <span class="gap-target" data-answer="batteries"></span>...Thank you, thank you very much!</p>
+          <p><strong>Ross:</strong> Oh, let's celebrate with some <span class="gap-target" data-answer="maple candy"></span>!</p>
+          <p><strong>Chandler:</strong> No!</p>
+          <p><strong>Ross:</strong> <span class="gap-target" data-answer="At least"></span> tell me where you <span class="gap-target" data-answer="hid"></span> it!</p>
+        `
+      },
+      7: {
+        title: "Part 7 (until checkout)", start: 220, end: 300, vocabType: "mixed",
+        pics: [
+          { term: "bill", img: "https://i.imgur.com/EP1HHzT.jpeg" },
+          { term: "maid's cart", img: "https://i.imgur.com/1tiYb3l.jpeg" },
+          { term: "pine cones", img: "https://i.imgur.com/NyeUU1a.jpeg" }
+        ],
+        abVocab: [
+          { term: "factor in", correct: "To include or consider a specific detail/tax when calculating", wrong: "To forget an important detail completely" },
+          { term: "way ahead of the game", correct: "Being in a very advantageous or winning position", wrong: "Losing a sport match badly" },
+          { term: "delightful", correct: "Very pleasant, charming, or enjoyable", wrong: "Extremely boring and sad" }
+        ],
+        examples: [
+          { term: "bill", ex: "I need to pay my credit card bill.", trans: "Eu preciso pagar a fatura do meu cartão de crédito." },
+          { term: "factor in", ex: "We didn't factor in the rush hour traffic when we left for the meeting.", trans: "Não levamos em consideração o trânsito do horário de pico quando saímos para a reunião." },
+          { term: "maid's cart", ex: "The housekeeper pushed the maid's cart down the hotel hallway.", trans: "A arrumadeira empurrou o carrinho pelo corredor do hotel." },
+          { term: "way ahead of the game", ex: "If you start studying for finals in February, you will be way ahead of the game.", trans: "Se você começar a estudar para as finais em fevereiro, você estará muito na vantagem." },
+          { term: "pine cones", ex: "They were collecting pine cones for Christmas decorations.", trans: "Eles estavam coletando pinhas para decorações de Natal." },
+          { term: "delightful", ex: "We had a delightful day at the park.", trans: "Tivemos um dia maravilhoso no parque." }
+        ],
+        gaps: ["bill", "factor in", "maid's cart", "way ahead of the game", "bowl", "enough", "pine cones", "same", "delightful", "maple candy"],
+        fullScript: `
+          <p><em>(At the front desk, checking out)</em></p>
+          <p><strong>Receptionist:</strong> Here's your copy of the <span class="gap-target" data-answer="bill"></span>. We hope you enjoyed your stay.</p>
+          <p><strong>Chandler:</strong> Oh, we did! And you still have all your lamps. (...) Well, I didn't <span class="gap-target" data-answer="factor in"></span> the room tax.</p>
+          <p><strong>Ross:</strong> Oh, dude, don't worry about it. I found an unattended <span class="gap-target" data-answer="maid's cart"></span>. We're <span class="gap-target" data-answer="way ahead of the game"></span>. Oh my God!</p>
+          <p><strong>Chandler:</strong> What?</p>
+          <p><strong>Ross:</strong> There's something new in the <span class="gap-target" data-answer="bowl"></span>!</p>
+          <p><strong>Chandler:</strong> Look, we have <span class="gap-target" data-answer="enough"></span>. Just walk away.</p>
+          <p><strong>Ross:</strong> No, but I want... I want the <span class="gap-target" data-answer="pine cones"></span>!</p>
+          <p><strong>Chandler:</strong> There's a forest right outside!</p>
+          <p><strong>Ross:</strong> It's not the <span class="gap-target" data-answer="same"></span>!</p>
+          <p><strong>Chandler:</strong> Okay, go! Quick!</p>
+          <p><strong>Ross:</strong> (to the receptionist) Thank you for a <span class="gap-target" data-answer="delightful"></span> stay!</p>
+          <p><em>(Leaving the hotel, Ross's bag rips and everything falls on the floor)</em></p>
+          <p><strong>Ross:</strong> My <span class="gap-target" data-answer="maple candy"></span>!</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      20: [
+        { q: "1. What hotel amenities do you usually load up on when traveling?", start: "When I stay at a hotel, I usually load up on ______.", ex: "When I stay at a hotel, I always load up on mini shampoos and tea bags!" },
+        { q: "2. Have you ever felt that a hotel or restaurant was ripping you off?", start: "Yes/No, I felt ripped off when ______.", ex: "Yes, I felt ripped off when a coffee shop charged $8 for water!" },
+        { q: "3. What personal products do you prefer to bring from home instead of using the hotel's complimentary toiletries?", start: "Instead of using hotel shampoos and soaps, I usually bring my own ______.", ex: "Instead of using hotel shampoos, I always bring my own brand because my hair is sensitive!" }
+      ],
+      30: [
+        { q: "1. What hotel amenities do you usually load up on when traveling?", start: "When I stay at a hotel, I usually load up on ______.", ex: "When I stay at a hotel, I always load up on mini shampoos!" },
+        { q: "2. Have you ever felt that a hotel or restaurant was ripping you off?", start: "Yes/No, I felt ripped off when ______.", ex: "Yes, I felt ripped off when a hotel charged for parking!" },
+        { q: "3. What personal products do you prefer to bring from home instead of using the hotel's complimentary toiletries?", start: "Instead of using hotel shampoos and soaps, I usually bring my own ______.", ex: "Instead of using hotel shampoos, I always bring my own brand!" },
+        { q: "4. In your opinion, what items in a hotel room are completely off-limits to take?", start: "Items like ______ are completely off-limits to take.", ex: "Items like hair dryers, lamps, and towels are completely off-limits!" }
+      ],
+      45: [
+        { q: "1. What hotel amenities do you usually load up on when traveling?", start: "When I stay at a hotel, I usually load up on ______.", ex: "When I stay at a hotel, I always load up on mini shampoos!" },
+        { q: "2. Have you ever felt that a hotel or restaurant was ripping you off?", start: "Yes/No, I felt ripped off when ______.", ex: "Yes, I felt ripped off when a taxi overcharged me!" },
+        { q: "3. What personal products do you prefer to bring from home instead of using the hotel's complimentary toiletries?", start: "Instead of using hotel shampoos and soaps, I usually bring my own ______.", ex: "Instead of using hotel shampoos, I always bring my own brand!" },
+        { q: "4. In your opinion, what items in a hotel room are completely off-limits to take?", start: "Items like ______ are completely off-limits to take.", ex: "Items like lamps and remotes are completely off-limits!" },
+        { q: "5. Do you think Ross went too far, or was he just getting what the hotel owed him?", start: "I think Ross ______ because ______.", ex: "I think Ross went too far when he took the pine cones, but it was hilarious!" }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 2 : chosenTime === 20 ? 4 : chosenTime === 30 ? 5 : 7;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      }
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+      }
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?end=32&enablejsapi=1";
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. Where are Chandler and Ross?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">At a coffee shop in New York</option>
+              <option value="b">At a hotel reception desk in Vermont</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. What is Ross excited about?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">Getting free hotel amenities and maple candy</option>
+              <option value="b">Going to a big party in New York</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+          
+          if (pData.vocabType === 'ab') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([
+                { text: v.correct, correct: "true" },
+                { text: v.wrong, correct: "false" }
+              ]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'select') {
+            const dummyDefs = ["To cancel a reservation immediately", "To pay double price"];
+            vocabHTML = pData.vocab.map(v => {
+              const shuffledOptions = shuffleArray([v.def, ...dummyDefs]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.def}">
+                    <option value="">-- Choose meaning --</option>
+                    ${shuffledOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'mixed') {
+            let picsHTML = pData.pics ? `
+              <div class="pic-grid">
+                ${pData.pics.map(p => `
+                  <div class="pic-card">
+                    <img src="${p.img}" alt="${p.term}">
+                    <select class="custom-select" data-correct="${p.term}">
+                      <option value="">-- Name --</option>
+                      ${shuffleArray(pData.pics.map(x=>x.term)).map(t=>`<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                  </div>
+                `).join('')}
+              </div>
+            ` : '';
+
+            let abHTML = pData.abVocab ? pData.abVocab.map(v => {
+              const options = shuffleArray([
+                { text: v.correct, correct: "true" },
+                { text: v.wrong, correct: "false" }
+              ]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('') : '';
+
+            vocabHTML = picsHTML + abHTML;
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Match each key term with its definition:</p>
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to the examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?start=${pData.start}&end=${pData.end}&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = chosenTime === 10 ? 73 : chosenTime === 20 ? 155 : chosenTime === 30 ? 187 : 300;
+        player.src = `https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?end=${endCut}&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the episode.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    /* SELECTION ONLY WITHOUT IMMEDIATE CORRECTION */
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Chandler and Ross arrive at the hotel, but there is no record of their reservation." },
+        { order: 2, text: "The receptionist charges them $600 for a Deluxe Suite, making Chandler furious." },
+        { order: 3, text: "Ross convinces Chandler to load up on free hotel amenities to get their money back." },
+        { order: 4, text: "Ross calls the front desk asking for tons of complimentary toiletries." },
+        { order: 5, text: "Chandler brings salt and pepper shakers, but Ross explains what is allowed vs. stealing." },
+        { order: 6, text: "They take light bulbs and remote control batteries before checking out." },
+        { order: 7, text: "Ross tries to take pine cones, but his bag rips and everything falls on the floor!" }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    /* CORRECTION ONLY UPON CLICKING 'CHECK ANSWERS' */
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      // Check Select Dropdowns
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      // Check Cards A vs B
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      // Check Gap Fillers
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      // Check Retell
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

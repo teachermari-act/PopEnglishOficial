@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Modern Family Airport Panic by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --accent-teal: #0d9488;
+      --accent-hover: #14b8a6;
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+      background-color: #0b0f19;
+      min-height: 55px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 32px; border-radius: 8px; }
+    .brand-text h1 { font-size: 1.1em; color: var(--text-light); font-weight: 700; }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 16px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 20px 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border: 1px solid #334155;
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 180px; 
+      object-fit: cover; 
+      object-position: top;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 12px; 
+      display: block;
+      pointer-events: none;
+    }
+    .hero-title { font-size: 1.25em; margin-bottom: 4px; color: #f1f5f9; }
+    .hero-subtitle { font-size: 0.85em; color: var(--accent-hover); font-weight: 600; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.85em; color: #94a3b8; margin-bottom: 14px; }
+
+    .time-title { font-size: 0.95em; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 18px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #334155; color: white; border: 2px solid transparent;
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.85em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      background: var(--accent-teal); border-color: #5eead4; transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--accent-teal); color: white; border: none;
+      padding: 12px 32px; border-radius: 30px; font-size: 1em;
+      font-weight: bold; cursor: pointer; transition: background 0.2s;
+      box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { background: var(--accent-hover); }
+
+    /* WORKSPACE RESPONSIVO */
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 55px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #e2e8f0; padding: 8px 12px;
+      border-bottom: 1px solid #cbd5e0; overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: white;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 700;
+      color: #64748b; border: 1px solid #cbd5e0; white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #cbd5e0; color: #334155; border-radius: 50%; width: 20px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.8em;
+    }
+
+    .cool-step-pill.active { background: var(--bg-dark); color: white; border-color: var(--bg-dark); }
+    .cool-step-pill.active .step-num { background: var(--accent-teal); color: white; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #cbd5e0; padding: 4px; border-radius: 10px; margin-bottom: 12px; }
+    .part-subtab-btn {
+      flex: 1; padding: 8px 4px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.8em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-teal); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { flex: 1; padding: 14px; overflow-y: auto; font-size: 0.95em; position: relative; }
+
+    .question-block { margin-bottom: 14px; }
+    .question-block strong { display: block; font-size: 0.95em; margin-bottom: 6px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 10px 12px; font-size: 0.9em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 8px 12px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.88em; color: #334155;
+    }
+    .ab-btn.selected-option { border-color: var(--accent-teal); background: #e0f2fe; color: #0369a1; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 4px solid var(--accent-teal);
+      padding: 10px 12px; border-radius: var(--radius-soft); margin-bottom: 10px;
+    }
+    .vocab-card-example h4 { font-size: 1em; color: var(--accent-teal); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .translation-text { font-size: 0.85em; color: #64748b; font-style: italic; margin-top: 4px; }
+    .audio-btn { background: #e0f2fe; border: none; color: #0284c7; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
+
+    .word-bank { 
+      position: sticky; top: -14px; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px; 
+      margin-bottom: 12px; padding: 10px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 44px; 
+    }
+    .chip { background: white; padding: 5px 10px; border-radius: 14px; font-weight: 700; font-size: 0.85em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+
+    .gap-target {
+      display: inline-block; min-width: 75px; height: 28px; border-bottom: 2px solid var(--accent-teal);
+      background: #e0f2fe; margin: 0 2px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #0369a1; border-radius: 4px; line-height: 28px; cursor: pointer; font-size: 0.88em; padding: 0 6px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 8px; margin-top: 8px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 8px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 28px; height: 38px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .retell-item {
+      background: white; padding: 8px 10px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 38px; display: flex; align-items: center; font-size: 0.85em;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 10px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 12px; font-size: 0.88em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 10px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; font-size: 0.8em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 8px; border-radius: 6px; margin-top: 4px; font-size: 0.88em; }
+
+    .panel-footer { padding: 10px 14px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 8px; }
+    .btn-group { display: flex; gap: 8px; }
+    .btn-action { background: var(--accent-teal); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.88em; }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: #0284c7; }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 24px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    /* REGRAS CSS EXCLUSIVAS PARA CELULAR (TELA < 768px) */
+    @media (max-width: 768px) {
+      body { height: auto; overflow-y: auto; }
+      header { padding: 6px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; }
+      
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
+  <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
+    <a href="../index.html" style="color: #38bdf8; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 0.9em; display: inline-flex; align-items: center; gap: 6px;">
+      ← Back to Homepage
+    </a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/IHeLljv.jpeg?v=3" class="banner-img" alt="Modern Family Airport Scene">
+      <h2 class="hero-title">Modern Family: Mitch & Cam Lost at the Airport</h2>
+      <div class="hero-subtitle">• Season 8, Episode 18 •</div>
+      <p class="hero-desc">Bite-sized movie lessons to boost your listening, vocabulary, and speaking skills.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Parts 1 & 2)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "Nem tão busy, nem tão free" (Parts 1 to 4)</span> <strong>20 min</strong>
+          </button>
+          <button class="time-btn" onclick="selectTime(30, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 to 6)</span> <strong>30 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/QFMHbHLNq2k?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2>CONGRATULATIONS! 🎉</h2>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 1:04)", start: 0, end: 64, vocabType: "multi",
+        vocab: [
+          { 
+            term: "flying medicine", 
+            options: [
+              { text: "A special medical insurance required for air travel", correct: "false" },
+              { text: "Medication taken to relax or sleep during a flight", correct: "true" },
+              { text: "A first-aid kit stored inside the airplane cockpit", correct: "false" }
+            ]
+          },
+          { 
+            term: "glimpse", 
+            options: [
+              { text: "A very quick, brief, or partial look at something or someone", correct: "true" },
+              { text: "A long, continuous stare at a person or object", correct: "false" },
+              { text: "A loud sound heard during takeoff or landing", correct: "false" }
+            ]
+          },
+          { 
+            term: "scramble", 
+            options: [
+              { text: "To sit quietly and wait for an official announcement", correct: "false" },
+              { text: "To cancel a flight reservation permanently online", correct: "false" },
+              { text: "To move or act quickly and hurriedly to achieve something", correct: "true" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "flying medicine", ex: "I always take my flying medicine right before boarding long flights so I can sleep.", trans: "Eu sempre tomo meu remédio de voar logo antes de embarcar em voos longos para conseguir dormir." },
+          { term: "glimpse", ex: "Fans gathered outside the stadium hoping to get a glimpse of the players.", trans: "Os fãs se reuniram do lado de fora do estádio esperando ver os jogadores de relance." },
+          { term: "scramble", ex: "We had to scramble to catch the last train of the night.", trans: "Tivemos que nos apressar para pegar o último trem da noite." }
+        ],
+        gaps: ["glimpse", "feminism", "flying medicine", "sleep tight", "stuff", "scramble"],
+        fullScript: `
+          <p><strong>Cam:</strong> Hey, I just caught a <span class="gap-target" data-answer="glimpse"></span> of our pilot and he looks exactly like Sully. I think it is Sully.</p>
+          <p><strong>Mitch:</strong> I think that's a woman.</p>
+          <p><strong>Cam:</strong> No, it's...</p>
+          <p><strong>Mitch:</strong> Yeah.</p>
+          <p><strong>Cam:</strong> Oh, I know what you're doing. You're testing the limits of my <span class="gap-target" data-answer="feminism"></span>! I will have you know that I am perfectly fine putting my life in the hands of a female pilot.</p>
+          <p><strong>Pilot (Captain):</strong> Hi folks, this is your captain.</p>
+          <p><strong>Cam:</strong> Oh, thank God!</p>
+          <p><strong>Pilot (Captain):</strong> Our flight time to Turks and Caicos is 6 hours 24 minutes. Flight attendants, prepare for takeoff.</p>
+          <p><strong>Mitch:</strong> All right, time to take that special <span class="gap-target" data-answer="flying medicine"></span> Ronaldo gave us.</p>
+          <p><strong>Cam:</strong> Yes. What does cuidado mean?</p>
+          <p><strong>Mitch:</strong> I think it means <span class="gap-target" data-answer="sleep tight"></span>.</p>
+          <p><strong>Cam:</strong> Oh, well. Cheers!</p>
+          <p><strong>Mitch:</strong> Cuidado! Okay. [...] What happened? Did we land?</p>
+          <p><strong>Cam:</strong> Man, that <span class="gap-target" data-answer="stuff"></span> is good.</p>
+          <p><strong>Pilot (Captain):</strong> Bad news, folks. We have had some mechanical issues and we will need to head back to the gate.</p>
+          <p><strong>Mitch:</strong> Okay, anytime you head back to the gate, that means your flight's not taking off. Alright, gather your things. We're going to need to <span class="gap-target" data-answer="scramble"></span> to find another one.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (1:04 - 1:51)", start: 64, end: 111, vocabType: "multi",
+        vocab: [
+          { 
+            term: "connecting flight", 
+            options: [
+              { text: "A flight requiring you to change planes at an intermediate airport", correct: "true" },
+              { text: "A flight that goes directly to your destination without any stops", correct: "false" },
+              { text: "A free shuttle bus between two different terminal buildings", correct: "false" }
+            ]
+          },
+          { 
+            term: "hurry", 
+            options: [
+              { text: "To sit and wait patiently for an announcement", correct: "false" },
+              { text: "To move or act with speed and urgency", correct: "true" },
+              { text: "To cancel your travel plans suddenly", correct: "false" }
+            ]
+          },
+          { 
+            term: "make your way", 
+            options: [
+              { text: "To travel, walk, or proceed toward a specific place or destination", correct: "true" },
+              { text: "To lose your direction inside a building", correct: "false" },
+              { text: "To buy a ticket at the airport counter", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "connecting flight", ex: "We only have 30 minutes to catch our connecting flight in Atlanta.", trans: "Temos apenas 30 minutos para pegar nosso voo de conexão em Atlanta." },
+          { term: "hurry", ex: "You don't need to hurry; we have plenty of time.", trans: "Você não precisa se apressar; nós temos bastante tempo." },
+          { term: "make your way", ex: "Please make your way to the main entrance after the show.", trans: "Por favor, dirijam-se à entrada principal após o show." }
+        ],
+        gaps: ["connecting flight", "hurry", "hard time", "make your way", "mistake", "understand"],
+        fullScript: `
+          <p><strong>Gate Agent:</strong> Okay, Mr. Pritchett, there is a <span class="gap-target" data-answer="connecting flight"></span> through Dallas that leaves in 5 minutes. You can catch it if you <span class="gap-target" data-answer="hurry"></span>.</p>
+          <p><strong>Mitch:</strong> I don't want to go to Dallas! We're going to Turks and Caicos.</p>
+          <p><strong>Gate Agent:</strong> Dallas is just where you make your connection.</p>
+          <p><strong>Mitch:</strong> I'm sorry, I'm having a really <span class="gap-target" data-answer="hard time"></span> processing information right now.</p>
+          <p><strong>Cam:</strong> We took sleeping pills.</p>
+          <p><strong>Gate Agent:</strong> Just <span class="gap-target" data-answer="make your way"></span> over to Gate 32.</p>
+          <p><strong>Mitch:</strong> Okay. Okay, I can... Wow.</p>
+          <p><strong>Cam:</strong> Wait, why do these say Dallas?</p>
+          <p><strong>Mitch:</strong> I have no idea!</p>
+          <p><strong>Cam:</strong> I'm sorry, there's been a horrible <span class="gap-target" data-answer="mistake"></span>! We don't want to go to Dallas!</p>
+          <p><strong>Gate Agent:</strong> Okay, listen carefully: you're connecting in Dallas to Turks and Caicos. You need to be at Gate 32 in 4 minutes. Do you <span class="gap-target" data-answer="understand"></span>?</p>
+          <p><strong>Cam:</strong> Yes, I'm not an idiot! Okay, we have to be at Gate 4 in 32 minutes.</p>
+          <p><strong>Gate Agent:</strong> No! Gate 32! Write it down.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (1:51 - 2:24)", start: 111, end: 144, vocabType: "multi",
+        vocab: [
+          { 
+            term: "into me", 
+            options: [
+              { text: "Angry or annoyed with someone because of a mistake", correct: "false" },
+              { text: "Attracted to someone or interested in them romantically", correct: "true" },
+              { text: "Confused about someone's directions or instructions", correct: "false" }
+            ]
+          },
+          { 
+            term: "instinct", 
+            options: [
+              { text: "A natural, automatic reaction or feeling without conscious reasoning", correct: "true" },
+              { text: "A written set of instructions from an airport agent", correct: "false" },
+              { text: "A calculation made using a map or a GPS device", correct: "false" }
+            ]
+          },
+          { 
+            term: "stealing", 
+            options: [
+              { text: "Buying an expensive item at a duty-free shop", correct: "false" },
+              { text: "Lending your personal belongings to a friend", correct: "false" },
+              { text: "Taking something that belongs to someone else without permission", correct: "true" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "into me", ex: "She smiled at you again! Are you sure she isn't into you?", trans: "Ela sorriu para você de novo! Tem certeza de que ela não está a fim de você?" },
+          { term: "instinct", ex: "When I saw the dark alley, my first instinct was to turn around and walk away.", trans: "Quando vi o beco escuro, meu primeiro instinto foi virar e ir embora." },
+          { term: "stealing", ex: "Someone was caught stealing clothes from the department store.", trans: "Alguém foi pego roubando roupas da loja de departamentos." }
+        ],
+        gaps: ["into me", "follow you", "instinct", "passport", "stealing", "painted it"],
+        fullScript: `
+          <p><strong>Cam:</strong> Why is she so angry?</p>
+          <p><strong>Mitch:</strong> Isn't it obvious? She's totally <span class="gap-target" data-answer="into me"></span>, she gave me a marker!</p>
+          <p><strong>Cam:</strong> Makes sense. All right.</p>
+          <p><strong>Mitch:</strong> Okay. I'm gonna <span class="gap-target" data-answer="follow you"></span>.</p>
+          <p><strong>Gate Agent:</strong> Wrong!</p>
+          <p><strong>Mitch:</strong> Knew it. <span class="gap-target" data-answer="instinct"></span>, okay. Yes.</p>
+          <p><strong>Cam:</strong> Wait, no, my bag! My bag's gone! It has my <span class="gap-target" data-answer="passport"></span> in it! Wait, that guy... he has my bag! Excuse me, sir! Nice try <span class="gap-target" data-answer="stealing"></span> my bag! I see you've already <span class="gap-target" data-answer="painted it"></span>!</p>
+          <p><strong>Mitch:</strong> Cam, it's... it's back on your shoulder.</p>
+          <p><strong>Cam:</strong> You are good!</p>
+        `
+      },
+      4: {
+        title: "Part 4 (2:25 - 3:30)", start: 145, end: 210, vocabType: "multi",
+        vocab: [
+          { 
+            term: "proprietor", 
+            options: [
+              { text: "A customer who buys items in large quantities", correct: "false" },
+              { text: "The owner of a business or shop", correct: "true" },
+              { text: "A security guard working in a commercial center", correct: "false" }
+            ]
+          },
+          { 
+            term: "haberdashery", 
+            options: [
+              { text: "A bakery that sells fresh bread and pastries", correct: "false" },
+              { text: "A travel agency that books international flights", correct: "false" },
+              { text: "A shop selling men's clothing and accessories like hats and ties", correct: "true" }
+            ]
+          },
+          { 
+            term: "relevant", 
+            options: [
+              { text: "Closely connected or appropriate to what is being done or considered", correct: "true" },
+              { text: "Completely forgotten or no longer used by anyone", correct: "false" },
+              { text: "Very expensive or high in price", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "proprietor", ex: "She is the proprietor of a small bakery in the city center.", trans: "Ela é a proprietária de uma pequena padaria no centro da cidade." },
+          { term: "haberdashery", ex: "He bought a vintage silk tie at a traditional haberdashery in London.", trans: "Ele comprou uma gravata de seda vintage em uma alfaiataria/loja de acessórios masculina tradicional em Londres." },
+          { term: "relevant", ex: "Her previous work experience is very relevant to this new job position.", trans: "A experiência de trabalho anterior dela é muito relevante para esta nova vaga de emprego." }
+        ],
+        gaps: ["surviving", "proprietor", "haberdashery", "relevant", "workplace", "code", "stuff", "obviously"],
+        fullScript: `
+          <p><strong>Mitch:</strong> Cam! Listen to me, listen to me, listen to me. If we're going to have any chance of getting to Dallas and then <span class="gap-target" data-answer="surviving"></span> there, we are going to need hats.</p>
+          <p><strong>Cam:</strong> Hats, hats!</p>
+          <p><strong>Mitch:</strong> Excuse me, sir, sir, sir, are you the <span class="gap-target" data-answer="proprietor"></span> of this <span class="gap-target" data-answer="haberdashery"></span>? Can you point me in the direction of your finest sports caps?</p>
+          <p><strong>Clerk:</strong> What team?</p>
+          <p><strong>Cam:</strong> Gay. I'm not sure why that's <span class="gap-target" data-answer="relevant"></span>.</p>
+          <p><strong>Mitch:</strong> Okay, I'll just...</p>
+          <p><strong>Cam:</strong> Hey, I have a question for you: when you're outside the <span class="gap-target" data-answer="workplace"></span>, do you wear hats, or does that just kind of make you feel like you're always in the office?</p>
+          <p><strong>Mitch:</strong> You know what, I think I am going to get these.</p>
+          <p><strong>Cam:</strong> No, Mitchell, we can't! Oh, look, little girls' hats! We should get one for Linda.</p>
+          <p><strong>Mitch:</strong> Who?</p>
+          <p><strong>Cam:</strong> Hum, our daughter.</p>
+          <p><strong>Mitch:</strong> No, it's Lily.</p>
+          <p><strong>Cam:</strong> Oh, I love that name! Mitchell, why do you have 32 written on your arm?</p>
+          <p><strong>Mitch:</strong> I have no idea. Maybe it's some sort of <span class="gap-target" data-answer="code"></span>, or maybe it's my age. Do I look 32 to you? Tell me the truth. No. You know, don't...</p>
+          <p><strong>Cam:</strong> Well, if we wrote it down, it must be something important.</p>
+          <p><strong>Mitch:</strong> Hey, we should write down other <span class="gap-target" data-answer="stuff"></span> that seems important so we don't forget.</p>
+          <p><strong>Cam:</strong> Yeah, okay. Hum... well... hats.</p>
+          <p><strong>Mitch:</strong> Hats, <span class="gap-target" data-answer="obviously"></span>. Okay, uh, what else? I feel like there was...</p>
+          <p><strong>Cam:</strong> A number...</p>
+          <p><strong>Mitch:</strong> 32!</p>
+          <p><strong>Cam:</strong> 32.</p>
+        `
+      },
+      5: {
+        title: "Part 5 (3:30 - 4:52)", start: 210, end: 292, vocabType: "multi",
+        vocab: [
+          { 
+            term: "suck it up", 
+            options: [
+              { text: "To sleep on the floor of an airport terminal", correct: "false" },
+              { text: "To accept a difficult situation without complaining", correct: "true" },
+              { text: "To buy new clothes quickly during travel", correct: "false" }
+            ]
+          },
+          { 
+            term: "pull your act together", 
+            options: [
+              { text: "To calm down and regain self-control", correct: "true" },
+              { text: "To pack your suitcases in a neat order", correct: "false" },
+              { text: "To ask an airport agent for a refund", correct: "false" }
+            ]
+          },
+          { 
+            term: "lifesaver", 
+            options: [
+              { text: "An official security badge worn by flight crew", correct: "false" },
+              { text: "A discount coupon offered by airline companies", correct: "false" },
+              { text: "A person or thing that saves someone from a difficult situation", correct: "true" }
+            ]
+          },
+          { 
+            term: "knock it off", 
+            options: [
+              { text: "To stop doing something annoying or unwanted immediately", correct: "true" },
+              { text: "To hit an object off a table by mistake", correct: "false" },
+              { text: "To take a quick nap on a flight", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "suck it up", ex: "I know the training is exhausting, but you just have to suck it up and finish the workout.", trans: "Eu sei que o treino é exaustivo, mas você só precisa engolir o choro / aguentar firme e terminar o exercício." },
+          { term: "pull your act together", ex: "Before going into the job interview, take a deep breath and pull your act together.", trans: "Antes de entrar na entrevista de emprego, respire fundo e se recomponha." },
+          { term: "lifesaver", ex: "Having a backup charger in my bag during travel was a real lifesaver.", trans: "Ter um carregador portátil na minha bolsa durante a viagem foi uma verdadeira salvação." },
+          { term: "knock it off", ex: "The kids were arguing over the remote control until their father told them to knock it off.", trans: "As crianças estavam discutindo pelo controle remoto até que o pai delas mandou pararem com isso." }
+        ],
+        gaps: ["hearing", "soft", "knock it off", "suck it up", "pull your act together", "portions", "boarding call", "lifesaver", "made it"],
+        fullScript: `
+          <p><strong>P.A. Announcer:</strong> Attention, please, passengers Mitchell Pritchett and Cameron Tucker...</p>
+          <p><strong>Cam:</strong> You're <span class="gap-target" data-answer="hearing"></span> that, right?</p>
+          <p><strong>P.A. Announcer:</strong> Please report to Gate 32 immediately.</p>
+          <p><strong>Mitch:</strong> Are we in trouble?</p>
+          <p><strong>Cam:</strong> I don't know.</p>
+          <p><strong>Mitch:</strong> He sounds mad.</p>
+          <p><strong>Cam:</strong> He does. Hey...</p>
+          <p><strong>Mitch:</strong> No, no, no, no, Cam, don't... Don't you dare, don't you dare!</p>
+          <p><strong>Cam:</strong> No, I... It just looks so <span class="gap-target" data-answer="soft"></span> and inviting. I... I don't think I can go on. Tell Linda I love her!</p>
+          <p><strong>Mitch:</strong> You're going to tell Linda yourself, okay? I cannot go to Dallas without you, the <span class="gap-target" data-answer="portions"></span> there are so big!</p>
+          <p><strong>Cam:</strong> I'm just so tired... I'm so very tired, I just need to close my eyes.</p>
+          <p><strong>Mitch:</strong> <span class="gap-target" data-answer="knock it off"></span>! You're gonna <span class="gap-target" data-answer="suck it up"></span>. You're gonna <span class="gap-target" data-answer="pull your act together"></span>, and you're coming with me to Gate 3232! That can't be right.</p>
+          <p><strong>Cam:</strong> We're just never going to make it.</p>
+          <p><strong>Mitch:</strong> Oh my God, you're right. We're going to die in this airport!</p>
+          <p><strong>P.A. Announcer:</strong> This is the final <span class="gap-target" data-answer="boarding call"></span> for flight 224 to Dallas.</p>
+          <p><strong>Cam:</strong> Wait, there's still time! Sir, stop, stop! Is there a way that you can take us to Gate 32?</p>
+          <p><strong>Cart Driver:</strong> I guess.</p>
+          <p><strong>Cam:</strong> Okay, wow, thank you so much! You are a <span class="gap-target" data-answer="lifesaver"></span>.</p>
+          <p><strong>Mitch:</strong> Please hurry! Okay.</p>
+          <p><strong>Cart Driver:</strong> We're here.</p>
+          <p><strong>Mitch & Cam:</strong> Thank you! Okay, thank you so much!</p>
+          <p><strong>Mitch:</strong> Mitch and Cam! Hi! Hi! We're Mitch and Cam...</p>
+          <p><strong>Cam:</strong> I'm Mitch, he's Cam.</p>
+          <p><strong>Gate Agent:</strong> Mr. Tucker, Mr. Pritchett, you <span class="gap-target" data-answer="made it"></span> just in time!</p>
+          <p><strong>Mitch:</strong> Oh my gosh.</p>
+          <p><strong>Gate Agent:</strong> Thank you.</p>
+          <p><strong>Mitch:</strong> Lucy! Her name is Lucy!</p>
+          <p><strong>Cam:</strong> We're coming home, Lucy!</p>
+        `
+      },
+      6: {
+        title: "Part 6 (4:52 - 5:34)", start: 292, end: 334, vocabType: "multi",
+        vocab: [
+          { 
+            term: "slept through it", 
+            options: [
+              { text: "Woke up repeatedly during a flight due to loud noises", correct: "false" },
+              { text: "Slept continuously during an entire event or period without waking up", correct: "true" },
+              { text: "Decided not to sleep at all during a long night trip", correct: "false" }
+            ]
+          },
+          { 
+            term: "board", 
+            options: [
+              { text: "To leave a plane immediately after it lands at the destination", correct: "false" },
+              { text: "To register your luggage at the check-in desk", correct: "false" },
+              { text: "To get on or enter a ship, aircraft, train, or other vehicle", correct: "true" }
+            ]
+          },
+          { 
+            term: "refused", 
+            options: [
+              { text: "Indicated or stated that one is unwilling to do, accept, or allow something", correct: "true" },
+              { text: "Agreed happily to follow all official instructions", correct: "false" },
+              { text: "Forgot to perform a task because of feeling tired", correct: "false" }
+            ]
+          },
+          { 
+            term: "heavy", 
+            options: [
+              { text: "Of great weight or difficult to lift and carry", correct: "true" },
+              { text: "Very light and easy to hold in one hand", correct: "false" },
+              { text: "Brightly colored or easy to see", correct: "false" }
+            ]
+          },
+          { 
+            term: "so it appears", 
+            options: [
+              { text: "It is completely impossible to happen", correct: "false" },
+              { text: "It seems to be true based on the current evidence or situation", correct: "true" },
+              { text: "It was planned a very long time ago", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "slept through it", ex: "There was a loud thunderstorm last night, but I slept through it.", trans: "Houve uma tempestade forte ontem à noite, mas eu dormi direto / nem vi." },
+          { term: "board", ex: "We waited at gate 15 until it was time to board.", trans: "Esperamos no portão 15 até a hora de embarcar." },
+          { term: "refused", ex: "The store owner refused to give a refund without a receipt.", trans: "O dono da loja se recusou a dar reembolso sem o comprovante." },
+          { term: "heavy", ex: "Can you help me carry this heavy box to the car?", trans: "Você pode me ajudar a carregar esta caixa pesada até o carro?" },
+          { term: "so it appears", ex: "Is the event canceled? Yes, so it appears.", trans: "O evento foi cancelado? Sim, ao que parece." }
+        ],
+        gaps: ["left", "slept through it", "supposed", "so it appears", "Whose", "refused", "board", "heavy"],
+        fullScript: `
+          <p><strong>Flight Attendant:</strong> Sir? Sir?</p>
+          <p><strong>Mitch:</strong> What? What happened?</p>
+          <p><strong>Cam:</strong> Are we in Dallas yet?</p>
+          <p><strong>Flight Attendant:</strong> Oh, we've <span class="gap-target" data-answer="left"></span> Dallas, we're in Turks and Caicos. We need to clean the plane.</p>
+          <p><strong>Cam:</strong> What?</p>
+          <p><strong>Mitch:</strong> Do you remember being in Dallas?</p>
+          <p><strong>Cam:</strong> No, we must have <span class="gap-target" data-answer="slept through it"></span>.</p>
+          <p><strong>Mitch:</strong> You're wearing a cowboy hat.</p>
+          <p><strong>Cam:</strong> So are you. What is this?</p>
+          <p><strong>Mitch:</strong> I don't think we're <span class="gap-target" data-answer="supposed"></span> to have that... <span class="gap-target" data-answer="so it appears"></span> I've gotten a piercing.</p>
+          <p><strong>Cam:</strong> What?</p>
+          <p><strong>Mitch:</strong> Mm-hmm.</p>
+          <p><strong>Cam:</strong> Murray! Why does your arm say "Murray"? <span class="gap-target" data-answer="Whose"></span> dog is this?</p>
+          <p><strong>Flight Attendant:</strong> What do you mean "whose dog"? You <span class="gap-target" data-answer="refused"></span> to <span class="gap-target" data-answer="board"></span> without him!</p>
+          <p><strong>Cam:</strong> I did? Okay, let's go!</p>
+          <p><strong>Mitch:</strong> I don't remember my bag being this <span class="gap-target" data-answer="heavy"></span>... Uh-oh.</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      20: [
+        { q: "1. Have you ever taken sleeping pills or medication on a flight or long trip?", start: "Yes/No, I usually ______ when I take long flights.", ex: "No, I never take sleeping pills because I am afraid of missing my flight!" },
+        { q: "2. Have you ever almost missed a connecting flight at an airport?", start: "Yes/No, I once almost missed my flight because ______.", ex: "Yes, I almost missed a connecting flight in Miami because the first plane was delayed!" },
+        { q: "3. What is the most stressful part of being at a big airport for you?", start: "For me, the most stressful part is ______.", ex: "For me, the most stressful part is finding the correct gate and going through security!" }
+      ],
+      30: [
+        { q: "1. Have you ever taken sleeping pills or medication on a flight or long trip?", start: "Yes/No, I usually ______ when I take long flights.", ex: "No, I never take sleeping pills because I am afraid of missing my flight!" },
+        { q: "2. Have you ever almost missed a connecting flight at an airport?", start: "Yes/No, I once almost missed my flight because ______.", ex: "Yes, I almost missed a connecting flight in Miami because the first plane was delayed!" },
+        { q: "3. What is the most stressful part of being at a big airport for you?", start: "For me, the most stressful part is ______.", ex: "For me, the most stressful part is finding the correct gate and going through security!" },
+        { q: "4. If you woke up from a flight wearing a cowboy hat and a mystery dog like Mitch & Cam, how would you react?", start: "If I woke up with a mystery dog, I would ______.", ex: "If I woke up with a mystery dog, I would be super confused and check my phone photos immediately!" }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 2 : chosenTime === 20 ? 4 : 6;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      }
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+      }
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=64&autoplay=0&enablejsapi=1";
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. Why are Mitch and Cam acting confused?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">They took sleeping pills / flying medicine too early</option>
+              <option value="b">They went to the wrong airport</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. Why did their flight return to the gate?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">Bad weather conditions</option>
+              <option value="b">Mechanical issues on the plane</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+          
+          if (pData.vocabType === 'multi') {
+            vocabHTML = pData.vocab.map(v => `
+              <div class="question-block">
+                <strong>${v.term}:</strong>
+                <div class="ab-card-container">
+                  ${v.options.map(opt => `
+                    <button class="ab-btn" data-correct="${opt.correct}" onclick="clickAB(this)">${opt.text}</button>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('');
+          } else if (pData.vocabType === 'ab') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([
+                { text: v.correct, correct: "true" },
+                { text: v.wrong, correct: "false" }
+              ]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'select') {
+            const dummyDefs = ["To cancel a reservation immediately", "To pay double price at airport"];
+            vocabHTML = pData.vocab.map(v => {
+              const shuffledOptions = shuffleArray([v.def, ...dummyDefs]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.def}">
+                    <option value="">-- Choose meaning --</option>
+                    ${shuffledOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Match each key term with its definition:</p>
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to the examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/QFMHbHLNq2k?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = chosenTime === 10 ? 111 : chosenTime === 20 ? 210 : 334;
+        player.src = `https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the episode.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Their plane returns to the gate due to mechanical issues right after taking sleeping pills." },
+        { order: 2, text: "The gate agent warns them they have 4 minutes to catch a connecting flight to Dallas." },
+        { order: 3, text: "Cam accuses a traveler of stealing his bag, only to realize it is on his own shoulder." },
+        { order: 4, text: "They get distracted in an airport hat shop and forget their daughter's name." },
+        { order: 5, text: "Mitch convinces Cam to 'suck it up' and they hitch a ride on an airport cart to Gate 32." },
+        { order: 6, text: "They wake up in Turks & Caicos with cowboy hats, a new piercing, and an unknown dog!" }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

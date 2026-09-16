@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POP English - Portal de Atividades</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f8fafc; color: #1e293b; padding: 20px; }
+    header { text-align: center; padding: 40px 20px; background: #0f172a; color: white; border-radius: 12px; margin-bottom: 30px; }
+    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    header p { color: #94a3b8; }
+    .grid-levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+    .card-level { background: white; border-radius: 12px; padding: 25px; border-top: 5px solid #ccc; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
+    .basic { border-top-color: #22c55e; }
+    .intermediate { border-top-color: #eab308; }
+    .advanced { border-top-color: #ef4444; }
+    .card-level h2 { margin-bottom: 10px; color: #0f172a; }
+    .card-level p { color: #64748b; font-size: 0.95rem; margin-bottom: 20px; line-height: 1.4; }
+    .btn-select { display: block; text-align: center; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: bold; color: white; transition: opacity 0.2s; }
+    .basic .btn-select { background-color: #22c55e; }
+    .intermediate .btn-select { background-color: #ca8a04; }
+    .advanced .btn-select { background-color: #ef4444; }
+    .btn-select:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>POP English</h1>
+    <p>Select a level to access the activities</p>
+  </header>
+
+  <main class="grid-levels">
+    <!-- Level Basic -->
+    <div class="card-level basic">
+      <div>
+        <h2>Basic</h2>
+        <p>Introductory activities and core vocabulary skills.</p>
+      </div>
+      <a href="./levels/basic.html" class="btn-select">Access Basic Level</a>
+    </div>
+
+    <!-- Level Intermediate -->
+    <div class="card-level intermediate">
+      <div>
+        <h2>Intermediate</h2>
+        <p>Practice and development for everyday conversation.</p>
+      </div>
+      <a href="./levels/intermediate.html" class="btn-select">Access Intermediate Level</a>
+    </div>
+
+    <!-- Level Advanced -->
+    <div class="card-level advanced">
+      <div>
+        <h2>Advanced</h2>
+        <p>Complex challenges, nuances, and advanced expressions.</p>
+      </div>
+      <a href="./levels/advanced.html" class="btn-select">Access Advanced Level</a>
+    </div>
+  </main>
+
+</body>
+</html>
