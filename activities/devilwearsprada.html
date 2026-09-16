@@ -295,7 +295,7 @@
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
-        <iframe id="ytPlayer" src="https://www.youtube.com/embed/vL-KQij0I8U?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/-rDTRuCOs9g?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
 
@@ -583,7 +583,7 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        player.src = "https://www.youtube.com/embed/vL-KQij0I8U?start=0&end=64&autoplay=0&enablejsapi=1";
+        player.src = "https://www.youtube.com/embed/-rDTRuCOs9g?start=0&end=64&autoplay=0&enablejsapi=1";
         
         container.innerHTML = `
           <h3>Gist Questions (Warm-up)</h3>
@@ -654,7 +654,7 @@
           `;
         } else if (activeSubTab === 'listening') {
           videoBoxWrapper.style.display = 'block';
-          player.src = `https://www.youtube.com/embed/vL-KQij0I8U?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+          player.src = `https://www.youtube.com/embed/-rDTRuCOs9g?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
 
           container.innerHTML = `
             ${subTabsHTML}
@@ -688,7 +688,7 @@
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
         const endCut = chosenTime === 10 ? 64 : 158;
-        player.src = `https://www.youtube.com/embed/vL-KQij0I8U?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+        player.src = `https://www.youtube.com/embed/-rDTRuCOs9g?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
         container.innerHTML = `
           <h3>Watch Whole Scene</h3>
