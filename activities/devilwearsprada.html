@@ -12,8 +12,10 @@
     :root {
       --bg-dark: #0f172a;
       --card-dark: #1e293b;
-      --accent-teal: #0d9488;
-      --accent-hover: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --accent-gradient: linear-gradient(90deg, #9333ea, #a855f7);
+      --accent-gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
       --panel-light: #f8fafc;
       --text-dark: #0f172a;
       --text-light: #f8fafc;
@@ -24,6 +26,18 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #a855f7;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9em;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: #ec4899; }
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -72,8 +86,15 @@
       display: block;
       pointer-events: none;
     }
-    .hero-title { font-size: 1.25em; margin-bottom: 4px; color: #f1f5f9; }
-    .hero-subtitle { font-size: 0.85em; color: var(--accent-hover); font-weight: 600; margin-bottom: 6px; }
+    .hero-title { 
+      font-size: 1.25em; 
+      margin-bottom: 4px; 
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.85em; color: #ec4899; font-weight: 600; margin-bottom: 6px; }
     .hero-desc { font-size: 0.85em; color: #94a3b8; margin-bottom: 14px; }
 
     .time-title { font-size: 0.95em; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
@@ -87,18 +108,18 @@
     }
 
     .time-btn:hover, .time-btn.selected {
-      background: var(--accent-teal); border-color: #5eead4; transform: scale(1.01);
+      background: var(--accent-gradient); border-color: #c084fc; transform: scale(1.01);
     }
 
     .start-btn {
-      background: var(--accent-teal); color: white; border: none;
+      background: var(--accent-gradient); color: white; border: none;
       padding: 12px 32px; border-radius: 30px; font-size: 1em;
-      font-weight: bold; cursor: pointer; transition: background 0.2s;
-      box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
+      font-weight: bold; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
       position: relative; z-index: 4; width: 100%; max-width: 280px;
     }
 
-    .start-btn:hover { background: var(--accent-hover); }
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
     /* WORKSPACE RESPONSIVO */
     .workspace { 
@@ -139,7 +160,7 @@
     }
 
     .cool-step-pill.active { background: var(--bg-dark); color: white; border-color: var(--bg-dark); }
-    .cool-step-pill.active .step-num { background: var(--accent-teal); color: white; }
+    .cool-step-pill.active .step-num { background: var(--accent-purple); color: white; }
 
     .part-subtabs { display: flex; gap: 4px; background: #cbd5e0; padding: 4px; border-radius: 10px; margin-bottom: 12px; }
     .part-subtab-btn {
@@ -147,9 +168,17 @@
       border-radius: 8px; font-weight: 700; font-size: 0.8em; color: #475569;
       cursor: pointer; text-align: center; transition: all 0.2s;
     }
-    .part-subtab-btn.active { background: white; color: var(--accent-teal); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+    .part-subtab-btn.active { background: white; color: #9333ea; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
 
     .content-area { flex: 1; padding: 14px; overflow-y: auto; font-size: 0.95em; position: relative; }
+
+    .content-area h3 {
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
 
     .question-block { margin-bottom: 14px; }
     .question-block strong { display: block; font-size: 0.95em; margin-bottom: 6px; color: #1e293b; }
@@ -166,17 +195,17 @@
       background: white; border: 2px solid #cbd5e0; padding: 8px 12px; border-radius: 8px;
       text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.88em; color: #334155;
     }
-    .ab-btn.selected-option { border-color: var(--accent-teal); background: #e0f2fe; color: #0369a1; font-weight: 700; }
+    .ab-btn.selected-option { border-color: #a855f7; background: #f3e8ff; color: #6b21a8; font-weight: 700; }
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
     .vocab-card-example {
-      background: white; border: 1px solid #e2e8f0; border-left: 4px solid var(--accent-teal);
+      background: white; border: 1px solid #e2e8f0; border-left: 4px solid #a855f7;
       padding: 10px 12px; border-radius: var(--radius-soft); margin-bottom: 10px;
     }
-    .vocab-card-example h4 { font-size: 1em; color: var(--accent-teal); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .vocab-card-example h4 { font-size: 1em; color: #7e22ce; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
     .translation-text { font-size: 0.85em; color: #64748b; font-style: italic; margin-top: 4px; }
-    .audio-btn { background: #e0f2fe; border: none; color: #0284c7; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
 
     .word-bank { 
       position: sticky; top: -14px; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px; 
@@ -184,12 +213,12 @@
       border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 44px; 
     }
     .chip { background: white; padding: 5px 10px; border-radius: 14px; font-weight: 700; font-size: 0.85em; cursor: pointer; border: 1px solid #cbd5e0; }
-    .chip.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+    .chip.selected { background: #9333ea; color: white; border-color: #9333ea; }
 
     .gap-target {
-      display: inline-block; min-width: 75px; height: 28px; border-bottom: 2px solid var(--accent-teal);
-      background: #e0f2fe; margin: 0 2px; vertical-align: middle; text-align: center;
-      font-weight: bold; color: #0369a1; border-radius: 4px; line-height: 28px; cursor: pointer; font-size: 0.88em; padding: 0 6px;
+      display: inline-block; min-width: 75px; height: 28px; border-bottom: 2px solid #a855f7;
+      background: #f3e8ff; margin: 0 2px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 4px; line-height: 28px; cursor: pointer; font-size: 0.88em; padding: 0 6px;
     }
     .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
@@ -218,9 +247,10 @@
 
     .panel-footer { padding: 10px 14px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 8px; }
     .btn-group { display: flex; gap: 8px; }
-    .btn-action { background: var(--accent-teal); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.88em; }
+    .btn-action { background: var(--accent-gradient); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.88em; transition: transform 0.1s, opacity 0.2s; }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
     .btn-secondary { background: #64748b; }
-    .btn-check { background: #0284c7; }
+    .btn-check { background: linear-gradient(90deg, #9333ea, #a855f7); }
 
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
     .modal-card { background: white; color: var(--text-dark); padding: 24px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
@@ -252,7 +282,7 @@
 
   <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
   <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
-    <a href="../index.html" style="color: #38bdf8; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 0.9em; display: inline-flex; align-items: center; gap: 6px;">
+    <a href="../index.html" class="nav-back">
       ← Back to Homepage
     </a>
   </div>
@@ -693,7 +723,7 @@
         container.innerHTML = `
           <h3>Watch Whole Scene</h3>
           <p style="color:#64748b; margin-bottom:14px;">Watch the scene again without interruptions:</p>
-          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+          <div style="background:#f3e8ff; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#6b21a8;">
             🎉 <strong>Awesome progress!</strong> You've mastered this iconic scene.
           </div>
         `;
@@ -704,8 +734,8 @@
             <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
             <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
             <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
-            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
-            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+            <button class="toggle-btn" style="background:#f3e8ff; color:#7e22ce; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#f3e8ff; border-left-color:#a855f7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
           </div>
         `).join('');
 
