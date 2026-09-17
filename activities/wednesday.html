@@ -962,7 +962,10 @@
         globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
       }
 
-      globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      if (chosenTime === 20) {
+        globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      }
+
       globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
       globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
     }
