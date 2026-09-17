@@ -46,7 +46,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      font-size: 15px;
+      font-size: 17px;
       overflow-x: hidden;
     }
 
@@ -87,7 +87,7 @@
       pointer-events: none;
     }
     .hero-title { 
-      font-size: 1.25em; 
+      font-size: 1.55em; 
       margin-bottom: 4px; 
       background: linear-gradient(90deg, #a855f7, #ec4899);
       -webkit-background-clip: text;
@@ -102,7 +102,7 @@
     
     .time-btn {
       background: #334155; color: white; border: 2px solid transparent;
-      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.85em; font-weight: 600;
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.98em; font-weight: 600;
       cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
       position: relative; z-index: 4; text-align: left;
     }
@@ -172,19 +172,11 @@
 
     .content-area { flex: 1; padding: 14px; overflow-y: auto; font-size: 0.95em; position: relative; }
 
-    .content-area h3 {
-      background: linear-gradient(90deg, #a855f7, #ec4899);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
     .question-block { margin-bottom: 14px; }
     .question-block strong { display: block; font-size: 0.95em; margin-bottom: 6px; color: #1e293b; }
 
     .custom-select {
-      width: 100%; max-width: 100%; padding: 10px 12px; font-size: 0.9em; font-weight: 600;
+      width: 100%; max-width: 100%; padding: 10px 12px; font-size: 0.98em; font-weight: 600;
       color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
     }
     .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
@@ -193,7 +185,7 @@
     .ab-card-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
     .ab-btn {
       background: white; border: 2px solid #cbd5e0; padding: 8px 12px; border-radius: 8px;
-      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.88em; color: #334155;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.98em; color: #334155;
     }
     .ab-btn.selected-option { border-color: #a855f7; background: #f3e8ff; color: #6b21a8; font-weight: 700; }
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
@@ -218,7 +210,7 @@
     .gap-target {
       display: inline-block; min-width: 75px; height: 28px; border-bottom: 2px solid #a855f7;
       background: #f3e8ff; margin: 0 2px; vertical-align: middle; text-align: center;
-      font-weight: bold; color: #6b21a8; border-radius: 4px; line-height: 28px; cursor: pointer; font-size: 0.88em; padding: 0 6px;
+      font-weight: bold; color: #6b21a8; border-radius: 4px; line-height: 2.2; cursor: pointer; font-size: 0.95em; padding: 0 6px;
     }
     .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
@@ -257,7 +249,7 @@
 
     /* REGRAS CSS EXCLUSIVAS PARA CELULAR (TELA < 768px) */
     @media (max-width: 768px) {
-      body { height: auto; overflow-y: auto; }
+      body { font-size: 16px; height: auto; overflow-y: auto; }
       header { padding: 6px 12px; }
       .brand-text h1 { font-size: 0.95em; }
       .brand-text span { font-size: 0.7em; }
@@ -276,7 +268,16 @@
       .word-bank { top: 0; }
       .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
     }
-  </style>
+  
+    .content-area h3 {
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      margin-bottom: 8px;
+      font-size: 1.35em;
+    }
+</style>
 </head>
 <body>
 
@@ -692,7 +693,7 @@
             <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
             
             <div class="word-bank" id="partWordBank"></div>
-            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+            <div style="line-height:2.2; font-size:1.05em;" id="partScriptContainer">${pData.fullScript}</div>
           `;
 
           initPartWordBank(pData.gaps);
