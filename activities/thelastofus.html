@@ -405,14 +405,6 @@
         title: "Part 1 (0:00 - 0:43)", start: 0, end: 43, vocabType: "select",
         vocab: [
           { 
-            term: "worry", 
-            correct: "A feeling of anxiety, apprehension, or unease about potential problems", 
-            similar: [
-              "A state of deep sadness or grief caused by past events", 
-              "A temporary feeling of anger toward an unexpected situation"
-            ] 
-          },
-          { 
             term: "coughing", 
             correct: "Expelling air from the lungs abruptly with a sharp, clear sound", 
             similar: [
@@ -455,11 +447,6 @@
         ],
         examples: [
           { 
-            term: "worry", 
-            ex: "Don't worry, everything will be fine.", 
-            trans: "Não se preocupe, vai dar tudo certo." 
-          },
-          { 
             term: "coughing", 
             ex: "He couldn't stop coughing during the meeting.", 
             trans: "Ele não conseguia parar de tossir durante a reunião." 
@@ -485,9 +472,8 @@
             trans: "A exploração espacial é um enorme passo para a humanidade." 
           }
         ],
-        gaps: ["worry", "coughing", "within a matter of", "prospect", "keeps you up at night", "mankind"],
+        gaps: ["coughing", "within a matter of", "prospect", "keeps you up at night", "mankind"],
         fullScript: `
-          <p><strong>Host:</strong> And that's your biggest <span class="gap-target" data-answer="worry"></span>?</p>
           <p><strong>Schoenheiss:</strong> Yes, any kind of virus. But, most probably, something similar to influenza.</p>
           <p><strong>Host:</strong> Because of air travel.</p>
           <p><strong>Schoenheiss:</strong> Through the air. <span class="gap-target" data-answer="coughing"></span>...</p>
@@ -502,7 +488,7 @@
         `
       },
       2: {
-        title: "Part 2 (0:43 - 1:48)", start: 43, end: 108, vocabType: "mixed",
+        title: "Part 2 (0:43 - 1:49)", start: 43, end: 109, vocabType: "mixed",
         pics: [
           { term: "ant", img: "https://i.imgur.com/Arf3Jur.png" },
           { term: "brain", img: "https://i.imgur.com/kowMXP7.jpeg" }
@@ -628,6 +614,7 @@
           <p><strong>Host:</strong> Bacteria.</p>
           <p><strong>Dr. Neuman:</strong> No.</p>
           <p><strong>Host:</strong> You like saying no.</p>
+          <p><strong>Dr. Neuman:</strong> Yes.</p>
           <p><em>(audience laughs)</em></p>
           <p><strong>Host:</strong> Not bacteria. Not viruses. So...?</p>
           <p><strong>Dr. Neuman:</strong> Fungus.</p>
@@ -641,7 +628,7 @@
         `
       },
       3: {
-        title: "Part 3 (1:48 - end)", start: 108, end: 200, vocabType: "select",
+        title: "Part 3 (1:49 - end)", start: 109, end: 210, vocabType: "select",
         vocab: [
           { 
             term: "devour", 
@@ -1123,7 +1110,7 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        const endCut = chosenTime === 10 ? 43 : 200;
+        const endCut = chosenTime === 10 ? 43 : 210;
         player.src = `https://www.youtube.com/embed/lFULfl7-9Fc?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
         container.innerHTML = `
