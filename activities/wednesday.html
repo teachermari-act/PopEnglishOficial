@@ -401,7 +401,7 @@
 
     const partsData = {
       1: {
-        title: "Part 1 (0:00 - 0:55)", start: 0, end: 55, vocabType: "select",
+        title: "Part 1 (0:00 - 0:50)", start: 0, end: 50, vocabType: "select",
         vocab: [
           { 
             term: "equally", 
@@ -562,7 +562,7 @@
         `
       },
       2: {
-        title: "Part 2 (0:55 - 1:58)", start: 55, end: 118, vocabType: "mixed",
+        title: "Part 2 (0:50 - 1:58)", start: 50, end: 118, vocabType: "mixed",
         pics: [
           { term: "rope", img: "https://i.imgur.com/zEllbpY.jpeg" },
           { term: "shovel", img: "https://i.imgur.com/FoyraSZ.png" },
@@ -998,7 +998,7 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        player.src = "https://www.youtube.com/embed/KW4LlmuYt8E?start=0&end=55&autoplay=0&enablejsapi=1";
+        player.src = "https://www.youtube.com/embed/KW4LlmuYt8E?start=0&end=50&autoplay=0&enablejsapi=1";
         
         const q1Opts = shuffleArray([
           { val: "a", text: "She is devoting an hour to writing her novel" },
@@ -1170,7 +1170,7 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        const endCut = chosenTime === 10 ? 55 : 173;
+        const endCut = chosenTime === 10 ? 50 : 173;
         player.src = `https://www.youtube.com/embed/KW4LlmuYt8E?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
         container.innerHTML = `
