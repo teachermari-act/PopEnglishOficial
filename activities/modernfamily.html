@@ -60,7 +60,6 @@
     }
     .brand-text span { font-size: 0.75em; color: #94a3b8; }
 
-    /* Botão de voltar para a Homepage */
     .nav-back {
       display: inline-flex;
       align-items: center;
@@ -73,7 +72,6 @@
     }
     .nav-back:hover { color: var(--accent-pink); }
 
-    /* TELA INICIAL */
     .welcome-container { max-width: 650px; margin: auto; padding: 20px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
     .hero-card {
       background: var(--card-dark);
@@ -134,7 +132,6 @@
 
     .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
-    /* WORKSPACE RESPONSIVO */
     .workspace { 
       display: none; 
       flex: 1; 
@@ -184,7 +181,6 @@
     }
     .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
 
-    /* ÁREA DE CONTEÚDO (PREPARE, EXAMPLES E LISTENING COM FONTES AUMENTADAS) */
     .content-area { 
       flex: 1; 
       padding: 18px 20px; 
@@ -289,7 +285,6 @@
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
     .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
 
-    /* REGRAS CSS EXCLUSIVAS PARA CELULAR (TELA < 768px) */
     @media (max-width: 768px) {
       body { height: auto; overflow-y: auto; }
       header { padding: 8px 12px; }
@@ -397,25 +392,25 @@
           { 
             term: "flying medicine", 
             options: [
-              { text: "A special medical insurance required for air travel", correct: "false" },
-              { text: "Medication taken to relax or sleep during a flight", correct: "true" },
-              { text: "A first-aid kit stored inside the airplane cockpit", correct: "false" }
+              { text: "Pills to help you sleep or relax on a plane", correct: "true" },
+              { text: "A ticket you buy at the airport", correct: "false" },
+              { text: "Food served during a flight", correct: "false" }
             ]
           },
           { 
             term: "glimpse", 
             options: [
-              { text: "A very quick, brief, or partial look at something or someone", correct: "true" },
-              { text: "A long, continuous stare at a person or object", correct: "false" },
-              { text: "A loud sound heard during takeoff or landing", correct: "false" }
+              { text: "A very short look at something or someone", correct: "true" },
+              { text: "A long stare at a picture", correct: "false" },
+              { text: "A loud sound inside a plane", correct: "false" }
             ]
           },
           { 
             term: "scramble", 
             options: [
-              { text: "To sit quietly and wait for an official announcement", correct: "false" },
-              { text: "To cancel a flight reservation permanently online", correct: "false" },
-              { text: "To move or act quickly and hurriedly to achieve something", correct: "true" }
+              { text: "To move or act very fast because you are in a hurry", correct: "true" },
+              { text: "To sit and wait quietly", correct: "false" },
+              { text: "To buy clothes at a store", correct: "false" }
             ]
           }
         ],
@@ -450,25 +445,25 @@
           { 
             term: "connecting flight", 
             options: [
-              { text: "A flight requiring you to change planes at an intermediate airport", correct: "true" },
-              { text: "A flight that goes directly to your destination without any stops", correct: "false" },
-              { text: "A free shuttle bus between two different terminal buildings", correct: "false" }
+              { text: "A second flight you take to reach your final destination", correct: "true" },
+              { text: "A bus trip to another city", correct: "false" },
+              { text: "A direct flight with no stops", correct: "false" }
             ]
           },
           { 
             term: "hurry", 
             options: [
-              { text: "To sit and wait patiently for an announcement", correct: "false" },
-              { text: "To move or act with speed and urgency", correct: "true" },
-              { text: "To cancel your travel plans suddenly", correct: "false" }
+              { text: "To move, walk, or do something very fast", correct: "true" },
+              { text: "To sit and rest for a long time", correct: "false" },
+              { text: "To sleep on a plane", correct: "false" }
             ]
           },
           { 
             term: "make your way", 
             options: [
-              { text: "To travel, walk, or proceed toward a specific place or destination", correct: "true" },
-              { text: "To lose your direction inside a building", correct: "false" },
-              { text: "To buy a ticket at the airport counter", correct: "false" }
+              { text: "To walk or go to a specific place", correct: "true" },
+              { text: "To lose your luggage at the airport", correct: "false" },
+              { text: "To ask for help in English", correct: "false" }
             ]
           }
         ],
@@ -500,25 +495,25 @@
           { 
             term: "into me", 
             options: [
-              { text: "Angry or annoyed with someone because of a mistake", correct: "false" },
-              { text: "Attracted to someone or interested in them romantically", correct: "true" },
-              { text: "Confused about someone's directions or instructions", correct: "false" }
+              { text: "To like someone in a romantic way", correct: "true" },
+              { text: "To be angry at someone", correct: "false" },
+              { text: "To be confused by someone", correct: "false" }
             ]
           },
           { 
             term: "instinct", 
             options: [
-              { text: "A natural, automatic reaction or feeling without conscious reasoning", correct: "true" },
-              { text: "A written set of instructions from an airport agent", correct: "false" },
-              { text: "A calculation made using a map or a GPS device", correct: "false" }
+              { text: "A natural feeling that tells you what to do without thinking", correct: "true" },
+              { text: "A written rule on a ticket", correct: "false" },
+              { text: "A map of the airport", correct: "false" }
             ]
           },
           { 
             term: "stealing", 
             options: [
-              { text: "Buying an expensive item at a duty-free shop", correct: "false" },
-              { text: "Lending your personal belongings to a friend", correct: "false" },
-              { text: "Taking something that belongs to someone else without permission", correct: "true" }
+              { text: "Taking something that is not yours without asking", correct: "true" },
+              { text: "Buying a gift at a shop", correct: "false" },
+              { text: "Lending money to a friend", correct: "false" }
             ]
           }
         ],
@@ -546,25 +541,25 @@
           { 
             term: "proprietor", 
             options: [
-              { text: "A customer who buys items in large quantities", correct: "false" },
-              { text: "The owner of a business or shop", correct: "true" },
-              { text: "A security guard working in a commercial center", correct: "false" }
+              { text: "The owner of a shop or business", correct: "true" },
+              { text: "A person buying products", correct: "false" },
+              { text: "A pilot flying a plane", correct: "false" }
             ]
           },
           { 
             term: "haberdashery", 
             options: [
-              { text: "A bakery that sells fresh bread and pastries", correct: "false" },
-              { text: "A travel agency that books international flights", correct: "false" },
-              { text: "A shop selling men's clothing and accessories like hats and ties", correct: "true" }
+              { text: "A shop that sells clothes and accessories for men", correct: "true" },
+              { text: "A place where you buy fresh bread", correct: "false" },
+              { text: "A small coffee shop", correct: "false" }
             ]
           },
           { 
             term: "relevant", 
             options: [
-              { text: "Closely connected or appropriate to what is being done or considered", correct: "true" },
-              { text: "Completely forgotten or no longer used by anyone", correct: "false" },
-              { text: "Very expensive or high in price", correct: "false" }
+              { text: "Important or connected to what you are doing", correct: "true" },
+              { text: "Very expensive to buy", correct: "false" },
+              { text: "Old and broken", correct: "false" }
             ]
           }
         ],
@@ -604,33 +599,33 @@
           { 
             term: "suck it up", 
             options: [
-              { text: "To sleep on the floor of an airport terminal", correct: "false" },
-              { text: "To accept a difficult situation without complaining", correct: "true" },
-              { text: "To buy new clothes quickly during travel", correct: "false" }
+              { text: "To accept a hard situation and not complain", correct: "true" },
+              { text: "To sleep on the floor", correct: "false" },
+              { text: "To buy new shoes", correct: "false" }
             ]
           },
           { 
             term: "pull your act together", 
             options: [
-              { text: "To calm down and regain self-control", correct: "true" },
-              { text: "To pack your suitcases in a neat order", correct: "false" },
-              { text: "To ask an airport agent for a refund", correct: "false" }
+              { text: "To calm down and control your emotions", correct: "true" },
+              { text: "To pack your bags quickly", correct: "false" },
+              { text: "To call a taxi", correct: "false" }
             ]
           },
           { 
             term: "lifesaver", 
             options: [
-              { text: "An official security badge worn by flight crew", correct: "false" },
-              { text: "A discount coupon offered by airline companies", correct: "false" },
-              { text: "A person or thing that saves someone from a difficult situation", correct: "true" }
+              { text: "A person or thing that helps you in a difficult moment", correct: "true" },
+              { text: "A ticket discount", correct: "false" },
+              { text: "A security guard", correct: "false" }
             ]
           },
           { 
             term: "knock it off", 
             options: [
-              { text: "To stop doing something annoying or unwanted immediately", correct: "true" },
-              { text: "To hit an object off a table by mistake", correct: "false" },
-              { text: "To take a quick nap on a flight", correct: "false" }
+              { text: "An easy way to tell someone to stop doing something", correct: "true" },
+              { text: "To drop something on the floor", correct: "false" },
+              { text: "To take a fast nap", correct: "false" }
             ]
           }
         ],
@@ -678,41 +673,41 @@
           { 
             term: "slept through it", 
             options: [
-              { text: "Woke up repeatedly during a flight due to loud noises", correct: "false" },
-              { text: "Slept continuously during an entire event or period without waking up", correct: "true" },
-              { text: "Decided not to sleep at all during a long night trip", correct: "false" }
+              { text: "To sleep continuously and not wake up during an event", correct: "true" },
+              { text: "To wake up many times at night", correct: "false" },
+              { text: "To stay awake all night", correct: "false" }
             ]
           },
           { 
             term: "board", 
             options: [
-              { text: "To leave a plane immediately after it lands at the destination", correct: "false" },
-              { text: "To register your luggage at the check-in desk", correct: "false" },
-              { text: "To get on or enter a ship, aircraft, train, or other vehicle", correct: "true" }
+              { text: "To get on a plane, train, or bus", correct: "true" },
+              { text: "To leave the airport terminal", correct: "false" },
+              { text: "To pay for a meal", correct: "false" }
             ]
           },
           { 
             term: "refused", 
             options: [
-              { text: "Indicated or stated that one is unwilling to do, accept, or allow something", correct: "true" },
-              { text: "Agreed happily to follow all official instructions", correct: "false" },
-              { text: "Forgot to perform a task because of feeling tired", correct: "false" }
+              { text: "To say no to something or say you will not do it", correct: "true" },
+              { text: "To agree happily to do something", correct: "false" },
+              { text: "To forget an instruction", correct: "false" }
             ]
           },
           { 
             term: "heavy", 
             options: [
-              { text: "Of great weight or difficult to lift and carry", correct: "true" },
-              { text: "Very light and easy to hold in one hand", correct: "false" },
-              { text: "Brightly colored or easy to see", correct: "false" }
+              { text: "Having a lot of weight and difficult to lift", correct: "true" },
+              { text: "Very light and easy to carry", correct: "false" },
+              { text: "Brightly colored", correct: "false" }
             ]
           },
           { 
             term: "so it appears", 
             options: [
-              { text: "It is completely impossible to happen", correct: "false" },
-              { text: "It seems to be true based on the current evidence or situation", correct: "true" },
-              { text: "It was planned a very long time ago", correct: "false" }
+              { text: "A simple way to say 'it looks like it is true'", correct: "true" },
+              { text: "Something that is impossible", correct: "false" },
+              { text: "A plan for next year", correct: "false" }
             ]
           }
         ],
