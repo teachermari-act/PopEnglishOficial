@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Washington's Dream 2 by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --border-dark: #334155;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --gradient-brand: linear-gradient(90deg, #9333ea, #a855f7);
+      --gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-dark);
+      background-color: #0b0f19;
+      min-height: 60px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 36px; border-radius: 8px; }
+    .brand-text h1 { 
+      font-size: 1.2em; 
+      font-weight: 800; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+      font-size: 0.9em;
+    }
+    .nav-back:hover { color: var(--accent-pink); }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 20px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid var(--border-dark);
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 180px; 
+      object-fit: cover; 
+      object-position: top;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 16px; 
+      display: block;
+      pointer-events: none;
+      border: 1px solid var(--border-dark);
+    }
+
+    .hero-title { 
+      font-size: 1.4em; 
+      margin-bottom: 4px; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.9em; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px; }
+    .hero-desc { font-size: 0.88em; color: #94a3b8; margin-bottom: 18px; }
+
+    .time-title { font-size: 0.98em; font-weight: 700; margin-bottom: 12px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 20px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #1e293b; color: white; border: 2px solid var(--border-dark);
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.15);
+      transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--gradient-brand); color: white; border: none;
+      padding: 12px 32px; border-radius: 10px; font-size: 1.05em;
+      font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-dark);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; border: 1px solid var(--border-dark); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #0b0f19; padding: 10px 14px;
+      border-bottom: 1px solid var(--border-dark); overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: #1e293b;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700;
+      color: #94a3b8; border: 1px solid var(--border-dark); white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #334155; color: #f8fafc; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85em;
+    }
+
+    .cool-step-pill.active { background: var(--gradient-brand); color: white; border-color: var(--accent-purple); }
+    .cool-step-pill.active .step-num { background: white; color: var(--accent-purple); font-weight: 800; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 14px; }
+    .part-subtab-btn {
+      flex: 1; padding: 9px 6px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.88em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { 
+      flex: 1; 
+      padding: 18px 20px; 
+      overflow-y: auto; 
+      font-size: 1.1em;
+      line-height: 1.6;
+      position: relative; 
+    }
+
+    .content-area h3 {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25em;
+      margin-bottom: 10px;
+    }
+
+    .question-block { margin-bottom: 18px; }
+    .question-block strong { display: block; font-size: 1.05em; margin-bottom: 8px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 12px 14px; font-size: 1.02em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select:hover { border-color: var(--accent-purple); }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 12px 14px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1.02em; color: #334155;
+      line-height: 1.4;
+    }
+    .ab-btn:hover { border-color: var(--accent-purple); background: #faf5ff; }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .image-card {
+      background: white; border: 2px solid #cbd5e0; border-radius: var(--radius-soft);
+      padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+    }
+    .image-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-purple);
+      padding: 14px 16px; border-radius: var(--radius-soft); margin-bottom: 14px;
+    }
+    .vocab-card-example h4 { font-size: 1.15em; color: var(--accent-purple); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .vocab-card-example p { font-size: 1.05em; }
+    .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
+
+    .word-bank { 
+      position: sticky; top: -18px; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; 
+      margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 48px; 
+    }
+    .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+    .gap-target {
+      display: inline-block; min-width: 80px; height: 30px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 30px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 10px; margin-top: 10px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 10px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 32px; height: 42px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .retell-item {
+      background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 42px; display: flex; align-items: center; font-size: 0.95em; line-height: 1.4;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 12px 14px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.85em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 10px; border-radius: 6px; margin-top: 6px; font-size: 0.92em; }
+
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-action { 
+      background: var(--gradient-brand); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92em; 
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #0284c7, #0369a1); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    @media (max-width: 768px) {
+      body { height: auto; overflow-y: auto; }
+      header { padding: 8px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; font-size: 1.05em; padding: 12px; }
+      
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+    <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/vtgcENZ.jpeg" class="banner-img" alt="Washington's Dream SNL">
+      <h2 class="hero-title">SNL: Washington's Dream</h2>
+      <div class="hero-subtitle">• Saturday Night Live • Nate Bargatze •</div>
+      <p class="hero-desc">Explore the funny origin of American measurement systems with George Washington.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Parts 1 & 2)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "Nem tão busy, nem tão free" (Parts 1 to 4)</span> <strong>20 min</strong>
+          </button>
+          <button class="time-btn" onclick="selectTime(30, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 to 6)</span> <strong>30 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/VJ62EfUKI3w?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2 style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">CONGRATULATIONS! 🎉</h2>
+      <br>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 0:58)", start: 0, end: 58, vocabType: "ab",
+        vocab: [
+          { 
+            term: "wonder", 
+            options: [
+              { text: "To ask yourself questions or want to know something", correct: "true" },
+              { text: "To know an answer with complete certainty", correct: "false" }
+            ]
+          },
+          { 
+            term: "shore", 
+            options: [
+              { text: "The land along the edge of a body of water", correct: "true" },
+              { text: "The center of a big forest or park", correct: "false" }
+            ]
+          },
+          { 
+            term: "thousands", 
+            options: [
+              { text: "A very large number, multiples of 1,000", correct: "true" },
+              { text: "A very small group of two or three items", correct: "false" }
+            ]
+          },
+          { 
+            term: "fearful", 
+            options: [
+              { text: "Feeling nervous or afraid about what might happen", correct: "true" },
+              { text: "Feeling excited and completely happy", correct: "false" }
+            ]
+          },
+          { 
+            term: "through", 
+            options: [
+              { text: "Moving from the start to the end of an experience", correct: "true" },
+              { text: "Stopping before entering a place", correct: "false" }
+            ]
+          },
+          { 
+            term: "own", 
+            options: [
+              { text: "Belonging to oneself and not to anyone else", correct: "true" },
+              { text: "Borrowed from a friend for one day", correct: "false" }
+            ]
+          },
+          { 
+            term: "nation", 
+            options: [
+              { text: "A country with its own government and people", correct: "true" },
+              { text: "A small local street market", correct: "false" }
+            ]
+          },
+          { 
+            term: "own thing", 
+            options: [
+              { text: "Your personal way of doing something unique", correct: "true" },
+              { text: "Following everyone else's exact orders", correct: "false" }
+            ]
+          },
+          { 
+            term: "call it", 
+            options: [
+              { text: "To give a specific name or title to something", correct: "true" },
+              { text: "To lose an item on the street", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "wonder", ex: "I wonder what time the supermarket opens tomorrow.", trans: "Eu me pergunto a que horas o supermercado abre amanhã." },
+          { term: "shore", ex: "We spent the afternoon walking along the lake shore.", trans: "Nós passamos a tarde caminhando pela margem do lago." },
+          { term: "thousands", ex: "Thousands of fans attended the outdoor music show.", trans: "Milhares de fãs compareceram ao show de música ao ar livre." },
+          { term: "fearful", ex: "She felt fearful when the thunderstorm started.", trans: "Ela se sentiu com medo quando a tempestade começou." },
+          { term: "through", ex: "We drove through a long tunnel on our road trip.", trans: "Nós dirigimos por um túnel longo na nossa viagem de carro." },
+          { term: "own", ex: "He saved money to buy his own car.", trans: "Ele economizou dinheiro para comprar seu próprio carro." },
+          { term: "nation", ex: "People all across the nation celebrated the national holiday.", trans: "Pessoas de toda a nação comemoraram o feriado nacional." },
+          { term: "own thing", ex: "On weekends, I like to relax and do my own thing.", trans: "Nos finais de semana, eu gosto de relaxar e fazer minhas próprias coisas." },
+          { term: "call it", ex: "They bought a small café and decided to call it 'Sunrise'.", trans: "Eles compraram um café pequeno e decidiram chamá-lo de 'Sunrise'." }
+        ],
+        gaps: ["wonder", "shore", "thousands", "fearful", "through", "own", "nation", "own thing", "call it"],
+        fullScript: `
+          <p><strong>Soldier 1:</strong> I <span class="gap-target" data-answer="wonder"></span> how many British troops await us on the other <span class="gap-target" data-answer="shore"></span>.</p>
+          <p><strong>Soldier 2:</strong> Must be <span class="gap-target" data-answer="thousands"></span>.</p>
+          <p><strong>Soldier 3:</strong> Is there any chance we will win this war?</p>
+          <p><strong>George Washington:</strong> Of course!</p>
+          <p><strong>Soldier 4:</strong> General Washington!</p>
+          <p><strong>Soldier 4:</strong> General Washington, we apologize.</p>
+          <p><strong>George Washington:</strong> No need. I am <span class="gap-target" data-answer="fearful"></span> as well. But we will live <span class="gap-target" data-answer="through"></span> the battle ahead. Because we fight to control our <span class="gap-target" data-answer="own"></span> destiny.</p>
+          <p><strong>Everybody:</strong> Yeah!</p>
+          <p><strong>George Washington:</strong> To create our own <span class="gap-target" data-answer="nation"></span>.</p>
+          <p><strong>Everybody:</strong> Well said, General.</p>
+          <p><strong>George Washington:</strong> And to do our <span class="gap-target" data-answer="own thing"></span> with the English language.</p>
+          <p><strong>Soldier 4:</strong> Our own thing, sir?</p>
+          <p><strong>George Washington:</strong> Yes! I dream that one day our great nation will have a word for the number 12. We shall <span class="gap-target" data-answer="call it"></span> a dozen.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (0:58 - 2:18)", start: 58, end: 138, vocabType: "select",
+        images: [
+          { term: "cows", img: "https://i.imgur.com/zm00XuK.jpeg" },
+          { term: "beef", img: "https://images.unsplash.com/photo-1558030006-450675393462?w=300&q=80" },
+          { term: "pigs", img: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=300&q=80" },
+          { term: "pork", img: "https://i.imgur.com/1Ph2HcR.jpeg" },
+          { term: "chickens", img: "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=300&q=80" },
+          { term: "chicken", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=300&q=80" }
+        ],
+        vocab: [
+          { 
+            term: "none", 
+            correct: "Not any, zero, or no person/thing at all",
+            distractors: ["Every single item in a list", "A huge majority of items"]
+          },
+          { 
+            term: "some", 
+            correct: "An unspecified number or part of something",
+            distractors: ["All items without exception", "Zero items completely"]
+          },
+          { 
+            term: "short way", 
+            correct: "A quicker, simpler, or brief method",
+            distractors: ["A long and complicated process", "An impossible route"]
+          },
+          { 
+            term: "extend", 
+            correct: "To reach out or offer something to more people",
+            distractors: ["To stop or hide an action", "To reduce the size of something"]
+          },
+          { 
+            term: "myself", 
+            correct: "Used by a speaker to refer to themselves",
+            distractors: ["Another unknown person nearby", "A group of strangers"]
+          },
+          { 
+            term: "alive", 
+            correct: "Living and not dead",
+            distractors: ["Cooked and ready to eat", "Broken into small pieces"]
+          },
+          { 
+            term: "become", 
+            correct: "To change or grow into something new",
+            distractors: ["To stay exactly the same forever", "To disappear suddenly"]
+          }
+        ],
+        examples: [
+          { term: "none", ex: "None of the stores were open on Sunday evening.", trans: "Nenhuma das lojas estava aberta no domingo à noite." },
+          { term: "some", ex: "I brought some cookies to share with everyone.", trans: "Eu troux e alguns biscoitos para compartilhar com todos." },
+          { term: "short way", ex: "Taking the stairs is the short way to get to the first floor.", trans: "Usar as escadas é o caminho mais curto para chegar ao primeiro andar." },
+          { term: "extend", ex: "The hotel agreed to extend our stay for one more day.", trans: "O hotel concordou em estender nossa estadia por mais um dia." },
+          { term: "myself", ex: "I made this chocolate cake all by myself.", trans: "Eu fiz este bolo de chocolate totalmente sozinho(a)." },
+          { term: "alive", ex: "The plants look healthy and very much alive.", trans: "As plantas parecem saudáveis e muito vivas." },
+          { term: "become", ex: "With hard work, she can become a great doctor.", trans: "Com trabalho duro, ela pode se tornar uma ótima médica." },
+          { term: "cows", ex: "The cows were resting under the big oak tree.", trans: "As vacas estavam descansando debaixo da grande carvalho." },
+          { term: "beef", ex: "We ordered grilled beef with vegetables for dinner.", trans: "Pedimos carne bovina grelhada com legumes no jantar." },
+          { term: "pigs", ex: "The little pigs were playing in the farm yard.", trans: "Os porquinhos estavam brincando no pátio da fazenda." },
+          { term: "pork", ex: "Roasted pork is a popular dish during holidays.", trans: "Carne de porco assada é um prato popular durante feriados." },
+          { term: "chickens", ex: "The chickens lay fresh eggs every morning.", trans: "As galinhas botam ovos frescos toda manhã." },
+          { term: "chicken", ex: "I ate fried chicken and rice for lunch.", trans: "Eu comi frango frito e arroz no almoço." }
+        ],
+        gaps: ["none", "some", "short way", "extend", "myself", "alive", "become"],
+        fullScript: `
+          <p><strong>Soldier 3:</strong> And what other numbers will we have a word for?</p>
+          <p><strong>George Washington:</strong> <span class="gap-target" data-answer="none"></span>. Only 12 shall have its own word. Because we are free men, and we will be free to spell <span class="gap-target" data-answer="some"></span> words two different ways.</p>
+          <p><strong>Soldier 1:</strong> Which word, sir?</p>
+          <p><strong>George Washington:</strong> Donut. And the name Jeff.</p>
+          <p><strong>Soldier 4:</strong> What are the two ways to spell Jeff, sir?</p>
+          <p><strong>George Washington:</strong> The <span class="gap-target" data-answer="short way"></span> with the J, and the stupid way with the G. And this is what we fight, men: to <span class="gap-target" data-answer="extend"></span> these liberties to all Americans.</p>
+          <p><strong>Soldier 2:</strong> Including men of color like <span class="gap-target" data-answer="myself"></span>?</p>
+          <p><strong>George Washington:</strong> Well, we will also have two names for animals. One when they are <span class="gap-target" data-answer="alive"></span>, and a different one when they <span class="gap-target" data-answer="become"></span> food. So cows will be beef, pigs will be pork.</p>
+          <p><strong>Soldier 3:</strong> And chickens, sir?</p>
+          <p><strong>George Washington:</strong> That one stays.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (2:18 - 3:16)", start: 138, end: 196, vocabType: "ab",
+        images: [
+          { term: "hamburger", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&q=80" },
+          { term: "ham", img: "https://i.imgur.com/cZWwSBj.jpeg" },
+          { term: "buffalo wing", img: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=300&q=80" },
+          { term: "hot dog", img: "https://i.imgur.com/jqortLo.jpeg" }
+        ],
+        vocab: [
+          { 
+            term: "get out", 
+            options: [
+              { text: "To leave or exit a place or vehicle immediately", correct: "true" },
+              { text: "To sit down inside a house comfortably", correct: "false" }
+            ]
+          },
+          { 
+            term: "boat", 
+            options: [
+              { text: "A small vessel used for traveling on water", correct: "true" },
+              { text: "A large airplane flying in the sky", correct: "false" }
+            ]
+          },
+          { 
+            term: "go over", 
+            options: [
+              { text: "To move across or over the side of something", correct: "true" },
+              { text: "To sleep under a warm blanket", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "get out", ex: "Please get out of the car when we stop.", trans: "Por favor, saia do carro quando nós pararmos." },
+          { term: "boat", ex: "We rented a wooden boat to cross the river.", trans: "Nós alugamos um barco de madeira para atravessar o rio." },
+          { term: "go over", ex: "Be careful not to go over the edge of the pool.", trans: "Cuidado para não passar da borda da piscina." },
+          { term: "hamburger", ex: "I ordered a hamburger with cheese and salad.", trans: "Eu pedi um hambúrguer com queijo e salada." },
+          { term: "ham", ex: "She made a quick ham and cheese sandwich.", trans: "Ela fez um sanduíche rápido de presunto e queijo." },
+          { term: "buffalo wing", ex: "They served spicy buffalo wing dishes at the party.", trans: "Eles serviram asas de frango picantes na festa." },
+          { term: "hot dog", ex: "We bought a hot dog before watching the game.", trans: "Compramos um cachorro-quente antes de assistir ao jogo." }
+        ],
+        gaps: ["hamburger", "ham", "buffalo wing", "hot dog", "get out", "boat", "go over"],
+        fullScript: `
+          <p><strong>George Washington:</strong> Chickens are chicken. And we will create our own foods and name them what we want. Like the <span class="gap-target" data-answer="hamburger"></span>!</p>
+          <p><strong>Soldier 1:</strong> Made of <span class="gap-target" data-answer="ham"></span>, sir.</p>
+          <p><strong>George Washington:</strong> Ah, if it only were that simple. A hamburger is made of beef, just as a <span class="gap-target" data-answer="buffalo wing"></span> is made of chicken. But fear not, men: a <span class="gap-target" data-answer="hot dog"></span> will not be made of dogs.</p>
+          <p><strong>Soldier 3:</strong> What is it made of, sir?</p>
+          <p><strong>George Washington:</strong> Nobody knows.</p>
+          <p><strong>Soldier 4:</strong> But, sir, shouldn't we know what's in a hot dog?</p>
+          <p><strong>George Washington:</strong> <span class="gap-target" data-answer="get out"></span>!</p>
+          <p><strong>Soldier 4:</strong> I'm sorry!</p>
+          <p><strong>George Washington:</strong> Get out of the <span class="gap-target" data-answer="boat"></span>!</p>
+          <p><strong>Soldier 4:</strong> Just <span class="gap-target" data-answer="go over"></span> the side?</p>
+          <p><strong>George Washington:</strong> Yes! Go! Go! Go!</p>
+        `
+      },
+      4: {
+        title: "Part 4 (3:16 - 3:54)", start: 196, end: 234, vocabType: "select",
+        vocab: [
+          { 
+            term: "worthy", 
+            correct: "Deserving respect, honor, or praise",
+            distractors: ["Feeling very lazy or tired", "Careless with time and money"]
+          },
+          { 
+            term: "portrait", 
+            correct: "A picture or painting of a person's face",
+            distractors: ["A written agreement or signature", "A small metal key"]
+          },
+          { 
+            term: "front of", 
+            correct: "The forward side or surface of an object",
+            distractors: ["The hidden back part", "The deep bottom floor"]
+          },
+          { 
+            term: "on the back", 
+            correct: "Located on the rear or reverse side",
+            distractors: ["Located on the top roof", "Inside a closed drawer"]
+          },
+          { 
+            term: "stuff", 
+            correct: "A collection of random items or things",
+            distractors: ["Clean drinking water", "A single copper coin"]
+          },
+          { 
+            term: "squiggles", 
+            correct: "Short wavy or irregular lines",
+            distractors: ["Perfect straight lines", "Heavy metal squares"]
+          },
+          { 
+            term: "floating", 
+            correct: "Hovering or staying suspended in air or water",
+            distractors: ["Sinking quickly to the floor", "Fixed firmly inside stone"]
+          },
+          { 
+            term: "on top", 
+            correct: "At the highest position or surface",
+            distractors: ["At the lowest base point", "Hidden in the dark middle"]
+          },
+          { 
+            term: "rhyme", 
+            correct: "Words having the same ending sound",
+            distractors: ["A long mathematical formula", "A silent background video"]
+          },
+          { 
+            term: "reason", 
+            correct: "A clear cause, explanation, or logic",
+            distractors: ["A complete accident or mistake", "A random loud sound"]
+          },
+          { 
+            term: "much of", 
+            correct: "A large part or quantity of something",
+            distractors: ["A tiny single fragment", "Nothing at all"]
+          }
+        ],
+        examples: [
+          { term: "worthy", ex: "His dedication made him worthy of winning the award.", trans: "A dedicação dele o tornou merecedor de ganhar o prêmio." },
+          { term: "portrait", ex: "The family hung a large portrait in the living room.", trans: "A família pendurou um retrato grande na sala de estar." },
+          { term: "front of", ex: "Meet me in front of the coffee shop at three o'clock.", trans: "Encontre-me na frente da cafeteria às três horas." },
+          { term: "on the back", ex: "Please write your name on the back of the photo.", trans: "Por favor, escreva seu nome no verso da foto." },
+          { term: "stuff", ex: "I need to clean up all my stuff before guests arrive.", trans: "Preciso arrumar todas as minhas coisas antes que os convidados cheguem." },
+          { term: "squiggles", ex: "The child drew colorful squiggles all over her notebook.", trans: "A criança fez rabiscos coloridos por todo o seu caderno." },
+          { term: "floating", ex: "Look at those bright balloons floating in the sky!", trans: "Olhe aqueles balões brilhantes flutuando no céu!" },
+          { term: "on top", ex: "She put a cherry right on top of the ice cream.", trans: "Ela colocou uma cereja bem no topo do sorvete." },
+          { term: "rhyme", ex: "Children love learning simple songs that rhyme.", trans: "Crianças adoram aprender músicas simples que rima." },
+          { term: "reason", ex: "There is always a good reason for our school rules.", trans: "Sempre há um bom motivo para as regras da nossa escola." },
+          { term: "much of", ex: "We spent much of our vacation relaxing by the beach.", trans: "Nós passamos grande parte das nossas férias relaxando perto da praia." }
+        ],
+        gaps: ["worthy", "portrait", "front of", "on the back", "stuff", "squiggles", "floating", "on top", "rhyme", "reason", "much of"],
+        fullScript: `
+          <p><strong>George Washington:</strong> A real American would never want to know what's in a hot dog, just as they will never know why our money is called the dollar.</p>
+          <p><strong>Soldier 2:</strong> The dollar, sir!</p>
+          <p><strong>George Washington:</strong> Yeah, and if you think I'm <span class="gap-target" data-answer="worthy"></span>, put my <span class="gap-target" data-answer="portrait"></span> on the <span class="gap-target" data-answer="front of"></span> it.</p>
+          <p><strong>Soldier 2:</strong> And what shall be <span class="gap-target" data-answer="on the back"></span>, sir?</p>
+          <p><strong>George Washington:</strong> Everything. All of it. Crazy <span class="gap-target" data-answer="stuff"></span>. <span class="gap-target" data-answer="squiggles"></span>. Latin words. Pyramid with a <span class="gap-target" data-answer="floating"></span> eye <span class="gap-target" data-answer="on top"></span>.</p>
+          <p><strong>Soldier 1:</strong> General, I confess I'm very confused. There seems to be no <span class="gap-target" data-answer="rhyme"></span> or <span class="gap-target" data-answer="reason"></span> to <span class="gap-target" data-answer="much of"></span> this.</p>
+        `
+      },
+      5: {
+        title: "Part 5 (3:54 - 4:36)", start: 234, end: 276, vocabType: "ab",
+        vocab: [
+          { 
+            term: "our ways", 
+            options: [
+              { text: "Our custom, culture, and methods of doing things", correct: "true" },
+              { text: "A physical highway map of the city", correct: "false" }
+            ]
+          },
+          { 
+            term: "first", 
+            options: [
+              { text: "Coming before all others in order or time", correct: "true" },
+              { text: "Coming after everything else at the end", correct: "false" }
+            ]
+          },
+          { 
+            term: "kindergarten", 
+            options: [
+              { text: "The initial school class for young children", correct: "true" },
+              { text: "A final graduation exam in college", correct: "false" }
+            ]
+          },
+          { 
+            term: "grade", 
+            options: [
+              { text: "A school level or class year", correct: "true" },
+              { text: "A heavy tool used in gardening", correct: "false" }
+            ]
+          },
+          { 
+            term: "every day", 
+            options: [
+              { text: "Daily, on each day without skipping", correct: "true" },
+              { text: "Only once every ten years", correct: "false" }
+            ]
+          },
+          { 
+            term: "holidays", 
+            options: [
+              { text: "Official days of celebration with no school or work", correct: "true" },
+              { text: "Ordinary workdays with late shifts", correct: "false" }
+            ]
+          },
+          { 
+            term: "flag", 
+            options: [
+              { text: "A piece of cloth with colors and symbols representing a nation", correct: "true" },
+              { text: "A wooden chair used in a dining room", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "our ways", ex: "We welcome visitors and share our ways with them.", trans: "Nós acolhemos os visitantes e compartilhamos nossos costumes com eles." },
+          { term: "first", ex: "She was the first person to arrive at the meeting.", trans: "Ela foi a primeira pessoa a chegar à reunião." },
+          { term: "kindergarten", ex: "My little sister is excited to start kindergarten.", trans: "Minha irmãzinha está animada para começar o jardim de infância." },
+          { term: "grade", ex: "Students in fifth grade are learning basic fractions.", trans: "Os alunos da quinta série estão aprendendo frações básicas." },
+          { term: "every day", ex: "I walk my dog in the park every day after school.", trans: "Eu passeio com meu cachorro no parque todos os dias depois da escola." },
+          { term: "holidays", ex: "Our family gets together to cook during national holidays.", trans: "Nossa família se reúne para cozinhar durante os feriados nacionais." },
+          { term: "flag", ex: "They raised the colorful flag outside the school building.", trans: "Eles hastearam a bandeira colorida do lado de fora do prédio da escola." }
+        ],
+        gaps: ["our ways", "first", "kindergarten", "grade", "every day", "holidays", "flag"],
+        fullScript: `
+          <p><strong>George Washington:</strong> Do not worry, soldier. For our great nation, we will create schools that teach our children <span class="gap-target" data-answer="our ways"></span>. The <span class="gap-target" data-answer="first"></span> year of school will be called <span class="gap-target" data-answer="kindergarten"></span>.</p>
+          <p><strong>Soldier 3:</strong> And what will the second year be called?</p>
+          <p><strong>George Washington:</strong> First <span class="gap-target" data-answer="grade"></span>. There will be 12 grades in all.</p>
+          <p><strong>Soldier 1:</strong> Ah! So a dozen grades!</p>
+          <p><strong>George Washington:</strong> That's...No. We don't use it that way. But the children would not have to go to school <span class="gap-target" data-answer="every day"></span>. We will have our own <span class="gap-target" data-answer="holidays"></span>: 4th of July, <span class="gap-target" data-answer="flag"></span> Day, and Presidents' Day.</p>
+        `
+      },
+      6: {
+        title: "Part 6 (4:36 - 5:20)", start: 276, end: 320, vocabType: "select",
+        vocab: [
+          { 
+            term: "honor", 
+            correct: "To show great respect or admiration for someone",
+            distractors: ["To forget a person's name", "To criticize someone publicly"]
+          },
+          { 
+            term: "leaders", 
+            correct: "People who guide, rule, or direct a group or nation",
+            distractors: ["New students starting school", "People who work alone without rules"]
+          },
+          { 
+            term: "mattress", 
+            correct: "A soft thick pad put on a bed to sleep on",
+            distractors: ["A wooden dining table", "A warm winter jacket"]
+          },
+          { 
+            term: "people", 
+            correct: "Human beings or citizens of a group or nation",
+            distractors: ["Wild animals living in a forest", "Office machines and equipment"]
+          },
+          { 
+            term: "freed", 
+            correct: "Given liberty and released from slavery or restriction",
+            distractors: ["Locked in a room", "Charged money for a service"]
+          },
+          { 
+            term: "after", 
+            correct: "Following in time or happening later than something",
+            distractors: ["Happening before anything starts", "At the exact same second"]
+          }
+        ],
+        examples: [
+          { term: "honor", ex: "We gather every year to honor our brave heroes.", trans: "Nós nos reunimos todos os anos para homenagear nossos bravos heróis." },
+          { term: "leaders", ex: "Great leaders listen carefully to their team members.", trans: "Grandes líderes ouvem atentamente os membros de sua equipe." },
+          { term: "mattress", ex: "I bought a comfortable new mattress for my bedroom.", trans: "Eu comprei um colchão novo e confortável para o meu quarto." },
+          { term: "people", ex: "Many people enjoy going to the park on sunny weekends.", trans: "Muitas pessoas gostam de ir ao parque em finais de semana ensolarados." },
+          { term: "freed", ex: "The wild bird was freed from the small cage.", trans: "O pássaro selvagem foi liberto da gaiola pequena." },
+          { term: "after", ex: "We can go for ice cream after we finish our dinner.", trans: "Nós podemos ir tomar sorvete depois que terminarmos nosso jantar." }
+        ],
+        gaps: ["honor", "leaders", "mattress", "people", "freed", "after"],
+        fullScript: `
+          <p><strong>Soldier 1:</strong> And what shall we do to <span class="gap-target" data-answer="honor"></span> our <span class="gap-target" data-answer="leaders"></span> on Presidents' Day, sir?</p>
+          <p><strong>George Washington:</strong> Buy a <span class="gap-target" data-answer="mattress"></span>. Of course. These are my dreams for our nation, men. We fight this war to free the English language and free the American <span class="gap-target" data-answer="people"></span>. All the American people!</p>
+          <p><strong>Soldier 2:</strong> Sir? Do you mean the slaves will be <span class="gap-target" data-answer="freed"></span> <span class="gap-target" data-answer="after"></span> this war?</p>
+          <p><strong>George Washington:</strong> After a war...</p>
+          <p><strong>Soldier 2:</strong> A war? But is this war, right? Hey, is this war, right? Where you go?</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      20: [
+        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
+        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
+        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" }
+      ],
+      30: [
+        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
+        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
+        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" },
+        { q: "4. If you could invent a new rule or measurement system for your country, what would it be?", start: "If I could invent a new system, I would ______.", ex: "If I could invent a new system, I would make every month have exactly 30 days to make calendars simpler!" }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 2 : chosenTime === 20 ? 4 : 6;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      }
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+      }
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube.com/embed/VJ62EfUKI3w?start=0&end=58&autoplay=0&enablejsapi=1";
+        
+        const q1Opts = shuffleArray([
+          { val: "a", text: "His dream for a new country with unique English words and rules" },
+          { val: "b", text: "A secret plan to attack the British army at night" }
+        ]);
+        const q2Opts = shuffleArray([
+          { val: "a", text: "1,000" },
+          { val: "b", text: "12" }
+        ]);
+
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. What is George Washington talking about with his soldiers?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              ${q1Opts.map(o => `<option value="${o.val}">${o.text}</option>`).join('')}
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. What number will have a special word ("a dozen") in Washington's dream?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              ${q2Opts.map(o => `<option value="${o.val}">${o.text}</option>`).join('')}
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+          let imageGridHTML = "";
+
+          if (pData.images) {
+            const allImageTerms = pData.images.map(i => i.term);
+            imageGridHTML = `
+              <div style="margin-bottom:20px;">
+                <p style="font-weight:700; color:#1e293b; margin-bottom:10px;">📸 Match the word with the correct image:</p>
+                <div class="image-grid">
+                  ${pData.images.map(imgObj => `
+                    <div class="image-card">
+                      <img src="${imgObj.img}" alt="${imgObj.term}">
+                      <select class="custom-select" data-correct="${imgObj.term}" style="font-size:0.9em; padding:6px 8px;">
+                        <option value="">-- Choose --</option>
+                        ${shuffleArray([...allImageTerms]).map(t => `<option value="${t}">${t}</option>`).join('')}
+                      </select>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }
+          
+          if (pData.vocabType === 'ab') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([...v.options]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'select') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([v.correct, ...v.distractors]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.correct}">
+                    <option value="">-- Select the correct meaning --</option>
+                    ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Prepare for listening by practicing vocabulary:</p>
+            ${imageGridHTML}
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to everyday examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/VJ62EfUKI3w?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = chosenTime === 10 ? 138 : chosenTime === 20 ? 234 : 320;
+        player.src = `https://www.youtube.com/embed/VJ62EfUKI3w?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the episode.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Washington talks about creating a new nation and introducing the word 'a dozen' for the number 12." },
+        { order: 2, text: "He explains spelling rules for 'donut' and 'Jeff', and names for live animals versus food." },
+        { order: 3, text: "He talks about hamburgers and hot dogs, but throws a soldier out of the boat for asking questions." },
+        { order: 4, text: "He describes putting his face on the dollar bill and weird symbols on the back." },
+        { order: 5, text: "He explains kindergarten and first grade for the new school system." },
+        { order: 6, text: "He mentions buying mattresses on Presidents' Day and dodges questions about freeing slaves." }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
