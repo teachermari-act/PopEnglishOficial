@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Washington's Dream by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --border-dark: #334155;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --gradient-brand: linear-gradient(90deg, #9333ea, #a855f7);
+      --gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-dark);
+      background-color: #0b0f19;
+      min-height: 60px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 36px; border-radius: 8px; }
+    .brand-text h1 { 
+      font-size: 1.2em; 
+      font-weight: 800; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+      font-size: 0.9em;
+    }
+    .nav-back:hover { color: var(--accent-pink); }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 20px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid var(--border-dark);
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 180px; 
+      object-fit: cover; 
+      object-position: top;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 16px; 
+      display: block;
+      pointer-events: none;
+      border: 1px solid var(--border-dark);
+    }
+
+    .hero-title { 
+      font-size: 1.4em; 
+      margin-bottom: 4px; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.9em; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px; }
+    .hero-desc { font-size: 0.88em; color: #94a3b8; margin-bottom: 18px; }
+
+    .time-title { font-size: 0.98em; font-weight: 700; margin-bottom: 12px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 20px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #1e293b; color: white; border: 2px solid var(--border-dark);
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.15);
+      transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--gradient-brand); color: white; border: none;
+      padding: 12px 32px; border-radius: 10px; font-size: 1.05em;
+      font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-dark);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; border: 1px solid var(--border-dark); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #0b0f19; padding: 10px 14px;
+      border-bottom: 1px solid var(--border-dark); overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: #1e293b;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700;
+      color: #94a3b8; border: 1px solid var(--border-dark); white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #334155; color: #f8fafc; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85em;
+    }
+
+    .cool-step-pill.active { background: var(--gradient-brand); color: white; border-color: var(--accent-purple); }
+    .cool-step-pill.active .step-num { background: white; color: var(--accent-purple); font-weight: 800; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 14px; }
+    .part-subtab-btn {
+      flex: 1; padding: 9px 6px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.88em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { 
+      flex: 1; 
+      padding: 18px 20px; 
+      overflow-y: auto; 
+      font-size: 1.1em;
+      line-height: 1.6;
+      position: relative; 
+    }
+
+    .content-area h3 {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25em;
+      margin-bottom: 10px;
+    }
+
+    .content-area p {
+      font-size: 1.02em;
+    }
+
+    .question-block { margin-bottom: 18px; }
+    .question-block strong { display: block; font-size: 1.05em; margin-bottom: 8px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 12px 14px; font-size: 1.02em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select:hover { border-color: var(--accent-purple); }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 12px 14px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1.02em; color: #334155;
+      line-height: 1.4;
+    }
+    .ab-btn:hover { border-color: var(--accent-purple); background: #faf5ff; }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    /* IMAGE MATCHING GRID */
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .image-card {
+      background: white; border: 2px solid #cbd5e0; border-radius: var(--radius-soft);
+      padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+    }
+    .image-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-purple);
+      padding: 14px 16px; border-radius: var(--radius-soft); margin-bottom: 14px;
+    }
+    .vocab-card-example h4 { font-size: 1.15em; color: var(--accent-purple); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .vocab-card-example p { font-size: 1.05em; }
+    .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
+
+    .word-bank { 
+      position: sticky; top: -18px; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; 
+      margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 48px; 
+    }
+    .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+    .gap-target {
+      display: inline-block; min-width: 85px; height: 32px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 10px; margin-top: 10px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 10px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 32px; height: 42px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .retell-item {
+      background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 42px; display: flex; align-items: center; font-size: 0.95em; line-height: 1.4;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 12px 14px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.85em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 10px; border-radius: 6px; margin-top: 6px; font-size: 0.92em; }
+
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-action { 
+      background: var(--gradient-brand); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92em; 
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #0284c7, #0369a1); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    @media (max-width: 768px) {
+      body { height: auto; overflow-y: auto; }
+      header { padding: 8px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; font-size: 1.05em; padding: 12px; }
+      
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+    <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://img.youtube.com/vi/JYqfVE-fykk/maxresdefault.jpg" class="banner-img" alt="Washington's Dream SNL">
+      <h2 class="hero-title">SNL: Washington's Dream</h2>
+      <div class="hero-subtitle">• Saturday Night Live • Nate Bargatze •</div>
+      <p class="hero-desc">Explore the funny origin of American measurement systems with George Washington.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Parts 1 & 2)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "Nem tão busy, nem tão free" (Parts 1 to 4)</span> <strong>20 min</strong>
+          </button>
+          <button class="time-btn" onclick="selectTime(30, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 to 6)</span> <strong>30 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/JYqfVE-fykk?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2 style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">CONGRATULATIONS! 🎉</h2>
+      <br>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 0:48)", start: 0, end: 48, vocabType: "ab",
+        vocab: [
+          { 
+            term: "British", 
+            options: [
+              { text: "Something or someone related to the United Kingdom", correct: "true" },
+              { text: "Something or someone related to South America", correct: "false" }
+            ]
+          },
+          { 
+            term: "troops", 
+            options: [
+              { text: "A group of soldiers in an army", correct: "true" },
+              { text: "A group of peaceful civilians or tourists", correct: "false" }
+            ]
+          },
+          { 
+            term: "strength", 
+            options: [
+              { text: "The quality of being strong and powerful", correct: "true" },
+              { text: "The state of feeling weak or sick", correct: "false" }
+            ]
+          },
+          { 
+            term: "ahead", 
+            options: [
+              { text: "In front or in the future", correct: "true" },
+              { text: "Behind or in the past", correct: "false" }
+            ]
+          },
+          { 
+            term: "laws", 
+            options: [
+              { text: "Official rules made by a government", correct: "true" },
+              { text: "Illegal actions or crimes", correct: "false" }
+            ]
+          },
+          { 
+            term: "weights and measures", 
+            options: [
+              { text: "Standard systems to calculate heavy size or quantity", correct: "true" },
+              { text: "Random guesses with no numbers or scale", correct: "false" }
+            ]
+          },
+          { 
+            term: "proud", 
+            options: [
+              { text: "Feeling happy and pleased with an achievement", correct: "true" },
+              { text: "Feeling ashamed or embarrassed", correct: "false" }
+            ]
+          },
+          { 
+            term: "pounds", 
+            options: [
+              { text: "A unit used to measure weight", correct: "true" },
+              { text: "A unit used to measure temperature", correct: "false" }
+            ]
+          },
+          { 
+            term: "ton", 
+            options: [
+              { text: "A unit of weight equal to 2,000 pounds", correct: "true" },
+              { text: "A very light object like a feather", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "British", ex: "My friend loves listening to British music.", trans: "Meu amigo adora ouvir música britânica." },
+          { term: "troops", ex: "The troops arrived at the station this morning.", trans: "As tropas chegaram à estação esta manhã." },
+          { term: "strength", ex: "You need physical strength to move this sofa.", trans: "Você precisa de força física para mover este sofá." },
+          { term: "ahead", ex: "Look ahead to see the ocean view.", trans: "Olhe para a frente para ver a vista do oceano." },
+          { term: "laws", ex: "Drivers must follow traffic laws every day.", trans: "Os motoristas devem seguir as leis de trânsito todos os dias." },
+          { term: "weights and measures", ex: "We learned about basic weights and measures in school.", trans: "Nós aprendemos sobre pesos e medidas básicos na escola." },
+          { term: "proud", ex: "Her parents were proud of her good grades.", trans: "Os pais dela estavam orgulhosos das boas notas dela." },
+          { term: "pounds", ex: "This heavy suitcase weighs forty pounds.", trans: "Esta mala pesada pesa quarenta libras." },
+          { term: "ton", ex: "I have a ton of homework to do tonight.", trans: "Eu tenho uma tonelada de lição de casa para fazer hoje à noite." }
+        ],
+        gaps: ["British", "troops", "strength", "ahead", "laws", "weights and measures", "proud", "pounds", "ton"],
+        fullScript: `
+          <p><strong>Soldier 2:</strong> I hear the <span class="gap-target" data-answer="British"></span> are sending another 5,000 <span class="gap-target" data-answer="troops"></span>.</p>
+          <p><strong>Soldier 4:</strong> How will we ever win this war?</p>
+          <p><strong>Washington:</strong> By remembering what we fight for.</p>
+          <p><strong>Soldier 3:</strong> General Washington.</p>
+          <p><strong>Washington:</strong> Sit, please. We need your <span class="gap-target" data-answer="strength"></span> for the fight <span class="gap-target" data-answer="ahead"></span>. We fight for a country of our own, a new nation where we choose our own <span class="gap-target" data-answer="laws"></span>.</p>
+          <p><strong>Everybody:</strong> Yes, sir!</p>
+          <p><strong>Washington:</strong> Choose our own leaders.</p>
+          <p><strong>Everybody:</strong> Yes, sir!</p>
+          <p><strong>Washington:</strong> And choose our own systems of <span class="gap-target" data-answer="weights and measures"></span>.</p>
+          <p><strong>Soldier 3:</strong> Weights and measures, sir?</p>
+          <p><strong>Washington:</strong> Yes. Yes, I dream of that one day our <span class="gap-target" data-answer="proud"></span> nation will measure weights in <span class="gap-target" data-answer="pounds"></span> and that 2,000 pounds shall be called a <span class="gap-target" data-answer="ton"></span>.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (0:48 - 1:33)", start: 48, end: 93, vocabType: "select",
+        images: [
+          { term: "soda", img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300&q=80" },
+          { term: "wine", img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=300&q=80" },
+          { term: "alcohol", img: "https://images.unsplash.com/photo-1527281400683-1aae777175f8?w=300&q=80" },
+          { term: "milk", img: "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=300&q=80" },
+          { term: "paint", img: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=300&q=80" }
+        ],
+        vocab: [
+          { 
+            term: "it seems like", 
+            correct: "To appear to be true based on what you see or hear",
+            distractors: ["To make a clear promise to someone", "To decide something immediately"]
+          },
+          { 
+            term: "yet", 
+            correct: "However / despite that fact",
+            distractors: ["Because of that reason", "In addition to that"]
+          },
+          { 
+            term: "liquids", 
+            correct: "Fluids that flow easily like water or milk",
+            distractors: ["Solid items that do not change shape", "Dry powders used for cooking"]
+          },
+          { 
+            term: "gallons", 
+            correct: "A unit of volume equal to about 3.78 liters",
+            distractors: ["A unit used for measuring distance", "A unit used for weighing sugar"]
+          },
+          { 
+            term: "pints", 
+            correct: "A small liquid unit equal to half a quart",
+            distractors: ["A tool for measuring height", "A heavy container for gasoline"]
+          },
+          { 
+            term: "quarts", 
+            correct: "A unit of liquid measure equal to a quarter of a gallon",
+            distractors: ["A type of bottle made of glass", "A metric scale used in Europe"]
+          },
+          { 
+            term: "God willing", 
+            correct: "If everything goes well and as planned",
+            distractors: ["By pure luck or accident", "When something is impossible"]
+          },
+          { 
+            term: "nobody knows", 
+            correct: "No person has the information or answer",
+            distractors: ["Everyone understands it clearly", "A few experts explained it"]
+          }
+        ],
+        examples: [
+          { term: "it seems like", ex: "It seems like it is going to rain soon.", trans: "Parece que vai chover em breve." },
+          { term: "yet", ex: "He is very tired, yet he keeps working.", trans: "Ele está muito cansado, no entanto ele continua trabalhando." },
+          { term: "liquids", ex: "Drink plenty of liquids on hot summer days.", trans: "Beba bastante líquido em dias quentes de verão." },
+          { term: "gallons", ex: "We bought two gallons of fresh water for the road trip.", trans: "Nós compramos dois galões de água fresca para a viagem de carro." },
+          { term: "pints", ex: "She ordered two pints of ice cream for the movie night.", trans: "Ela pediu duas pintas de sorvete para a noite de filme." },
+          { term: "quarts", ex: "The recipe calls for two quarts of warm milk.", trans: "A receita pede dois quartos de leite morno." },
+          { term: "God willing", ex: "I will pass my English test tomorrow, God willing!", trans: "Eu vou passar no meu teste de inglês amanhã, se Deus quiser!" },
+          { term: "nobody knows", ex: "Nobody knows the password to this old computer.", trans: "Ninguém sabe a senha deste computador antigo." },
+          { term: "soda", ex: "I usually drink cold soda with my pizza.", trans: "Eu costumo beber refrigerante gelado com minha pizza." },
+          { term: "wine", ex: "They served red wine during the special dinner.", trans: "Eles serviram vinho tinto durante o jantar especial." },
+          { term: "alcohol", ex: "Stores cannot sell alcohol to minors under 18.", trans: "Lojas não podem vender álcool para menores de 18 anos." },
+          { term: "milk", ex: "My brother drinks a glass of warm milk before sleep.", trans: "Meu irmão bebe um copo de leite morno antes de dormir." },
+          { term: "paint", ex: "We chose blue paint for our bedroom walls.", trans: "Nós escolhemos tinta azul para as paredes do nosso quarto." }
+        ],
+        gaps: ["it seems like", "yet", "liquids", "gallons", "pints", "quarts", "God willing", "nobody knows"],
+        fullScript: `
+          <p><strong>Soldier 4:</strong> And what will 1,000 pounds be called, sir?</p>
+          <p><strong>Washington:</strong> Nothing. Because we will have no word for that.</p>
+          <p><strong>Soldier 3:</strong> <span class="gap-target" data-answer="it seems like"></span> we should have a word for 1,000 pounds, sir.</p>
+          <p><strong>Washington:</strong> And <span class="gap-target" data-answer="yet"></span>, we won't. Because we are free men. And we will be free to measure <span class="gap-target" data-answer="liquids"></span> in liters and milliliters, but not all liquids. Only soda, wine, and alcohol.</p>
+          <p><strong>Soldier 4:</strong> Only those, sir?</p>
+          <p><strong>Washington:</strong> Yes. Because for milk and paint, we will use <span class="gap-target" data-answer="gallons"></span>, <span class="gap-target" data-answer="pints"></span>, and <span class="gap-target" data-answer="quarts"></span>, <span class="gap-target" data-answer="God willing"></span>.</p>
+          <p><strong>Soldier 3:</strong> Okay. How many liters are in a gallon, sir?</p>
+          <p><strong>Washington:</strong> <span class="gap-target" data-answer="nobody knows"></span>.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (1:33 - 2:17)", start: 93, end: 137, vocabType: "ab",
+        vocab: [
+          { 
+            term: "such as I", 
+            options: [
+              { text: "People like me or similar to me", correct: "true" },
+              { text: "People completely different from me", correct: "false" }
+            ]
+          },
+          { 
+            term: "inches", 
+            options: [
+              { text: "Small units used to measure length or height", correct: "true" },
+              { text: "Heavy units used to measure weight or mass", correct: "false" }
+            ]
+          },
+          { 
+            term: "feet", 
+            options: [
+              { text: "Units of length equal to 12 inches", correct: "true" },
+              { text: "Units of time equal to 60 seconds", correct: "false" }
+            ]
+          },
+          { 
+            term: "yards", 
+            options: [
+              { text: "Units of distance equal to 3 feet", correct: "true" },
+              { text: "Units of liquid measure equal to 3 liters", correct: "false" }
+            ]
+          },
+          { 
+            term: "miles", 
+            options: [
+              { text: "Long distance units used for travel", correct: "true" },
+              { text: "Tiny distance units used for paper size", correct: "false" }
+            ]
+          },
+          { 
+            term: "of course", 
+            options: [
+              { text: "Naturally or obviously yes", correct: "true" },
+              { text: "Doubtfully or impossible to happen", correct: "false" }
+            ]
+          },
+          { 
+            term: "everyone", 
+            options: [
+              { text: "Every person in a group or all people", correct: "true" },
+              { text: "No single person or nobody", correct: "false" }
+            ]
+          },
+          { 
+            term: "so simple", 
+            options: [
+              { text: "Very easy and uncomplicated", correct: "true" },
+              { text: "Extremely hard and confusing", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "such as I", ex: "Beginners, such as I, need more practice time.", trans: "Iniciantes, como eu, precisam de mais tempo de prática." },
+          { term: "inches", ex: "The new phone screen is six inches long.", trans: "A tela do novo celular tem seis polegadas de comprimento." },
+          { term: "feet", ex: "The bedroom ceiling is ten feet high.", trans: "O teto do quarto tem dez pés de altura." },
+          { term: "yards", ex: "Our house has a garden that is twenty yards wide.", trans: "Nossa casa tem um jardim com vinte jardas de largura." },
+          { term: "miles", ex: "We drove fifty miles to visit my grandmother.", trans: "Nós dirigimos cinquenta milhas para visitar minha avó." },
+          { term: "of course", ex: "Can I help you? Of course you can!", trans: "Posso te ajudar? É claro que pode!" },
+          { term: "everyone", ex: "Everyone in the classroom smiled at the teacher.", trans: "Todos na sala de aula sorriram para o professor." },
+          { term: "so simple", ex: "This cooking recipe is so simple to make.", trans: "Esta receita de cozinha é tão simples de fazer." }
+        ],
+        gaps: ["such as I", "inches", "feet", "yards", "miles", "so simple", "everyone", "of course"],
+        fullScript: `
+          <p><strong>Soldier 2:</strong> And, sir, in this new country, what plans are there for men of color <span class="gap-target" data-answer="such as I"></span>?</p>
+          <p><strong>Washington:</strong> Distance will be measured in <span class="gap-target" data-answer="inches"></span>, <span class="gap-target" data-answer="feet"></span>, <span class="gap-target" data-answer="yards"></span>, and <span class="gap-target" data-answer="miles"></span>. So 12 inches to a foot.</p>
+          <p><strong>Soldier 1:</strong> 12 feet to a yard.</p>
+          <p><strong>Washington:</strong> If it were only <span class="gap-target" data-answer="so simple"></span>. 3 feet to a yard.</p>
+          <p><strong>Soldier 1:</strong> And how many yards to a mile?</p>
+          <p><strong>Washington:</strong> Nobody knows.</p>
+          <p><strong>Soldier 2:</strong> Okay. Well, how many feet to a mile?</p>
+          <p><strong>Washington:</strong> 5,280, <span class="gap-target" data-answer="of course"></span>. It's a simple number that <span class="gap-target" data-answer="everyone"></span> will remember.</p>
+        `
+      },
+      4: {
+        title: "Part 4 (2:17 - 3:05)", start: 137, end: 185, vocabType: "select",
+        images: [
+          { term: "track", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80" },
+          { term: "swimming", img: "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300&q=80" },
+          { term: "football", img: "https://i.imgur.com/6ykrTH5.jpeg" }
+        ],
+        vocab: [
+          { 
+            term: "confess", 
+            correct: "To admit that something is true",
+            distractors: ["To explain a problem clearly", "To ask someone for advice"]
+          },
+          { 
+            term: "in certain", 
+            correct: "In specific or particular situations",
+            distractors: ["In all possible ways everywhere", "Without any rules or limits"]
+          },
+          { 
+            term: "unpopular", 
+            correct: "Not liked or played by many people",
+            distractors: ["Unknown or hidden from public", "Very cheap or inexpensive"]
+          },
+          { 
+            term: "throw", 
+            correct: "To send something through the air using your hand",
+            distractors: ["To kick something using your foot", "To catch an object softly"]
+          },
+          { 
+            term: "kicking", 
+            correct: "Hitting something with your foot",
+            distractors: ["Catching a ball with your hands", "Running as fast as possible"]
+          },
+          { 
+            term: "a little", 
+            correct: "A small amount or degree",
+            distractors: ["A huge quantity or total", "Nothing at all"]
+          },
+          { 
+            term: "sometimes", 
+            correct: "On some occasions or now and then",
+            distractors: ["Every single moment without stopping", "Never in any situation"]
+          }
+        ],
+        examples: [
+          { term: "confess", ex: "I must confess, I ate the last slice of cake.", trans: "Devo confessar, eu comi o último pedaço de bolo." },
+          { term: "in certain", ex: "In certain cities, public buses are completely free.", trans: "Em certas cidades, os ônibus públicos são totalmente gratuitos." },
+          { term: "unpopular", ex: "That movie was very unpopular with teenagers.", trans: "Aquele filme foi muito impopular entre os adolescentes." },
+          { term: "throw", ex: "Please throw the ball to your brother.", trans: "Por favor, jogue a bola para o seu irmão." },
+          { term: "kicking", ex: "The boy is outside kicking a soccer ball.", trans: "O menino está lá fora chutando uma bola de futebol." },
+          { term: "a little", ex: "I speak a little English every day.", trans: "Eu falo um pouco de inglês todos os dias." },
+          { term: "sometimes", ex: "We sometimes go to the beach on weekends.", trans: "Nós às vezes vamos à praia nos finais de semana." },
+          { term: "track", ex: "She runs on the track every morning before school.", trans: "Ela corre na pista todas as manhãs antes da escola." },
+          { term: "swimming", ex: "Swimming is a great exercise for hot days.", trans: "Natação é um ótimo exercício para dias quentes." },
+          { term: "football", ex: "They watch American football together on Sundays.", trans: "Eles assistem futebol americano juntos aos domingos." }
+        ],
+        gaps: ["confess", "in certain", "unpopular", "throw", "kicking", "a little", "sometimes"],
+        fullScript: `
+          <p><strong>Soldier 3:</strong> I must <span class="gap-target" data-answer="confess"></span>, it feels a little complicated, sir. Why not use meters and kilometers?</p>
+          <p><strong>Washington:</strong> We will, soldier. But only <span class="gap-target" data-answer="in certain"></span> <span class="gap-target" data-answer="unpopular"></span> sports like track and swimming. For popular sports like football, we will use yards.</p>
+          <p><strong>Soldier 4:</strong> Football, sir?</p>
+          <p><strong>Washington:</strong> Yes. It's a sport where you <span class="gap-target" data-answer="throw"></span> a ball with your hands.</p>
+          <p><strong>Soldier 3:</strong> So in football, there is no kicking?</p>
+          <p><strong>Washington:</strong> There's <span class="gap-target" data-answer="a little"></span> <span class="gap-target" data-answer="kicking"></span>. You kick the ball to get points.</p>
+          <p><strong>Soldier 1:</strong> How many points, sir?</p>
+          <p><strong>Washington:</strong> <span class="gap-target" data-answer="sometimes"></span> one and sometimes three.</p>
+          <p><strong>Soldier 3:</strong> I'm very confused, sir.</p>
+        `
+      },
+      5: {
+        title: "Part 5 (3:05 - 3:50)", start: 185, end: 230, vocabType: "ab",
+        vocab: [
+          { 
+            term: "worry", 
+            options: [
+              { text: "To feel anxious, nervous, or uneasy", correct: "true" },
+              { text: "To feel calm, relaxed, and safe", correct: "false" }
+            ]
+          },
+          { 
+            term: "rulers", 
+            options: [
+              { text: "Straight tools used to measure small lengths", correct: "true" },
+              { text: "Soft towels used to dry hands", correct: "false" }
+            ]
+          },
+          { 
+            term: "sets", 
+            options: [
+              { text: "Groups of items that belong together", correct: "true" },
+              { text: "Single isolated items with no connection", correct: "false" }
+            ]
+          },
+          { 
+            term: "line up", 
+            options: [
+              { text: "To match or stand in a straight row", correct: "true" },
+              { text: "To scatter away in different directions", correct: "false" }
+            ]
+          },
+          { 
+            term: "except", 
+            options: [
+              { text: "Not including or leaving out someone/something", correct: "true" },
+              { text: "Including everything without exception", correct: "false" }
+            ]
+          },
+          { 
+            term: "liberty", 
+            options: [
+              { text: "The state of being free to make choices", correct: "true" },
+              { text: "The state of being trapped in prison", correct: "false" }
+            ]
+          },
+          { 
+            term: "slaves", 
+            options: [
+              { text: "People forced to work with no freedom or pay", correct: "true" },
+              { text: "Free business owners working for profit", correct: "false" }
+            ]
+          },
+          { 
+            term: "unrelated", 
+            options: [
+              { text: "Not connected or linked in any way", correct: "true" },
+              { text: "Identical and closely connected", correct: "false" }
+            ]
+          },
+          { 
+            term: "scales", 
+            options: [
+              { text: "Graduated systems or series of marks used for measuring", correct: "true" },
+              { text: "Random drawing pictures on paper", correct: "false" }
+            ]
+          },
+          { 
+            term: "make sense", 
+            options: [
+              { text: "To be clear, logical, and easy to understand", correct: "true" },
+              { text: "To be completely confusing and foolish", correct: "false" }
+            ]
+          },
+          { 
+            term: "entire", 
+            options: [
+              { text: "Whole, complete, or 100% of something", correct: "true" },
+              { text: "Partial or a tiny fraction of something", correct: "false" }
+            ]
+          },
+          { 
+            term: "super", 
+            options: [
+              { text: "Extremely, very, or to a high degree", correct: "true" },
+              { text: "Slightly or barely noticeable", correct: "false" }
+            ]
+          },
+          { 
+            term: "random", 
+            options: [
+              { text: "Chosen without a clear method, order, or reason", correct: "true" },
+              { text: "Organized in a strict alphabetical order", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "worry", ex: "Don't worry about the test; you prepared well.", trans: "Não se preocupe com o teste; você se preparou bem." },
+          { term: "rulers", ex: "Students need wooden rulers for geometry class.", trans: "Os alunos precisam de réguas de madeira para a aula de geometria." },
+          { term: "sets", ex: "She bought two sets of new coffee cups.", trans: "Ela comprou dois jogos de xícaras de café novas." },
+          { term: "line up", ex: "Please line up in an orderly queue at the door.", trans: "Por favor, alinhem-se em uma fila organizada na porta." },
+          { term: "except", ex: "Everyone came to the party except Lucas.", trans: "Todo mundo veio para a festa, exceto o Lucas." },
+          { term: "liberty", ex: "Statues around the world celebrate human liberty.", trans: "Estátuas ao redor do mundo celebram a liberdade humana." },
+          { term: "slaves", ex: "Slavery was abolished long ago in many nations.", trans: "A escravidão foi abolida há muito tempo em muitas nações." },
+          { term: "unrelated", ex: "Those two stories are completely unrelated.", trans: "Aquelas duas histórias são completamente não relacionadas." },
+          { term: "scales", ex: "Thermometers use numerical scales to show heat.", trans: "Termômetros usam escalas numéricas para mostrar o calor." },
+          { term: "make sense", ex: "Your explanation helps the rule make sense.", trans: "Sua explicação ajuda a regra a fazer sentido." },
+          { term: "entire", ex: "He ate the entire pizza by himself.", trans: "Ele comeu a pizza inteira sozinho." },
+          { term: "super", ex: "This new game is super fun to play with friends.", trans: "Este novo jogo é super divertido de jogar com amigos." },
+          { term: "random", ex: "The computer generated a random password for security.", trans: "O computador gerou uma senha aleatória por segurança." }
+        ],
+        gaps: ["worry", "rulers", "sets", "line up", "except", "Liberty", "slaves", "unrelated", "scales", "make sense", "entire", "super", "random"],
+        fullScript: `
+          <p><strong>Washington:</strong> Do not <span class="gap-target" data-answer="worry"></span>. For our new nation, we will have <span class="gap-target" data-answer="rulers"></span> with two <span class="gap-target" data-answer="sets"></span> of numbers. Inches on one side, centimeters on the other.</p>
+          <p><strong>Soldier 4:</strong> So we can see where they line up?</p>
+          <p><strong>Washington:</strong> Yes, <span class="gap-target" data-answer="except"></span> that they don't <span class="gap-target" data-answer="line up"></span>, and they never will.</p>
+          <p><strong>Soldier 4:</strong> Why?</p>
+          <p><strong>Washington:</strong> <span class="gap-target" data-answer="Liberty"></span>, son. Liberty.</p>
+          <p><strong>Soldier 2:</strong> And the <span class="gap-target" data-answer="slaves"></span>, sir, what of them?</p>
+          <p><strong>Washington:</strong> You asked about the temperature.</p>
+          <p><strong>Soldier 2:</strong> I did not.</p>
+          <p><strong>Washington:</strong> We shall have two different <span class="gap-target" data-answer="unrelated"></span> <span class="gap-target" data-answer="scales"></span> of temperature. One of them will <span class="gap-target" data-answer="make sense"></span> to the <span class="gap-target" data-answer="entire"></span> world, and the other will be <span class="gap-target" data-answer="super"></span> <span class="gap-target" data-answer="random"></span>. Our great nation will use the random one.</p>
+        `
+      },
+      6: {
+        title: "Part 6 (3:50 - 4:40)", start: 230, end: 280, vocabType: "select",
+        vocab: [
+          { 
+            term: "spell", 
+            correct: "To write or say the letters of a word in order",
+            distractors: ["To pronounce a word with a strong accent", "To translate a word into another language"]
+          },
+          { 
+            term: "brave", 
+            correct: "Ready to face danger or difficult situations with courage",
+            distractors: ["Feeling nervous or afraid in public places", "Staying quiet when someone is talking"]
+          },
+          { 
+            term: "get rid of", 
+            correct: "To eliminate, remove, or throw away something",
+            distractors: ["To collect and save items for later use", "To buy new clothes at the store"]
+          },
+          { 
+            term: "armor", 
+            correct: "Metal clothing worn to protect the body in battle",
+            distractors: ["Soft sports shoes used for running", "A lightweight coat used on rainy days"]
+          },
+          { 
+            term: "by God", 
+            correct: "An emphatic phrase used to stress truth or strong promise",
+            distractors: ["A polite way to ask for the time", "A greeting used when meeting a neighbor"]
+          },
+          { 
+            term: "keep", 
+            correct: "To continue to have or retain something",
+            distractors: ["To give away your things to strangers", "To break an object into pieces"]
+          },
+          { 
+            term: "glamour", 
+            correct: "An attractive, exciting, or stylish quality",
+            distractors: ["A messy or dirty appearance", "A boring and silent environment"]
+          },
+          { 
+            term: "dream", 
+            correct: "A strong hope, wish, or goal for the future",
+            distractors: ["A terrible nightmare that wakes you up", "A quick decision made without thinking"]
+          },
+          { 
+            term: "melting pot", 
+            correct: "A place where different cultures mix together",
+            distractors: ["A big kitchen pot used to melt butter", "A crowded market full of fresh food"]
+          },
+          { 
+            term: "measurements", 
+            correct: "The sizes, lengths, or amounts found by measuring",
+            distractors: ["The prices listed on supermarket products", "The names of famous historical cities"]
+          },
+          { 
+            term: "throw tantrums", 
+            correct: "To have sudden angry reactions or childish outbursts",
+            distractors: ["To laugh loudly during a comedy show", "To dance happily with friends"]
+          },
+          { 
+            term: "in short", 
+            correct: "To summarize briefly in a few words",
+            distractors: ["To talk continuously for many hours", "To read a long book from start to finish"]
+          },
+          { 
+            term: "land", 
+            correct: "A country, nation, or ground territory",
+            distractors: ["The deep ocean water away from coast", "The sky and clouds above us"]
+          }
+        ],
+        examples: [
+          { term: "spell", ex: "How do you spell your last name?", trans: "Como você soletra seu sobrenome?" },
+          { term: "brave", ex: "Firefighters are very brave people.", trans: "Bombeiros são pessoas muito corajosas." },
+          { term: "get rid of", ex: "We need to get rid of these old boxes.", trans: "Nós precisamos nos livrar destas caixas antigas." },
+          { term: "armor", ex: "Knights wore heavy metal armor in battle.", trans: "Cavaleiros usavam armadura de metal pesada na batalha." },
+          { term: "by God", ex: "By God, we will finish this work today!", trans: "Por Deus, nós vamos terminar este trabalho hoje!" },
+          { term: "keep", ex: "You can keep the remaining change.", trans: "Você pode ficar com / guardar o troco restante." },
+          { term: "glamour", ex: "Hollywood is famous for its glamour and fashion.", trans: "Hollywood é famosa pelo seu glamour e moda." },
+          { term: "dream", ex: "Her big dream is to travel around Europe.", trans: "O grande sonho dela é viajar pela Europa." },
+          { term: "melting pot", ex: "My university campus is a multicultural melting pot.", trans: "O campus da minha universidade é um caldeirão multicultural." },
+          { term: "measurements", ex: "Take exact measurements before buying furniture.", trans: "Tire as medidas exatas antes de comprar móveis." },
+          { term: "throw tantrums", ex: "The toddler threw tantrums at the supermarket.", trans: "A criança pequena teve acessos de birra no supermercado." },
+          { term: "in short", ex: "In short, the meeting was a great success.", trans: "Em resumo, a reunião foi um grande sucesso." },
+          { term: "land", ex: "They bought a small piece of land near the lake.", trans: "Eles compraram um pequeno pedaço de terra perto do lago." }
+        ],
+        gaps: ["spell", "brave", "get rid of", "armor", "by God", "keep", "glamour", "dream", "melting pot", "measurements", "throw tantrums", "in short", "land"],
+        fullScript: `
+          <p><strong>Soldier 4:</strong> What is the scale called, sir?</p>
+          <p><strong>Washington:</strong> Fahrenheit.</p>
+          <p><strong>Soldier 4:</strong> <span class="gap-target" data-answer="spell"></span> that for me.</p>
+          <p><strong>Washington:</strong> Impossible. But one day, if we are <span class="gap-target" data-answer="brave"></span>, we will <span class="gap-target" data-answer="get rid of"></span> the U in a lot of British words like color and <span class="gap-target" data-answer="armor"></span>. But <span class="gap-target" data-answer="by God"></span>, we will <span class="gap-target" data-answer="keep"></span> the British U in the word <span class="gap-target" data-answer="glamour"></span>.</p>
+          <p><strong>Soldier 3:</strong> Only glamour, sir?</p>
+          <p><strong>Washington:</strong> Only glamour. That is my <span class="gap-target" data-answer="dream"></span> for our country, men: a <span class="gap-target" data-answer="melting pot"></span> of different <span class="gap-target" data-answer="measurements"></span> that will make European men <span class="gap-target" data-answer="throw tantrums"></span>. <span class="gap-target" data-answer="in short"></span>, a <span class="gap-target" data-answer="land"></span> of liberty.</p>
+          <p><strong>Soldier 2:</strong> Where all men are free. Where all men are free, right?</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      20: [
+        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
+        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
+        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" }
+      ],
+      30: [
+        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
+        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
+        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" },
+        { q: "4. If you could invent a new rule or measurement system for your country, what would it be?", start: "If I could invent a new system, I would ______.", ex: "If I could invent a new system, I would make every month have exactly 30 days to make calendars simpler!" }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 2 : chosenTime === 20 ? 4 : 6;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      }
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+      }
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube.com/embed/JYqfVE-fykk?start=0&end=48&autoplay=0&enablejsapi=1";
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. What is George Washington talking about with his soldiers?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">His dream for a new country with unique weights and measures</option>
+              <option value="b">A secret plan to attack the British army at night</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. How many pounds will make a "ton" in Washington's dream?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">1,000 pounds</option>
+              <option value="b">2,000 pounds</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+          let imageGridHTML = "";
+
+          if (pData.images) {
+            const allImageTerms = pData.images.map(i => i.term);
+            imageGridHTML = `
+              <div style="margin-bottom:20px;">
+                <p style="font-weight:700; color:#1e293b; margin-bottom:10px;">📸 Match the word with the correct image:</p>
+                <div class="image-grid">
+                  ${pData.images.map(imgObj => `
+                    <div class="image-card">
+                      <img src="${imgObj.img}" alt="${imgObj.term}">
+                      <select class="custom-select" data-correct="${imgObj.term}" style="font-size:0.9em; padding:6px 8px;">
+                        <option value="">-- Choose --</option>
+                        ${shuffleArray([...allImageTerms]).map(t => `<option value="${t}">${t}</option>`).join('')}
+                      </select>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }
+          
+          if (pData.vocabType === 'ab') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([...v.options]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'select') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([v.correct, ...v.distractors]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.correct}">
+                    <option value="">-- Select the correct meaning --</option>
+                    ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Prepare for listening by practicing vocabulary:</p>
+            ${imageGridHTML}
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to everyday examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/JYqfVE-fykk?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = chosenTime === 10 ? 93 : chosenTime === 20 ? 185 : 280;
+        player.src = `https://www.youtube.com/embed/JYqfVE-fykk?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the episode.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Washington explains that a ton will be 2,000 pounds, but 1,000 pounds has no name." },
+        { order: 2, text: "He says soda and alcohol will use liters, but milk will be measured in gallons." },
+        { order: 3, text: "He explains that distance will be measured in feet, yards, and 5,280 feet in a mile." },
+        { order: 4, text: "He explains that meters are only for unpopular sports, while football uses yards." },
+        { order: 5, text: "He mentions rulers with numbers that don't line up and ignores questions about slaves." },
+        { order: 6, text: "He introduces Fahrenheit and decides to keep the 'U' only in the word 'glamour'." }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
