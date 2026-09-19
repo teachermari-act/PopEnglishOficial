@@ -12,8 +12,10 @@
     :root {
       --bg-dark: #0f172a;
       --card-dark: #1e293b;
-      --accent-teal: #0d9488;
-      --accent-hover: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --accent-gradient: linear-gradient(90deg, #9333ea, #a855f7);
+      --title-gradient: linear-gradient(90deg, #a855f7, #ec4899);
       --panel-light: #f8fafc;
       --text-dark: #0f172a;
       --text-light: #f8fafc;
@@ -36,6 +38,26 @@
       font-size: 15px;
     }
 
+    /* Botão de Voltar */
+    .nav-back-container {
+      padding: 10px 16px;
+      background-color: #0b0f19;
+      border-bottom: 1px solid #1e293b;
+      flex-shrink: 0;
+    }
+
+    .nav-back {
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent-pink); }
+
     header {
       padding: 8px 24px;
       display: flex;
@@ -44,14 +66,36 @@
       border-bottom: 1px solid #334155;
       background-color: #0b0f19;
       height: 55px;
+      flex-shrink: 0;
     }
 
     .brand { display: flex; align-items: center; gap: 12px; }
     .brand img { height: 36px; border-radius: 8px; }
-    .brand-text h1 { font-size: 1.2em; color: var(--text-light); font-weight: 700; }
+    .brand-text h1 {
+      font-size: 1.2em;
+      font-weight: 800;
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
     .brand-text span { font-size: 0.8em; color: #94a3b8; }
 
-    .welcome-container { max-width: 650px; margin: auto; padding: 10px; text-align: center; }
+    h1, h2, h3 {
+      background: var(--title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+
+    .welcome-container {
+      max-width: 650px;
+      margin: auto;
+      padding: 10px;
+      text-align: center;
+      overflow-y: auto;
+      max-height: calc(100vh - 100px);
+    }
+
     .hero-card {
       background: var(--card-dark);
       border-radius: var(--radius-round);
@@ -61,9 +105,9 @@
     }
 
     .banner-img { width: 100%; max-height: 150px; object-fit: cover; border-radius: var(--radius-soft); margin-bottom: 12px; }
-    .hero-title { font-size: 1.35em; margin-bottom: 2px; color: #f1f5f9; }
-    .hero-subtitle { font-size: 0.9em; color: var(--accent-hover); font-weight: 600; margin-bottom: 6px; }
-    .hero-desc { font-size: 0.85em; color: #94a3b8; margin-bottom: 14px; }
+    .hero-title { font-size: 1.35em; margin-bottom: 2px; }
+    .hero-subtitle { font-size: 0.9em; color: var(--accent-purple); font-weight: 600; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.95em; color: #cbd5e0; margin-bottom: 14px; font-weight: 500; }
 
     .time-title { font-size: 1em; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
     .time-selector { display: flex; flex-direction: column; gap: 6px; max-width: 440px; margin: 0 auto 18px auto; }
@@ -75,25 +119,48 @@
     }
 
     .time-btn:hover, .time-btn.selected {
-      background: var(--accent-teal); border-color: #5eead4; transform: scale(1.01);
+      background: var(--accent-purple); border-color: var(--accent-pink); transform: scale(1.01);
     }
 
-    .start-btn {
-      background: var(--accent-teal); color: white; border: none;
-      padding: 12px 32px; border-radius: 30px; font-size: 1.05em;
-      font-weight: bold; cursor: pointer; transition: background 0.2s;
-      box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
+    .start-btn, button {
+      background: var(--accent-gradient);
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 30px;
+      font-size: 1.05em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
     }
 
-    .start-btn:hover { background: var(--accent-hover); }
+    .start-btn:hover, button:hover {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
 
-    .workspace { display: none; flex: 1; height: calc(100vh - 55px); padding: 12px; gap: 12px; }
-    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .workspace {
+      display: none;
+      flex: 1;
+      height: calc(100vh - 95px);
+      padding: 12px;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
     
     .right-panel {
-      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
-      border-radius: var(--radius-round); display: flex; flex-direction: column;
-      overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      flex: 1.2;
+      background: var(--panel-light);
+      color: var(--text-dark);
+      border-radius: var(--radius-round);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      min-height: 0;
     }
 
     .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; }
@@ -101,7 +168,7 @@
 
     .cool-stepper {
       display: flex; gap: 8px; background: #e2e8f0; padding: 10px 14px;
-      border-bottom: 1px solid #cbd5e0; overflow-x: auto; align-items: center;
+      border-bottom: 1px solid #cbd5e0; overflow-x: auto; align-items: center; flex-shrink: 0;
     }
 
     .cool-step-pill {
@@ -120,7 +187,7 @@
     }
 
     .cool-step-pill.active .step-num {
-      background: var(--accent-teal); color: white;
+      background: var(--accent-purple); color: white;
     }
 
     .part-subtabs {
@@ -131,14 +198,16 @@
     .part-subtab-btn {
       flex: 1; padding: 8px; border: none; background: transparent;
       border-radius: 8px; font-weight: 700; font-size: 0.9em; color: #475569;
-      cursor: pointer; text-align: center; transition: all 0.2s;
+      cursor: pointer; text-align: center; transition: all 0.2s; box-shadow: none;
     }
+
+    .part-subtab-btn:hover { transform: none; opacity: 1; }
 
     .part-subtab-btn.active {
-      background: white; color: var(--accent-teal); box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
 
-    .content-area { flex: 1; padding: 18px; overflow-y: auto; font-size: 1.05em; }
+    .content-area { flex: 1; padding: 18px; overflow-y: auto; font-size: 1.05em; min-height: 0; }
 
     .question-block { margin-bottom: 16px; }
     .question-block strong { display: block; font-size: 1.05em; margin-bottom: 6px; color: #1e293b; }
@@ -154,34 +223,44 @@
     .ab-btn {
       background: white; border: 2px solid #cbd5e0; padding: 10px 14px; border-radius: 8px;
       text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.95em; color: #334155;
+      box-shadow: none;
     }
-    .ab-btn:hover { border-color: var(--accent-teal); background: #f0fdf4; }
-    .ab-btn.selected-option { border-color: var(--accent-teal); background: #e0f2fe; color: #0369a1; font-weight: 700; }
+    .ab-btn:hover { border-color: var(--accent-purple); background: #f3e8ff; transform: none; }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
-    /* REVERTED TO COMPACT 3-COLUMN GRID */
+    /* AJUSTE DAS IMAGENS NA GRADE */
     .pic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-    .pic-card { background: white; border: 1px solid #cbd5e0; border-radius: 8px; padding: 6px; text-align: center; }
-    .pic-card img { width: 100%; height: 75px; object-fit: cover; border-radius: 4px; margin-bottom: 6px; display: block; }
+    .pic-card { background: white; border: 1px solid #cbd5e0; border-radius: 8px; padding: 6px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+    .pic-card img { 
+      width: 100%; 
+      max-width: 100%;
+      height: auto; 
+      aspect-ratio: 4 / 3;
+      object-fit: cover; 
+      border-radius: 4px; 
+      margin-bottom: 6px; 
+      display: block; 
+    }
 
     .vocab-card-example {
-      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-teal);
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-purple);
       padding: 12px 14px; border-radius: var(--radius-soft); margin-bottom: 12px;
     }
-    .vocab-card-example h4 { font-size: 1.1em; color: var(--accent-teal); margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .vocab-card-example h4 { font-size: 1.1em; color: var(--accent-purple); margin-bottom: 4px; display: flex; justify-content: space-between; }
     .translation-text { font-size: 0.9em; color: #64748b; font-style: italic; margin-top: 4px; }
     
-    .audio-btn { background: #e0f2fe; border: none; color: #0284c7; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85em; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85em; box-shadow: none; }
 
     .word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; padding: 12px; background: #e2e8f0; border-radius: var(--radius-soft); min-height: 48px; }
-    .chip { background: white; padding: 6px 14px; border-radius: 16px; font-weight: 700; font-size: 0.95em; cursor: pointer; border: 1px solid #cbd5e0; }
-    .chip.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+    .chip { background: white; padding: 6px 14px; border-radius: 16px; font-weight: 700; font-size: 0.95em; cursor: pointer; border: 1px solid #cbd5e0; color: #334155; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
 
     .gap-target {
-      display: inline-block; min-width: 90px; height: 32px; border-bottom: 2px solid var(--accent-teal);
-      background: #e0f2fe; margin: 0 3px; vertical-align: middle; text-align: center;
-      font-weight: bold; color: #0369a1; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em;
+      display: inline-block; min-width: 90px; height: 32px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em;
       padding: 0 8px;
     }
     .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
@@ -196,7 +275,7 @@
     .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
     .retell-item {
       background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
-      cursor: grab; font-weight: 600; min-height: 44px; display: flex; align-items: center; font-size: 0.95em;
+      cursor: grab; font-weight: 600; min-height: 44px; display: flex; align-items: center; font-size: 0.95em; color: #334155;
     }
     .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
@@ -206,12 +285,16 @@
       padding: 12px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
     }
 
-    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 8px 14px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.88em; }
-    .toggle-box { display: none; background: #f0fdf4; border-left: 4px solid var(--success); padding: 12px; border-radius: 6px; margin-top: 6px; font-size: 0.95em; }
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 8px 14px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.88em; box-shadow: none; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 4px solid var(--success); padding: 12px; border-radius: 6px; margin-top: 6px; font-size: 0.95em; color: #1e293b; }
 
-    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .panel-footer {
+      padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; flex-shrink: 0;
+    }
     .btn-group { display: flex; gap: 10px; }
-    .btn-action { background: var(--accent-teal); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95em; }
+    .btn-action {
+      background: var(--accent-gradient); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95em; box-shadow: none;
+    }
     .btn-secondary { background: #64748b; }
     .btn-check { background: #0284c7; }
 
@@ -222,8 +305,8 @@
 <body>
 
   <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
-  <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
-    <a href="../index.html" style="color: #38bdf8; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 0.9em; display: inline-flex; align-items: center; gap: 6px;">
+  <div class="nav-back-container">
+    <a href="../index.html" class="nav-back">
       ← Back to Homepage
     </a>
   </div>
@@ -244,7 +327,7 @@
       <img src="https://i.imgur.com/nmDeP90.png" class="banner-img" alt="Friends Scene">
       <h2 class="hero-title">Friends: Loading Up on Hotel Amenities</h2>
       <div class="hero-subtitle">• Season 9, Episode 19 •</div>
-      <p class="hero-desc">Bite-sized movie lessons to boost your listening, vocabulary, and speaking skills.</p>
+      <p class="hero-desc">Ross and Chandler stay at a hotel and try to get free things to save money.</p>
       
       <div>
         <div class="time-title">How much time do you have to practice today?</div>
@@ -272,7 +355,7 @@
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
-        <iframe id="ytPlayer" src="https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?enablejsapi=1" allowfullscreen></iframe>
+        <iframe id="ytPlayer" src="https://www.youtube-nocookie.com/embed/FyZAkhvKv3g?enablejsapi=1" allowfullscreen></iframe>
       </div>
     </div>
 
@@ -293,7 +376,7 @@
   <div class="modal-overlay" id="completionModal">
     <div class="modal-card">
       <h2>CONGRATULATIONS! 🎉</h2>
-      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <p style="margin: 12px 0;">You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
       <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
     </div>
   </div>
@@ -599,7 +682,7 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        player.src = "https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?end=32&enablejsapi=1";
+        player.src = "https://www.youtube-nocookie.com/embed/FyZAkhvKv3g?end=32&enablejsapi=1";
         
         container.innerHTML = `
           <h3>Gist Questions (Warm-up)</h3>
@@ -725,7 +808,7 @@
           `;
         } else if (activeSubTab === 'listening') {
           videoBoxWrapper.style.display = 'block';
-          player.src = `https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?start=${pData.start}&end=${pData.end}&enablejsapi=1`;
+          player.src = `https://www.youtube-nocookie.com/embed/FyZAkhvKv3g?start=${pData.start}&end=${pData.end}&enablejsapi=1`;
 
           container.innerHTML = `
             ${subTabsHTML}
@@ -759,12 +842,12 @@
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
         const endCut = chosenTime === 10 ? 73 : chosenTime === 20 ? 155 : chosenTime === 30 ? 187 : 300;
-        player.src = `https://www.youtube-nocookie.com/embed/p1N2Kj_zSNE?end=${endCut}&enablejsapi=1`;
+        player.src = `https://www.youtube-nocookie.com/embed/FyZAkhvKv3g?end=${endCut}&enablejsapi=1`;
 
         container.innerHTML = `
           <h3>Watch Whole Scene</h3>
           <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
-          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+          <div style="background:#f3e8ff; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#7e22ce;">
             🎉 <strong>Awesome progress!</strong> You've mastered these parts of the episode.
           </div>
         `;
@@ -776,8 +859,8 @@
             <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
             <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
             <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
-            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
-            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+            <button class="toggle-btn" style="background:#f3e8ff; color:#7e22ce; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#f3e8ff; border-left-color:#7e22ce;"><strong>Example Response:</strong><br>"${item.ex}"</div>
           </div>
         `).join('');
 
@@ -809,7 +892,6 @@
       renderCurrentStep();
     }
 
-    /* SELECTION ONLY WITHOUT IMMEDIATE CORRECTION */
     function clickAB(btn) {
       const parent = btn.parentElement;
       parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
@@ -918,11 +1000,9 @@
       box.style.display = box.style.display === 'block' ? 'none' : 'block';
     }
 
-    /* CORRECTION ONLY UPON CLICKING 'CHECK ANSWERS' */
     function checkCurrentStep() {
       const container = document.getElementById('mainContentArea');
       
-      // Check Select Dropdowns
       container.querySelectorAll('.custom-select').forEach(select => {
         if (select.value === select.dataset.correct) {
           select.classList.add('correct'); select.classList.remove('incorrect');
@@ -931,7 +1011,6 @@
         }
       });
 
-      // Check Cards A vs B
       container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
         cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
           btn.classList.remove('correct', 'incorrect');
@@ -945,7 +1024,6 @@
         });
       });
 
-      // Check Gap Fillers
       container.querySelectorAll('.gap-target').forEach(gap => {
         if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
           gap.classList.add('correct'); gap.classList.remove('incorrect');
@@ -954,7 +1032,6 @@
         }
       });
 
-      // Check Retell
       const items = container.querySelectorAll('#sortableList .retell-item');
       items.forEach((item, index) => {
         if (parseInt(item.dataset.order) === index + 1) {

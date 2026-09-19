@@ -359,7 +359,7 @@
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
-        <iframe id="ytPlayer" src="https://www.youtube.com/embed/JYqfVE-fykk?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="ytPlayer" src="https://www.youtube-nocookie.com/embed/JYqfVE-fykk?enablejsapi=1&rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
 
@@ -930,7 +930,7 @@
           <p><strong>Soldier 4:</strong> <span class="gap-target" data-answer="spell"></span> that for me.</p>
           <p><strong>Washington:</strong> Impossible. But one day, if we are <span class="gap-target" data-answer="brave"></span>, we will <span class="gap-target" data-answer="get rid of"></span> the U in a lot of British words like color and <span class="gap-target" data-answer="armor"></span>. But <span class="gap-target" data-answer="by God"></span>, we will <span class="gap-target" data-answer="keep"></span> the British U in the word <span class="gap-target" data-answer="glamour"></span>.</p>
           <p><strong>Soldier 3:</strong> Only glamour, sir?</p>
-          <p><strong>Washington:</strong> Only glamour. That is my <span class="gap-target" data-answer="dream"></span> for our country, men: a <span class="gap-target" data-answer="melting pot"></span> of different <span class="gap-target" data-answer="measurements"></span> that will make European men <span class="gap-target" data-answer="throw tantrums"></span>. <span class="gap-target" data-answer="in short"></span>, a <span class="gap-target" data-answer="land"></span> of liberty.</p>
+          <p><strong>Washington:</strong> Only glamour. That is my <span class="gap-target" data-answer="dream"></span> for our country, men: a <span class="gap-target" data-answer="melting pot"></span> of different <span class="gap-target" data-answer="measurements"></span> that will make Europeans <span class="gap-target" data-answer="throw tantrums"></span>. <span class="gap-target" data-answer="in short"></span>, a <span class="gap-target" data-answer="land"></span> of liberty.</p>
           <p><strong>Soldier 2:</strong> Where all men are free. Where all men are free, right?</p>
         `
       }
@@ -1015,7 +1015,7 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        player.src = "https://www.youtube.com/embed/JYqfVE-fykk?start=0&end=48&autoplay=0&enablejsapi=1";
+        player.src = "https://www.youtube-nocookie.com/embed/JYqfVE-fykk?start=0&end=48&autoplay=0&enablejsapi=1&rel=0&modestbranding=1";
         
         container.innerHTML = `
           <h3>Gist Questions (Warm-up)</h3>
@@ -1127,7 +1127,7 @@
           `;
         } else if (activeSubTab === 'listening') {
           videoBoxWrapper.style.display = 'block';
-          player.src = `https://www.youtube.com/embed/JYqfVE-fykk?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+          player.src = `https://www.youtube-nocookie.com/embed/JYqfVE-fykk?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1`;
 
           container.innerHTML = `
             ${subTabsHTML}
@@ -1161,7 +1161,7 @@
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
         const endCut = chosenTime === 10 ? 93 : chosenTime === 20 ? 185 : 280;
-        player.src = `https://www.youtube.com/embed/JYqfVE-fykk?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+        player.src = `https://www.youtube-nocookie.com/embed/JYqfVE-fykk?start=0&end=${endCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1`;
 
         container.innerHTML = `
           <h3>Watch Whole Scene</h3>

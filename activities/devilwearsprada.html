@@ -304,7 +304,7 @@
       <img src="https://i.imgur.com/EHdz14o.jpeg" class="banner-img" alt="The Devil Wears Prada">
       <h2 class="hero-title">The Devil Wears Prada: The Cerulean Sweater</h2>
       <div class="hero-subtitle">• Iconic Scene •</div>
-      <p class="hero-desc">Bite-sized movie lessons to boost your listening, vocabulary, and speaking skills.</p>
+      <p class="hero-desc">Andy learns how high fashion influences everyday clothes during a meeting.</p>
       
       <div>
         <div class="time-title">How much time do you have to practice today?</div>
@@ -725,7 +725,7 @@
         container.innerHTML = `
           <h3>Watch Whole Scene</h3>
           <p style="color:#64748b; margin-bottom:14px;">Watch the scene again without interruptions:</p>
-          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+          <div style="background:#f3e8ff; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#6b21a8;">
             🎉 <strong>Awesome progress!</strong> You've mastered this iconic scene.
           </div>
         `;
@@ -736,8 +736,8 @@
             <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
             <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
             <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
-            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
-            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+            <button class="toggle-btn" style="background:#f3e8ff; color:#7e22ce; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#f3e8ff; border-left-color:#a855f7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
           </div>
         `).join('');
 

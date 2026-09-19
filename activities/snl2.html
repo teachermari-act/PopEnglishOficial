@@ -275,7 +275,7 @@
     .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.85em; }
     .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 10px; border-radius: 6px; margin-top: 6px; font-size: 0.92em; }
 
-    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-between; background: #f1f5f9; gap: 10px; }
     .btn-group { display: flex; gap: 10px; }
     .btn-action { 
       background: var(--gradient-brand); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92em; 
@@ -329,7 +329,7 @@
       <img src="https://i.imgur.com/vtgcENZ.jpeg" class="banner-img" alt="Washington's Dream SNL">
       <h2 class="hero-title">SNL: Washington's Dream</h2>
       <div class="hero-subtitle">• Saturday Night Live • Nate Bargatze •</div>
-      <p class="hero-desc">Explore the funny origin of American measurement systems with George Washington.</p>
+      <p class="hero-desc">Watch George Washington talk about his funny ideas for the American language, food, and schools.</p>
       
       <div>
         <div class="time-title">How much time do you have to practice today?</div>
@@ -473,8 +473,7 @@
           <p><strong>Soldier 2:</strong> Must be <span class="gap-target" data-answer="thousands"></span>.</p>
           <p><strong>Soldier 3:</strong> Is there any chance we will win this war?</p>
           <p><strong>George Washington:</strong> Of course!</p>
-          <p><strong>Soldier 4:</strong> General Washington!</p>
-          <p><strong>Soldier 4:</strong> General Washington, we apologize.</p>
+          <p><strong>Soldier 4:</strong> General Washington! General Washington, we apologize.</p>
           <p><strong>George Washington:</strong> No need. I am <span class="gap-target" data-answer="fearful"></span> as well. But we will live <span class="gap-target" data-answer="through"></span> the battle ahead. Because we fight to control our <span class="gap-target" data-answer="own"></span> destiny.</p>
           <p><strong>Everybody:</strong> Yeah!</p>
           <p><strong>George Washington:</strong> To create our own <span class="gap-target" data-answer="nation"></span>.</p>
@@ -690,7 +689,7 @@
         gaps: ["worthy", "portrait", "front of", "on the back", "stuff", "squiggles", "floating", "on top", "rhyme", "reason", "much of"],
         fullScript: `
           <p><strong>George Washington:</strong> A real American would never want to know what's in a hot dog, just as they will never know why our money is called the dollar.</p>
-          <p><strong>Soldier 2:</strong> The dollar, sir!</p>
+          <p><strong>Soldier 2:</strong> The dollar, sir?</p>
           <p><strong>George Washington:</strong> Yeah, and if you think I'm <span class="gap-target" data-answer="worthy"></span>, put my <span class="gap-target" data-answer="portrait"></span> on the <span class="gap-target" data-answer="front of"></span> it.</p>
           <p><strong>Soldier 2:</strong> And what shall be <span class="gap-target" data-answer="on the back"></span>, sir?</p>
           <p><strong>George Washington:</strong> Everything. All of it. Crazy <span class="gap-target" data-answer="stuff"></span>. <span class="gap-target" data-answer="squiggles"></span>. Latin words. Pyramid with a <span class="gap-target" data-answer="floating"></span> eye <span class="gap-target" data-answer="on top"></span>.</p>
@@ -823,15 +822,15 @@
 
     const questionsByTime = {
       20: [
-        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
-        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
-        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" }
+        { q: "1. Washington says 'donut' can be spelled two ways (and 'Jeff' with a J or G). Do you know other English words with tricky spelling?", start: "Another word that is confusing to spell is ______ because ______.", ex: "Another word that is confusing to spell is 'color' vs 'colour' because American and British English write it differently!" },
+        { q: "2. Why do you think Washington decides that cows are 'beef' and pigs are 'pork', but 'chickens stay chicken'?", start: "I think it's funny because ______.", ex: "I think it's funny because it shows how random and illogical naming food after animals can be!" },
+        { q: "3. Washington says people honor leaders on Presidents' Day by buying a mattress. What strange holiday tradition do you know?", start: "A funny holiday tradition I know is ______.", ex: "A funny holiday tradition I know is Black Friday sales, where people wake up super early just to buy appliances!" }
       ],
       30: [
-        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
-        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
-        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" },
-        { q: "4. If you could invent a new rule or measurement system for your country, what would it be?", start: "If I could invent a new system, I would ______.", ex: "If I could invent a new system, I would make every month have exactly 30 days to make calendars simpler!" }
+        { q: "1. Washington says 'donut' can be spelled two ways (and 'Jeff' with a J or G). Do you know other English words with tricky spelling?", start: "Another word that is confusing to spell is ______ because ______.", ex: "Another word that is confusing to spell is 'color' vs 'colour' because American and British English write it differently!" },
+        { q: "2. Why do you think Washington decides that cows are 'beef' and pigs are 'pork', but 'chickens stay chicken'?", start: "I think it's funny because ______.", ex: "I think it's funny because it shows how random and illogical naming food after animals can be!" },
+        { q: "3. In the video, Washington says the first year of school is 'kindergarten' and the second is 'first grade'. Is your country's school system also confusing?", start: "In my country, school levels are ______.", ex: "In my country, school levels are straightforward because we just count '1st year, 2nd year' from the beginning!" },
+        { q: "4. Why do you think George Washington walks away every time Soldier 2 asks about freeing the slaves?", start: "He walks away because ______.", ex: "He walks away because the sketch uses humor to highlight how Washington avoided answering serious questions about ending slavery!" }
       ]
     };
 
