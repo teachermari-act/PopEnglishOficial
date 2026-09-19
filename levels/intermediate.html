@@ -13,12 +13,18 @@
     header { margin-bottom: 30px; }
     header h1 { font-size: 1.8rem; margin-bottom: 6px; background: linear-gradient(90deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     header p { color: #94a3b8; font-size: 1rem; }
+    
     .activity-list { display: flex; flex-direction: column; gap: 15px; }
     .activity-card { background: #1e293b; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #6366f1; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; }
     .activity-card p { font-size: 0.9rem; color: #94a3b8; }
-    .btn-start { background: linear-gradient(90deg, #4f46e5, #6366f1); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; }
+    .btn-start { background: linear-gradient(90deg, #4f46e5, #6366f1); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; flex-shrink: 0; margin-left: 15px; }
     .btn-start:hover { opacity: 0.9; }
+
+    @media (max-width: 600px) {
+      .activity-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .btn-start { margin-left: 0; width: 100%; text-align: center; }
+    }
   </style>
 </head>
 <body>
@@ -31,24 +37,42 @@
       <p>Selecione uma atividade para destravar o ouvido no ritmo real:</p>
     </header>
 
-    <main class="activity-list">
-      <div class="activity-card">
-        <div>
-          <h3>Modern Family Activity</h3>
-          <p>Acelere a compreensão auditiva com o pânico no aeroporto de Modern Family.</p>
-        </div>
-        <a href="../activities/modernfamily.html" class="btn-start">Iniciar 🚀</a>
-      </div>
-
-      <div class="activity-card">
-        <div>
-          <h3>Wednesday Activity</h3>
-          <p>Acompanhe a rivalidade de colegas de quarto na cena do quarto de Ophelia Hall.</p>
-        </div>
-        <a href="../activities/wednesday.html" class="btn-start">Iniciar 🚀</a>
-      </div>
-    </main>
+    <!-- Lista onde os cards são gerados automaticamente -->
+    <main class="activity-list" id="activityListContainer"></main>
   </div>
+
+  <script>
+    // =========================================================================
+    // CATÁLOGO DE ATIVIDADES DO NÍVEL INTERMEDIÁRIO
+    // =========================================================================
+    const atividades = [
+      {
+        serieInfo: "Modern Family • Season 8, Episode 18",
+        tituloAula: "Mitch & Cam Lost at the Airport",
+        arquivo: "modernfamily.html"
+      },
+      {
+        serieInfo: "Wednesday • Season 1, Episode 1",
+        tituloAula: "Roommate Rivalry (Ophelia Hall Scene)",
+        arquivo: "wednesday.html"
+      }
+    ];
+
+    function renderizarCards() {
+      const container = document.getElementById('activityListContainer');
+      container.innerHTML = atividades.map(act => `
+        <div class="activity-card">
+          <div>
+            <h3>${act.serieInfo}</h3>
+            <p>${act.tituloAula}</p>
+          </div>
+          <a href="../activities/${act.arquivo}" class="btn-start">Iniciar 🚀</a>
+        </div>
+      `).join('');
+    }
+
+    renderizarCards();
+  </script>
 
 </body>
 </html>
