@@ -207,7 +207,7 @@
       background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
 
-    .content-area { flex: 1; padding: 18px; overflow-y: auto; font-size: 1.05em; min-height: 0; }
+    .content-area { flex: 1; padding: 18px; overflow-y: auto; font-size: 1.05em; min-height: 0; position: relative; }
 
     .question-block { margin-bottom: 16px; }
     .question-block strong { display: block; font-size: 1.05em; margin-bottom: 6px; color: #1e293b; }
@@ -230,7 +230,7 @@
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
-    /* AJUSTE DAS IMAGENS NA GRADE */
+    /* IMAGENS DA GRADE */
     .pic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
     .pic-card { background: white; border: 1px solid #cbd5e0; border-radius: 8px; padding: 6px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
     .pic-card img { 
@@ -253,7 +253,21 @@
     
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85em; box-shadow: none; }
 
-    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; padding: 12px; background: #e2e8f0; border-radius: var(--radius-soft); min-height: 48px; }
+    /* WORD BANK FIXO NO TOPO DO CONTEÚDO */
+    .word-bank { 
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 8px; 
+      margin-bottom: 14px; 
+      padding: 12px; 
+      background: #e2e8f0; 
+      border-radius: var(--radius-soft); 
+      min-height: 48px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
     .chip { background: white; padding: 6px 14px; border-radius: 16px; font-weight: 700; font-size: 0.95em; cursor: pointer; border: 1px solid #cbd5e0; color: #334155; }
     .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
 
@@ -300,6 +314,15 @@
 
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; }
     .modal-card { background: white; color: var(--text-dark); padding: 36px; border-radius: var(--radius-round); text-align: center; max-width: 440px; }
+
+    /* RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS */
+    @media (max-width: 768px) {
+      body { height: auto; overflow: auto; }
+      .workspace { flex-direction: column; height: auto; min-height: unset; overflow: visible; }
+      .left-panel, .right-panel { flex: unset; width: 100%; }
+      .right-panel { height: 600px; }
+      .pic-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
@@ -429,8 +452,7 @@
         ],
         gaps: ["get this straight", "refundable", "cheapest", "unfortunately", "insane", "on the way back", "closet"],
         fullScript: `
-          <p><strong>Chandler:</strong> Let me <span class="gap-target" data-answer="get this straight"></span>. I called yesterday to try to cancel my reservation, was told it's not <span class="gap-target" data-answer="refundable"></span>.</p>
-          <p>then we drove six hours all the way up here, and now you're telling me that we don't have a reservation?</p>
+          <p><strong>Chandler:</strong> Let me <span class="gap-target" data-answer="get this straight"></span>. I called yesterday to try to cancel my reservation, was told it's not <span class="gap-target" data-answer="refundable"></span>. Then we drove six hours all the way up here, and now you're telling me that we don't have a reservation?</p>
           <p><strong>Receptionist:</strong> I don't know what to say.</p>
           <p><strong>Ross:</strong> She doesn't know what to say!</p>
           <p><strong>Chandler:</strong> Just give us the <span class="gap-target" data-answer="cheapest"></span> room you have.</p>
