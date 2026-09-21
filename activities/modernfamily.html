@@ -324,8 +324,6 @@
       <img src="https://i.imgur.com/IHeLljv.jpeg?v=4" class="banner-img" alt="Modern Family Airport Scene">
       <h2 class="hero-title">Modern Family: Mitch & Cam Lost at the Airport</h2>
       <div class="hero-subtitle">• Season 8, Episode 18 •</div>
-      
-      <!-- FRASE RESUMO DA CENA ATUALIZADA -->
       <p class="hero-desc">Join Mitch and Cam in a chaotic airport adventure after a sleeping pill goes wrong.</p>
       
       <div>
@@ -819,7 +817,10 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        player.src = "https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=64&autoplay=0&enablejsapi=1";
+        
+        // CORREÇÃO DOS CORTES DO WARM-UP DE ACORDO COM O TEMPO ESCOLHIDO
+        const warmupEndCut = chosenTime === 10 ? 64 : chosenTime === 20 ? 210 : 334;
+        player.src = `https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=${warmupEndCut}&autoplay=0&enablejsapi=1`;
         
         container.innerHTML = `
           <h3>Gist Questions (Warm-up)</h3>
@@ -957,6 +958,8 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
+        
+        // CORREÇÃO DO CORTE DA CENA FINAL DE ACORDO COM O TEMPO ESCOLHIDO
         const endCut = chosenTime === 10 ? 111 : chosenTime === 20 ? 210 : 334;
         player.src = `https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
