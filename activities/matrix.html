@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - The Matrix: What is the Matrix? by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --border-dark: #334155;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --gradient-brand: linear-gradient(90deg, #9333ea, #a855f7);
+      --gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-dark);
+      background-color: #0b0f19;
+      min-height: 60px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 36px; border-radius: 8px; }
+    .brand-text h1 { 
+      font-size: 1.2em; 
+      font-weight: 800; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+      font-size: 0.9em;
+    }
+    .nav-back:hover { color: var(--accent-pink); }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 20px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid var(--border-dark);
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 200px; 
+      object-fit: cover; 
+      object-position: top;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 16px; 
+      display: block;
+      pointer-events: none;
+      border: 1px solid var(--border-dark);
+    }
+
+    .hero-title { 
+      font-size: 1.5em; 
+      margin-bottom: 4px; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.95em; color: var(--accent-purple); font-weight: 700; margin-bottom: 10px; }
+    .hero-desc { font-size: 0.9em; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
+
+    .time-title { font-size: 0.98em; font-weight: 700; margin-bottom: 12px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 20px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #1e293b; color: white; border: 2px solid var(--border-dark);
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.15);
+      transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--gradient-brand); color: white; border: none;
+      padding: 12px 32px; border-radius: 10px; font-size: 1.05em;
+      font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-dark);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; border: 1px solid var(--border-dark); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #0b0f19; padding: 10px 14px;
+      border-bottom: 1px solid var(--border-dark); overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: #1e293b;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700;
+      color: #94a3b8; border: 1px solid var(--border-dark); white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #334155; color: #f8fafc; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85em;
+    }
+
+    .cool-step-pill.active { background: var(--gradient-brand); color: white; border-color: var(--accent-purple); }
+    .cool-step-pill.active .step-num { background: white; color: var(--accent-purple); font-weight: 800; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 14px; }
+    .part-subtab-btn {
+      flex: 1; padding: 9px 6px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.88em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { 
+      flex: 1; 
+      padding: 18px 20px; 
+      overflow-y: auto; 
+      font-size: 1.1em;
+      line-height: 1.6;
+      position: relative; 
+    }
+
+    .content-area h3 {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25em;
+      margin-bottom: 10px;
+    }
+
+    .content-area p {
+      font-size: 1.02em;
+    }
+
+    .question-block { margin-bottom: 18px; }
+    .question-block strong { display: block; font-size: 1.05em; margin-bottom: 8px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 12px 14px; font-size: 1.02em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select:hover { border-color: var(--accent-purple); }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 12px 14px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1.02em; color: #334155;
+      line-height: 1.4;
+    }
+    .ab-btn:hover { border-color: var(--accent-purple); background: #faf5ff; }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-purple);
+      padding: 14px 16px; border-radius: var(--radius-soft); margin-bottom: 14px;
+    }
+    .vocab-card-example h4 { font-size: 1.15em; color: var(--accent-purple); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .vocab-card-example p { font-size: 1.05em; }
+    .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
+
+    .word-bank { 
+      position: sticky; top: -18px; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; 
+      margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 48px; 
+    }
+    .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+    .gap-target {
+      display: inline-block; min-width: 85px; height: 32px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 10px; margin-top: 10px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 10px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 32px; height: 42px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .retell-item {
+      background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 42px; display: flex; align-items: center; font-size: 0.95em; line-height: 1.4;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 12px 14px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.85em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 10px; border-radius: 6px; margin-top: 6px; font-size: 0.92em; }
+
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-action { 
+      background: var(--gradient-brand); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92em; 
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #0284c7, #0369a1); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    @media (max-width: 768px) {
+      body { height: auto; overflow-y: auto; }
+      header { padding: 8px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; font-size: 1.05em; padding: 12px; }
+      
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+    <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/FeUlEV2.jpeg" class="banner-img" alt="The Matrix Banner">
+      <h2 class="hero-title">The Matrix</h2>
+      <div class="hero-subtitle">What is the Matrix?</div>
+      <p class="hero-desc">Morpheus shows Neo that his world is not real. It is a computer simulation, and machines use humans for energy.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "Nem tão busy, nem tão free" (Parts 1 & 2)</span> <strong>20 min</strong>
+          </button>
+          <button class="time-btn" onclick="selectTime(30, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 to 4)</span> <strong>30 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube-nocookie.com/embed/aL3u3Jv69v4?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2 style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">CONGRATULATIONS! 🎉</h2>
+      <br>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    // CORTES DE TEMPO DAS PARTES (em segundos):
+    // Part 1: 0 - 84s (0:00 - 1:24)
+    // Part 2: 84s - 172s (1:24 - 2:52)
+    // Part 3: 172s - 233s (2:52 - 3:53)
+    // Part 4: 233s - 316s (3:53 - 5:16)
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 1:24)", start: 0, end: 84, vocabType: "select",
+        vocab: [
+          { 
+            term: "weird", 
+            correct: "Strange or unusual",
+            distractors: ["Very normal and common", "Exciting and fun"]
+          },
+          { 
+            term: "construct", 
+            correct: "A virtual reality program or place",
+            distractors: ["A real house made of bricks", "A new computer screen"]
+          },
+          { 
+            term: "load", 
+            correct: "To bring data or items into a computer program",
+            distractors: ["To delete files permanently", "To turn off the computer"]
+          },
+          { 
+            term: "weapons", 
+            correct: "Tools used for fighting like guns or swords",
+            distractors: ["Clothes used for working out", "Electronic devices for music"]
+          },
+          { 
+            term: "inside", 
+            correct: "In or into the interior of a space",
+            distractors: ["Far away on the outside", "Beside a big building"]
+          },
+          { 
+            term: "plugs", 
+            correct: "Connectors used to join cables to a socket or body",
+            distractors: ["Small buttons on a phone", "Warm socks for winter"]
+          },
+          { 
+            term: "changed", 
+            correct: "Became different or modified",
+            distractors: ["Stayed exactly the same", "Started from the beginning"]
+          },
+          { 
+            term: "residual", 
+            correct: "Remaining after the main part is gone",
+            distractors: ["Completely new and clean", "Big and very expensive"]
+          },
+          { 
+            term: "self image", 
+            correct: "The idea or mental picture you have of yourself",
+            distractors: ["A picture of your best friend", "A photograph of a house"]
+          }
+        ],
+        examples: [
+          { term: "weird", ex: "I heard a weird noise in the kitchen.", trans: "Ouvi um barulho estranho na cozinha." },
+          { term: "construct", ex: "Engineers construct new bridges in the city.", trans: "Engenheiros constroem novas pontes na cidade." },
+          { term: "load", ex: "Wait a minute, the game needs to load.", trans: "Espere um minuto, o jogo precisa carregar." },
+          { term: "weapons", ex: "Police officers carry weapons for safety.", trans: "Policiais carregam armas para segurança." },
+          { term: "inside", ex: "It is raining outside, so let's stay inside.", trans: "Está chovendo lá fora, então vamos ficar dentro." },
+          { term: "plugs", ex: "Put the plugs into the electrical socket.", trans: "Coloque os plugues na tomada elétrica." },
+          { term: "changed", ex: "She changed her hair color to blonde.", trans: "Ela mudou a cor do cabelo para loiro." },
+          { term: "residual", ex: "There is some residual sugar at the bottom of the cup.", trans: "Há um pouco de açúcar residual no fundo da xícara." },
+          { term: "self image", ex: "Exercise can help build a positive self image.", trans: "Exercício pode ajudar a construir uma autoimagem positiva." }
+        ],
+        gaps: ["weird", "construct", "load", "weapons", "inside", "plugs", "changed", "self image"],
+        fullScript: `
+          <p><strong>Morpheus:</strong> You wanted to know what the Matrix is, Neo? Trinity. Try to relax. This will feel a little <span class="gap-target" data-answer="weird"></span>.</p>
+          <p><strong>Morpheus:</strong> This is the <span class="gap-target" data-answer="construct"></span>. It's our loading program. We can <span class="gap-target" data-answer="load"></span> anything from clothing, to equipment, <span class="gap-target" data-answer="weapons"></span>, training simulations, anything we need.</p>
+          <p><strong>Neo:</strong> Right now we're <span class="gap-target" data-answer="inside"></span> a computer program?</p>
+          <p><strong>Morpheus:</strong> Is it really so hard to believe? Your clothes are different. The <span class="gap-target" data-answer="plugs"></span> in your arms and head are gone. Your hair has <span class="gap-target" data-answer="changed"></span>. Your appearance now is what we call residual <span class="gap-target" data-answer="self image"></span>. It is the mental projection of your digital self.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (1:24 - 2:52)", start: 84, end: 172, vocabType: "ab",
+        vocab: [
+          { 
+            term: "define", 
+            options: [
+              { text: "To explain the exact meaning of something", correct: "true" },
+              { text: "To hide or confuse the meaning of something", correct: "false" }
+            ]
+          },
+          { 
+            term: "smell", 
+            options: [
+              { text: "To sense something using your nose", correct: "true" },
+              { text: "To sense something using your ears", correct: "false" }
+            ]
+          },
+          { 
+            term: "taste", 
+            options: [
+              { text: "To sense flavor using your mouth", correct: "true" },
+              { text: "To sense temperature using your hands", correct: "false" }
+            ]
+          },
+          { 
+            term: "signals", 
+            options: [
+              { text: "Messages or information sent to a system", correct: "true" },
+              { text: "Complete silence with no information", correct: "false" }
+            ]
+          },
+          { 
+            term: "brain", 
+            options: [
+              { text: "The organ inside your head that thinks and controls your body", correct: "true" },
+              { text: "The organ inside your chest that pumps blood", correct: "false" }
+            ]
+          },
+          { 
+            term: "neural-interactive", 
+            options: [
+              { text: "Connected to and communicating with the brain", correct: "true" },
+              { text: "Completely disconnected from the mind and body", correct: "false" }
+            ]
+          },
+          { 
+            term: "desert", 
+            options: [
+              { text: "A dry and empty area of land", correct: "true" },
+              { text: "A wet forest full of green trees and rain", correct: "false" }
+            ]
+          },
+          { 
+            term: "bits and pieces", 
+            options: [
+              { text: "Small and incomplete parts of something", correct: "true" },
+              { text: "The whole complete object with nothing missing", correct: "false" }
+            ]
+          },
+          { 
+            term: "mankind", 
+            options: [
+              { text: "All human beings together", correct: "true" },
+              { text: "All wild animals in nature", correct: "false" }
+            ]
+          },
+          { 
+            term: "marveled", 
+            options: [
+              { text: "Looked at something with great wonder and surprise", correct: "true" },
+              { text: "Looked at something with total boredom and disinterest", correct: "false" }
+            ]
+          },
+          { 
+            term: "magnificence", 
+            options: [
+              { text: "Great beauty, power, or impressive quality", correct: "true" },
+              { text: "Extreme weakness and poor quality", correct: "false" }
+            ]
+          },
+          { 
+            term: "gave birth", 
+            options: [
+              { text: "Created or brought something new into life", correct: "true" },
+              { text: "Destroyed or ended the life of something", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "define", ex: "Can you define this English word for me?", trans: "Você pode definir esta palavra em inglês para mim?" },
+          { term: "smell", ex: "I love the smell of fresh coffee in the morning.", trans: "Eu amo o cheiro de café fresco de manhã." },
+          { term: "taste", ex: "This cake tastes sweet and delicious.", trans: "Este bolo tem um gosto doce e delicioso." },
+          { term: "signals", ex: "The phone has weak internet signals here.", trans: "O celular tem sinais de internet fracos aqui." },
+          { term: "brain", ex: "Sleep is very important for a healthy brain.", trans: "O sono é muito importante para um cérebro saudável." },
+          { term: "neural-interactive", ex: "New video games use neural-interactive technology.", trans: "Novos jogos de videogame usam tecnologia neural-interativa." },
+          { term: "desert", ex: "It is very hot and dry in the desert.", trans: "É muito quente e seco no deserto." },
+          { term: "bits and pieces", ex: "I only remember bits and pieces of the movie.", trans: "Eu só me lembro de pedaços e fragmentos do filme." },
+          { term: "mankind", ex: "Space travel is a big step for all mankind.", trans: "A viagem espacial é um grande passo para toda a humanidade." },
+          { term: "marveled", ex: "We marveled at the beautiful ocean view.", trans: "Nós nos maravilhamos com a linda vista do oceano." },
+          { term: "magnificence", ex: "They admired the magnificence of the palace.", trans: "Eles admiraram a magnificência do palácio." },
+          { term: "gave birth", ex: "Her ideas gave birth to a great new company.", trans: "As ideias dela deram origem a uma grande empresa nova." }
+        ],
+        gaps: ["define", "taste", "signals", "brain", "neural-interactive", "desert", "bits and pieces", "mankind", "magnificence", "gave birth"],
+        fullScript: `
+          <p><strong>Neo:</strong> This... this isn't real?</p>
+          <p><strong>Morpheus:</strong> What is real? How do you <span class="gap-target" data-answer="define"></span> real? If you're talking about what you can feel, what you can smell, what you can <span class="gap-target" data-answer="taste"></span> and see, then real is simply electrical <span class="gap-target" data-answer="signals"></span> interpreted by your <span class="gap-target" data-answer="brain"></span>. This is the world that you know. The world as it was at the end of the twentieth century. It exists now only as part of a <span class="gap-target" data-answer="neural-interactive"></span> simulation that we call the Matrix.</p>
+          <p><strong>Morpheus:</strong> You've been living in a dream world, Neo. This is the world as it exists today. Welcome to the <span class="gap-target" data-answer="desert"></span> of the real.</p>
+          <p><strong>Morpheus:</strong> We have only <span class="gap-target" data-answer="bits and pieces"></span> of information but what we know for certain is that at some point in the early twenty-first century all of <span class="gap-target" data-answer="mankind"></span> was united in celebration. We marveled at our own <span class="gap-target" data-answer="magnificence"></span> as we <span class="gap-target" data-answer="gave birth"></span> to A.Ι.</p>
+          <p><strong>Neo:</strong> A.I.?</p>
+        `
+      },
+      3: {
+        title: "Part 3 (2:52 - 3:53)", start: 172, end: 233, vocabType: "select",
+        vocab: [
+          { 
+            term: "consciousness", 
+            correct: "The state of being awake and aware of things",
+            distractors: ["A state of deep sleep without dreams", "A physical object made of metal"]
+          },
+          { 
+            term: "spawned", 
+            correct: "Created or produced something new",
+            distractors: ["Destroyed or broke something into pieces", "Bought something expensive at a store"]
+          },
+          { 
+            term: "struck", 
+            correct: "Hit or attacked first",
+            distractors: ["Helped or saved someone in danger", "Ran away very fast from a place"]
+          },
+          { 
+            term: "scorched", 
+            correct: "Burned or made very hot and dry",
+            distractors: ["Cooled down with cold ice water", "Washed clean with soft soap"]
+          },
+          { 
+            term: "unable", 
+            correct: "Not having the skill or power to do something",
+            distractors: ["Very smart and capable of everything", "Ready to start a new job today"]
+          },
+          { 
+            term: "source", 
+            correct: "The place or thing where something comes from",
+            distractors: ["The end result of a long journey", "A trash bin for old unwanted items"]
+          },
+          { 
+            term: "throughout", 
+            correct: "In every part of a period of time or place",
+            distractors: ["Only at the very beginning of a day", "Never during any point in history"]
+          },
+          { 
+            term: "fate", 
+            correct: "Destiny or events that happen beyond control",
+            distractors: ["A careful plan made by a person", "A small mistake made by accident"]
+          },
+          { 
+            term: "without", 
+            correct: "Not having or lacking something",
+            distractors: ["Having plenty of extra items", "Sharing everything with friends"]
+          },
+          { 
+            term: "body heat", 
+            correct: "The natural warmth produced by a living body",
+            distractors: ["Cold wind blowing outside in winter", "Electrical energy from a wall power plug"]
+          },
+          { 
+            term: "fusion", 
+            correct: "Combining two or more things to make power or one object",
+            distractors: ["Splitting something into tiny pieces", "Throwing away useless garbage"]
+          }
+        ],
+        examples: [
+          { term: "consciousness", ex: "He regained consciousness after a short nap.", trans: "Ele recuperou a consciência depois de um cochilo curto." },
+          { term: "spawned", ex: "The popular video game spawned a new movie series.", trans: "O jogo famoso deu origem a uma nova série de filmes." },
+          { term: "struck", ex: "Lightning struck the tall tree during the storm.", trans: "O raio atingiu a árvore alta durante a tempestade." },
+          { term: "scorched", ex: "The hot sun scorched the grass in the garden.", trans: "O sol quente queimou a grama no jardim." },
+          { term: "unable", ex: "She was unable to find her lost keys.", trans: "Ela foi incapaz de encontrar suas chaves perdidas." },
+          { term: "source", ex: "Oranges are a great source of Vitamin C.", trans: "Laranjas são uma ótima fonte de Vitamina C." },
+          { term: "throughout", ex: "It rained heavily throughout the entire night.", trans: "Choveu forte durante toda a noite." },
+          { term: "fate", ex: "They met again by fate after ten years.", trans: "Eles se encontraram novamente pelo destino depois de dez anos." },
+          { term: "without", ex: "I cannot drink coffee without sugar.", trans: "Eu não consigo beber café sem açúcar." },
+          { term: "body heat", ex: "A warm blanket keeps your body heat inside.", trans: "Um cobertor quente mantém o calor do seu corpo dentro." },
+          { term: "fusion", ex: "This restaurant offers a fusion of Italian and Japanese food.", trans: "Este restaurante oferece uma fusão de comida italiana e japonesa." }
+        ],
+        gaps: ["consciousness", "spawned", "struck", "scorched", "unable", "source", "throughout", "fate", "without", "body heat", "fusion"],
+        fullScript: `
+          <p><strong>Neo:</strong> You mean artificial intelligence?</p>
+          <p><strong>Morpheus:</strong> A singular <span class="gap-target" data-answer="consciousness"></span> that <span class="gap-target" data-answer="spawned"></span> an entire race of machines. We don't know who <span class="gap-target" data-answer="struck"></span> first, us or them. But we know that it was us that <span class="gap-target" data-answer="scorched"></span> the sky. At the time they were dependent on solar power, and it was believed that they would be <span class="gap-target" data-answer="unable"></span> to survive without an energy <span class="gap-target" data-answer="source"></span> as abundant as the sun. <span class="gap-target" data-answer="throughout"></span> human history, we have been dependent on machines to survive. <span class="gap-target" data-answer="fate"></span>, it seems, is not <span class="gap-target" data-answer="without"></span> a sense of irony.</p>
+          <p><strong>Morpheus:</strong> The human body generates more bio-electricity than a 120-volt battery and over 25,000 BTUs of <span class="gap-target" data-answer="body heat"></span>. Combined with a form of <span class="gap-target" data-answer="fusion"></span>, the machines have found all the energy they would ever need.</p>
+        `
+      },
+      4: {
+        title: "Part 4 (3:53 - 5:16)", start: 233, end: 316, vocabType: "ab",
+        vocab: [
+          { 
+            term: "fields", 
+            options: [
+              { text: "Large open areas of land used for growing crops", correct: "true" },
+              { text: "Small closed rooms inside a big building", correct: "false" }
+            ]
+          },
+          { 
+            term: "endless", 
+            options: [
+              { text: "Having no limit or finish; going on forever", correct: "true" },
+              { text: "Very short and ending quickly in a few minutes", correct: "false" }
+            ]
+          },
+          { 
+            term: "grown", 
+            options: [
+              { text: "Cultivated or produced like plants from soil", correct: "true" },
+              { text: "Bought ready-made from a store", correct: "false" }
+            ]
+          },
+          { 
+            term: "liquefy", 
+            options: [
+              { text: "To make or turn something into a liquid form", correct: "true" },
+              { text: "To freeze something into a hard solid block", correct: "false" }
+            ]
+          },
+          { 
+            term: "fed", 
+            options: [
+              { text: "Gave food or nourishment to someone or something", correct: "true" },
+              { text: "Took away food and made someone hungry", correct: "false" }
+            ]
+          },
+          { 
+            term: "intravenously", 
+            options: [
+              { text: "Entering directly through a medical tube into the veins", correct: "true" },
+              { text: "Eating normally through mouth and teeth", correct: "false" }
+            ]
+          },
+          { 
+            term: "facing", 
+            options: [
+              { text: "Looking directly towards or confronting something", correct: "true" },
+              { text: "Turning around and running away from something", correct: "false" }
+            ]
+          },
+          { 
+            term: "horrifying", 
+            options: [
+              { text: "Causing extreme fear, shock, or disgust", correct: "true" },
+              { text: "Causing great joy, peace, and happiness", correct: "false" }
+            ]
+          },
+          { 
+            term: "let me out", 
+            options: [
+              { text: "A plea to be allowed to leave or escape from a place", correct: "true" },
+              { text: "An invitation to stay inside forever", correct: "false" }
+            ]
+          },
+          { 
+            term: "I want out", 
+            options: [
+              { text: "A strong desire to leave a situation or space", correct: "true" },
+              { text: "A strong desire to enter a new building", correct: "false" }
+            ]
+          },
+          { 
+            term: "take off", 
+            options: [
+              { text: "To remove clothing, glasses, or equipment from the body", correct: "true" },
+              { text: "To put on extra jackets or shoes", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "fields", ex: "Farmers plant corn in large green fields.", trans: "Fazendeiros plantam milho em grandes campos verdes." },
+          { term: "endless", ex: "Looking at the ocean feels like looking at an endless blue sky.", trans: "Olhar para o oceano parece olhar para um céu azul infinito." },
+          { term: "grown", ex: "These fresh tomatoes were grown in our backyard.", trans: "Estes tomates frescos foram cultivados no nosso quintal." },
+          { term: "liquefy", ex: "Heat will liquefy the ice cream quickly on a sunny day.", trans: "O calor vai liquidificar o sorvete rapidamente em um dia ensolarado." },
+          { term: "fed", ex: "She fed the street cats with fresh food this morning.", trans: "Ela alimentou os gatos de rua com comida fresca esta manhã." },
+          { term: "intravenously", ex: "The patient received medicine intravenously at the hospital.", trans: "O paciente recebeu remédio intravenosamente no hospital." },
+          { term: "facing", ex: "Our new apartment is facing a big public park.", trans: "Nosso novo apartamento está de frente para um grande parque público." },
+          { term: "horrifying", ex: "He saw a horrifying car crash on the highway.", trans: "Ele viu um acidente de carro horroroso na rodovia." },
+          { term: "let me out", ex: "The dog barked loudly at the door: 'Let me out!'", trans: "O cachorro latiu alto na porta: 'Me deixe sair!'" },
+          { term: "I want out", ex: "This meeting is very boring, I want out now.", trans: "Esta reunião é muito chata, eu quero sair agora." },
+          { term: "take off", ex: "Please take off your shoes before entering the house.", trans: "Por favor, tire os sapatos antes de entrar em casa." }
+        ],
+        gaps: ["fields", "endless", "grown", "liquefy", "intravenously", "facing", "horrifying", "let me out", "I want out"],
+        fullScript: `
+          <p><strong>Morpheus:</strong> There are <span class="gap-target" data-answer="fields"></span>, <span class="gap-target" data-answer="endless"></span> fields, where human beings are no longer born. We are <span class="gap-target" data-answer="grown"></span>. For the longest time I wouldn't believe it, and then I saw the fields with my own eyes.</p>
+          <p><strong>Morpheus:</strong> Watch them <span class="gap-target" data-answer="liquefy"></span> the dead so they could be fed <span class="gap-target" data-answer="intravenously"></span> to the living. And standing there, <span class="gap-target" data-answer="facing"></span> the pure <span class="gap-target" data-answer="horrifying"></span> precision, I came to realize the obviousness of the truth.</p>
+          <p><strong>Morpheus:</strong> What is the Matrix? Control. The Matrix is a computer generated dream world built to keep us under control in order to change a human being into this.</p>
+          <p><strong>Neo:</strong> No. I don't believe it. It's not possible.</p>
+          <p><strong>Morpheus:</strong> I didn't say it would be easy, Neo. I just said it would be the truth.</p>
+          <p><strong>Neo:</strong> Stop. <span class="gap-target" data-answer="let me out"></span>. Let me out. <span class="gap-target" data-answer="I want out"></span>. Take this thing off me. Take this thing...</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      20: [
+        { q: "1. How would you react if someone proved to you that our reality is just a computer simulation?", start: "If someone proved this to me, I would feel ______ because ______.", ex: "If someone proved this to me, I would feel completely shocked and terrified because everything I know would be a lie!" },
+        { q: "2. Do you think sensory details (smell, touch, sight) are enough to define what is real?", start: "I think sensory details are ______ because ______.", ex: "I think sensory details are not enough because, as Morpheus said, they can be simulated by electrical signals in the brain!" },
+        { q: "3. Would you prefer to live in a comfortable fake reality or face a harsh real world?", start: "I would definitely choose to live in ______ because ______.", ex: "I would definitely choose to live in the harsh real world because truth and freedom are more important than comfortable illusions." }
+      ],
+      30: [
+        { q: "1. How would you react if someone proved to you that our reality is just a computer simulation?", start: "If someone proved this to me, I would feel ______ because ______.", ex: "If someone proved this to me, I would feel completely shocked and terrified because everything I know would be a lie!" },
+        { q: "2. Do you think sensory details (smell, touch, sight) are enough to define what is real?", start: "I think sensory details are ______ because ______.", ex: "I think sensory details are not enough because, as Morpheus said, they can be simulated by electrical signals in the brain!" },
+        { q: "3. Would you prefer to live in a comfortable fake reality or face a harsh real world?", start: "I would definitely choose to live in ______ because ______.", ex: "I would definitely choose to live in the harsh real world because truth and freedom are more important than comfortable illusions." },
+        { q: "4. What dangers or benefits do you see in the rapid development of Artificial Intelligence today?", start: "In my opinion, the biggest danger/benefit of AI is ______ because ______.", ex: "In my opinion, the biggest benefit of AI is automating repetitive work, but the danger is relying on technology too much to live our lives." }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 20 ? 2 : 4;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube-nocookie.com/embed/aL3u3Jv69v4?start=0&end=84&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3";
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. Where are Morpheus and Neo during this scene?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">Inside a computer loading program called 'the construct'</option>
+              <option value="b">Inside a real military base located underwater</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. What does Morpheus call Neo's digital appearance inside the program?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">A hologram avatar</option>
+              <option value="b">Residual self image</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+          let imageGridHTML = "";
+
+          if (pData.images) {
+            const allImageTerms = pData.images.map(i => i.term);
+            imageGridHTML = `
+              <div style="margin-bottom:20px;">
+                <p style="font-weight:700; color:#1e293b; margin-bottom:10px;">📸 Match the word with the correct image:</p>
+                <div class="image-grid">
+                  ${pData.images.map(imgObj => `
+                    <div class="image-card">
+                      <img src="${imgObj.img}" alt="${imgObj.term}">
+                      <select class="custom-select" data-correct="${imgObj.term}" style="font-size:0.9em; padding:6px 8px;">
+                        <option value="">-- Choose --</option>
+                        ${shuffleArray([...allImageTerms]).map(t => `<option value="${t}">${t}</option>`).join('')}
+                      </select>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }
+          
+          if (pData.vocabType === 'ab') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([...v.options]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'select') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([v.correct, ...v.distractors]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.correct}">
+                    <option value="">-- Select the correct meaning --</option>
+                    ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Prepare for listening by practicing vocabulary:</p>
+            ${imageGridHTML}
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to everyday examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube-nocookie.com/embed/aL3u3Jv69v4?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = step.maxPart === 2 ? 172 : 316;
+        player.src = `https://www.youtube-nocookie.com/embed/aL3u3Jv69v4?start=0&end=${endCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the episode.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Morpheus introduces the construct loading program and explains residual self image." },
+        { order: 2, text: "Morpheus defines reality as electrical signals and explains how humans created AI." },
+        { order: 3, text: "He reveals how humans scorched the sky and fate's irony regarding machine energy." },
+        { order: 4, text: "He explains how machines grow humans in fields, harvest energy, and defines Matrix as control." }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
