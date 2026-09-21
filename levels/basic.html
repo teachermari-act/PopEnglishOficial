@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Little by little a galinha enche o papo - POP English</title>
+  <title>Little by little the chicken enche o papo - POP English</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
@@ -15,7 +15,12 @@
     header p { color: #94a3b8; font-size: 1rem; }
     
     .activity-list { display: flex; flex-direction: column; gap: 15px; }
-    .activity-card { background: #1e293b; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #a855f7; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .activity-card { background: #1e293b; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #a855f7; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .card-content { display: flex; align-items: center; gap: 16px; }
+    
+    /* Imagem quadrada com cantos arredondados e maior */
+    .card-avatar { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #a855f7; background-color: #0f172a; }
+    
     .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; }
     .activity-card p { font-size: 0.9rem; color: #94a3b8; }
     .btn-start { background: linear-gradient(90deg, #9333ea, #a855f7); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; flex-shrink: 0; margin-left: 15px; }
@@ -33,52 +38,51 @@
     <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
 
     <header>
-      <h1>Little by little a galinha enche o papo ✨</h1>
+      <h1>Little by little the chicken enche o papo ✨</h1>
       <p>Selecione uma atividade para treinar seu listening no seu tempo:</p>
     </header>
 
-    <!-- Os cards serão gerados automaticamente dentro desta lista -->
     <main class="activity-list" id="activityListContainer"></main>
   </div>
 
   <script>
-    // =========================================================================
-    // CATÁLOGO DE ATIVIDADES DO NÍVEL BÁSICO
-    // Para adicionar uma atividade nova, basta incluir um novo bloco {...} abaixo!
-    // =========================================================================
     const atividades = [
       {
         serieInfo: "Friends • Season 9, Episode 19",
         tituloAula: "Loading Up on Hotel Amenities",
-        arquivo: "friends.html"
+        arquivo: "friends.html",
+        imagem: "https://i.imgur.com/nmDeP90.png"
       },
       {
         serieInfo: "Saturday Night Live • Nate Bargatze",
         tituloAula: "Washington's Dream #1",
-        arquivo: "snl1.html"
+        arquivo: "snl1.html",
+        imagem: "https://i.imgur.com/vtgcENZ.jpeg"
       },
       {
         serieInfo: "Saturday Night Live • Nate Bargatze",
         tituloAula: "Washington's Dream #2",
-        arquivo: "snl2.html"
+        arquivo: "snl2.html",
+        imagem: "https://i.imgur.com/vtgcENZ.jpeg"
       }
     ];
 
-    // FUNÇÃO QUE GERA OS CARDS AUTOMATICAMENTE NA TELA
     function renderizarCards() {
       const container = document.getElementById('activityListContainer');
       container.innerHTML = atividades.map(act => `
         <div class="activity-card">
-          <div>
-            <h3>${act.serieInfo}</h3>
-            <p>${act.tituloAula}</p>
+          <div class="card-content">
+            <img src="${act.imagem}" alt="${act.serieInfo}" class="card-avatar">
+            <div>
+              <h3>${act.serieInfo}</h3>
+              <p>${act.tituloAula}</p>
+            </div>
           </div>
-          <a href="../activities/${act.arquivo}" class="btn-start">Iniciar 🎧</a>
+          <a href="../activities/${act.arquivo}" class="btn-start">Start 🎧</a>
         </div>
       `).join('');
     }
 
-    // Executa ao carregar a página
     renderizarCards();
   </script>
 

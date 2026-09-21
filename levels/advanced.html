@@ -15,7 +15,12 @@
     header p { color: #94a3b8; font-size: 1rem; }
     
     .activity-list { display: flex; flex-direction: column; gap: 15px; }
-    .activity-card { background: #1e293b; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #ec4899; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .activity-card { background: #1e293b; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #ec4899; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .card-content { display: flex; align-items: center; gap: 16px; }
+    
+    /* Imagem quadrada com cantos arredondados e maior */
+    .card-avatar { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #ec4899; background-color: #0f172a; }
+
     .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; }
     .activity-card p { font-size: 0.9rem; color: #94a3b8; }
     .btn-start { background: linear-gradient(90deg, #db2777, #ec4899); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; flex-shrink: 0; margin-left: 15px; }
@@ -37,24 +42,22 @@
       <p>Selecione um desafio para testar seu listening sem legenda:</p>
     </header>
 
-    <!-- Lista onde os cards são gerados automaticamente -->
     <main class="activity-list" id="activityListContainer"></main>
   </div>
 
   <script>
-    // =========================================================================
-    // CATÁLOGO DE ATIVIDADES DO NÍVEL AVANÇADO
-    // =========================================================================
     const atividades = [
       {
         serieInfo: "The Devil Wears Prada • Iconic Scene",
         tituloAula: "The Cerulean Sweater Speech",
-        arquivo: "devilwearsprada.html"
+        arquivo: "devilwearsprada.html",
+        imagem: "https://i.imgur.com/EHdz14o.jpeg"
       },
       {
         serieInfo: "The Last of Us • Season 1, Episode 1",
         tituloAula: "The Fungal Pandemic Warning",
-        arquivo: "thelastofus.html"
+        arquivo: "thelastofus.html",
+        imagem: "https://i.imgur.com/SmGN2Hh.jpeg"
       }
     ];
 
@@ -62,11 +65,14 @@
       const container = document.getElementById('activityListContainer');
       container.innerHTML = atividades.map(act => `
         <div class="activity-card">
-          <div>
-            <h3>${act.serieInfo}</h3>
-            <p>${act.tituloAula}</p>
+          <div class="card-content">
+            <img src="${act.imagem}" alt="${act.serieInfo}" class="card-avatar">
+            <div>
+              <h3>${act.serieInfo}</h3>
+              <p>${act.tituloAula}</p>
+            </div>
           </div>
-          <a href="../activities/${act.arquivo}" class="btn-start">Iniciar 💥</a>
+          <a href="../activities/${act.arquivo}" class="btn-start">Start 💥</a>
         </div>
       `).join('');
     }
