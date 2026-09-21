@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - How I Met Your Mother (The Perfect Picture) by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --accent-gradient: linear-gradient(90deg, #9333ea, #a855f7);
+      --accent-gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #a855f7;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9em;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: #ec4899; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 17px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+      background-color: #0b0f19;
+      min-height: 55px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 32px; border-radius: 8px; }
+    .brand-text h1 { font-size: 1.1em; color: var(--text-light); font-weight: 700; }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 16px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 20px 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border: 1px solid #334155;
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 180px; 
+      object-fit: cover; 
+      object-position: top;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 12px; 
+      display: block;
+      pointer-events: none;
+    }
+    .hero-title { 
+      font-size: 1.55em; 
+      margin-bottom: 4px; 
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.85em; color: #ec4899; font-weight: 600; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.85em; color: #94a3b8; margin-bottom: 14px; }
+
+    .time-title { font-size: 0.95em; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 18px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #334155; color: white; border: 2px solid transparent;
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.98em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      background: var(--accent-gradient); border-color: #c084fc; transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--accent-gradient); color: white; border: none;
+      padding: 12px 32px; border-radius: 30px; font-size: 1em;
+      font-weight: bold; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    /* WORKSPACE RESPONSIVO */
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 55px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #e2e8f0; padding: 8px 12px;
+      border-bottom: 1px solid #cbd5e0; overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: white;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 700;
+      color: #64748b; border: 1px solid #cbd5e0; white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #cbd5e0; color: #334155; border-radius: 50%; width: 20px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.8em;
+    }
+
+    .cool-step-pill.active { background: var(--bg-dark); color: white; border-color: var(--bg-dark); }
+    .cool-step-pill.active .step-num { background: var(--accent-purple); color: white; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #cbd5e0; padding: 4px; border-radius: 10px; margin-bottom: 12px; }
+    .part-subtab-btn {
+      flex: 1; padding: 8px 4px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.8em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: #9333ea; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { flex: 1; padding: 14px; overflow-y: auto; font-size: 0.95em; position: relative; }
+
+    .question-block { margin-bottom: 14px; }
+    .question-block strong { display: block; font-size: 0.95em; margin-bottom: 6px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 10px 12px; font-size: 0.98em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 8px 12px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.98em; color: #334155;
+    }
+    .ab-btn.selected-option { border-color: #a855f7; background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 4px solid #a855f7;
+      padding: 10px 12px; border-radius: var(--radius-soft); margin-bottom: 10px;
+    }
+    .vocab-card-example h4 { font-size: 1em; color: #7e22ce; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .translation-text { font-size: 0.85em; color: #64748b; font-style: italic; margin-top: 4px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
+
+    .word-bank { 
+      position: sticky; top: -14px; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px; 
+      margin-bottom: 12px; padding: 10px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 44px; 
+    }
+    .chip { background: white; padding: 5px 10px; border-radius: 14px; font-weight: 700; font-size: 0.85em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: #9333ea; color: white; border-color: #9333ea; }
+
+    .gap-target {
+      display: inline-block; min-width: 75px; height: 28px; border-bottom: 2px solid #a855f7;
+      background: #f3e8ff; margin: 0 2px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 4px; line-height: 2.2; cursor: pointer; font-size: 0.95em; padding: 0 6px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 8px; margin-top: 8px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 8px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 28px; height: 38px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .retell-item {
+      background: white; padding: 8px 10px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 38px; display: flex; align-items: center; font-size: 0.85em;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 10px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 12px; font-size: 0.88em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 10px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 4px; font-size: 0.8em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 8px; border-radius: 6px; margin-top: 4px; font-size: 0.88em; }
+
+    .panel-footer { padding: 10px 14px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 8px; }
+    .btn-group { display: flex; gap: 8px; }
+    .btn-action { background: var(--accent-gradient); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.88em; transition: transform 0.1s, opacity 0.2s; }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #9333ea, #a855f7); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 24px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    /* MEDIA QUERIES PARA RESPONSIVIDADE EM CELULARES */
+    @media (max-width: 768px) {
+      body { font-size: 16px; height: auto; overflow-y: auto; }
+      header { padding: 6px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; }
+      
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  
+    .content-area h3 {
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      margin-bottom: 8px;
+      font-size: 1.35em;
+    }
+</style>
+</head>
+<body>
+
+  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
+  <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
+    <a href="../index.html" class="nav-back">
+      ← Back to Homepage
+    </a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://img.youtube.com/vi/i5CthfjN_zs/maxresdefault.jpg" class="banner-img" alt="How I Met Your Mother - Barney's Perfect Picture">
+      <h2 class="hero-title">HIMYM: Barney's Perfect Picture</h2>
+      <div class="hero-subtitle">• Season 5, Episode 18 •</div>
+      <p class="hero-desc">Robin tries to take a bad picture of Barney, but he always looks great in every photo.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Part 1)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 & 2)</span> <strong>20 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/i5CthfjN_zs?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2>CONGRATULATIONS! 🎉</h2>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 1:23)", start: 0, end: 83, selectType: "dropdown",
+        vocab: [
+          { 
+            term: "shot", 
+            options: [
+              { isCorrect: true, text: "A single photograph" },
+              { isCorrect: false, text: "A small quick drink" },
+              { isCorrect: false, text: "A goal in a sports game" }
+            ]
+          },
+          { 
+            term: "years apart", 
+            options: [
+              { isCorrect: false, text: "Taken in different rooms" },
+              { isCorrect: true, text: "Separated by many years" },
+              { isCorrect: false, text: "Taken on the exact same day" }
+            ]
+          },
+          { 
+            term: "never have, never will", 
+            options: [
+              { isCorrect: true, text: "I didn't do it before and I won't do it in the future" },
+              { isCorrect: false, text: "I used to do it in the past, but I will stop soon" },
+              { isCorrect: false, text: "I don't like doing it now, but I might try later" }
+            ]
+          },
+          { 
+            term: "drop-dead", 
+            options: [
+              { isCorrect: false, text: "Feeling very sick or tired" },
+              { isCorrect: false, text: "Falling down by accident" },
+              { isCorrect: true, text: "Extremely attractive or handsome" }
+            ]
+          },
+          { 
+            term: "stone-cold amazing", 
+            options: [
+              { isCorrect: true, text: "Completely and undeniably impressive" },
+              { isCorrect: false, text: "Very cold and freezing outdoors" },
+              { isCorrect: false, text: "Quiet and not talking to anyone" }
+            ]
+          },
+          { 
+            term: "stoned", 
+            options: [
+              { isCorrect: false, text: "Sitting on a hard rock" },
+              { isCorrect: true, text: "Looking dazed, confused, or sleepy" },
+              { isCorrect: false, text: "Feeling very cold in the winter" }
+            ]
+          },
+          { 
+            term: "chip", 
+            options: [
+              { isCorrect: false, text: "A small piece of wood" },
+              { isCorrect: false, text: "A sweet chocolate candy bar" },
+              { isCorrect: true, text: "A thin, crispy snack food" }
+            ]
+          },
+          { 
+            term: "dip", 
+            options: [
+              { isCorrect: false, text: "A cold drink in a glass" },
+              { isCorrect: true, text: "A creamy sauce for snack food" },
+              { isCorrect: false, text: "A quick jump into a swimming pool" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "shot", ex: "This is a great photo shot from our vacation.", trans: "Esta é uma ótima foto das nossas férias." },
+          { term: "years apart", ex: "My brother and I were born three years apart.", trans: "Meu irmão e eu nascemos com três anos de diferença." },
+          { term: "never have, never will", ex: "I don't drink coffee; never have, never will.", trans: "Eu não bebo café; nunca bebi, nunca beberei." },
+          { term: "drop-dead", ex: "She looks drop-dead gorgeous in that red dress.", trans: "Ela está incrivelmente linda naquele vestido vermelho." },
+          { term: "stone-cold amazing", ex: "His new song is stone-cold amazing!", trans: "A música nova dele é absolutamente incrível!" },
+          { term: "stoned", ex: "Why are you looking at me with that stoned expression?", trans: "Por que você está olhando para mim com essa cara de aéreo/atordoado?" },
+          { term: "chip", ex: "Do you want a potato chip?", trans: "Você quer uma batata frita/salgadinho?" },
+          { term: "dip", ex: "Try this tortilla chip with salsa dip.", trans: "Experimente esse nacho com molho de tomate." }
+        ],
+        gaps: ["shot", "years apart", "never have, never will", "drop-dead", "stone-cold amazing", "stoned", "chip", "dip"],
+        fullScript: `
+          <p><strong>Robin:</strong> Wait a second. Look at these pictures again. Barney has the same pose in each <span class="gap-target" data-answer="shot"></span>. And these are, like, <span class="gap-target" data-answer="years apart"></span>.</p>
+          <p><strong>Barney:</strong> Ah, yes, about that. I never take a bad picture. <span class="gap-target" data-answer="never have, never will"></span>.</p>
+          <p><strong>Robin:</strong> Get the.. There has to be a bad picture of you.</p>
+          <p><strong>Barney:</strong> Nope, not one.</p>
+          <p><strong>Robin:</strong> What about from elementary school? Everyone has bad pictures from school.</p>
+          <p><strong>Barney:</strong> Not the Barnacle. I always look <span class="gap-target" data-answer="drop-dead"></span>, <span class="gap-target" data-answer="stone-cold amazing"></span>. Unlike Marshall, who just looks dead, <span class="gap-target" data-answer="stoned"></span>, and cold.</p>
+          <p><strong>Narrator:</strong> He was right, kids. Your Uncle Marshall does a lot of things well, but he does not take a good picture.</p>
+          <p><strong>Marshall:</strong> They're not all bad, okay? Like here, here, look at this one! My eyes are open.</p>
+          <p><strong>Robin:</strong> Chip and <span class="gap-target" data-answer="dip"></span>, Barney?</p>
+          <p><strong>Barney:</strong> Sure.</p>
+          <p><strong>Robin:</strong> Aha got it. A bad picture.</p>
+          <p><strong>Barney:</strong> Is it, though?</p>
+          <p><strong>Robin:</strong> No, wait. You were eating a <span class="gap-target" data-answer="chip"></span>! Where's the chip?</p>
+          <p><strong>Barney:</strong> It is physically impossible for me to take a bad picture. I don't know why. Ask God.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (1:23 - 2:07)", start: 83, end: 127, selectType: "ab",
+        vocab: [
+          { 
+            term: "dropped", 
+            options: [
+              { isCorrect: true, text: "Let something fall to the ground" },
+              { isCorrect: false, text: "Lifted something up into the air" }
+            ]
+          },
+          { 
+            term: "picking it up", 
+            options: [
+              { isCorrect: false, text: "Throwing something away on the floor" },
+              { isCorrect: true, text: "Lifting an item from the floor with your hands" }
+            ]
+          },
+          { 
+            term: "lusts", 
+            options: [
+              { isCorrect: true, text: "Feels a strong attraction or desire for something" },
+              { isCorrect: false, text: "Feels a deep disgust or hate for something" }
+            ]
+          },
+          { 
+            term: "gather around", 
+            options: [
+              { isCorrect: false, text: "Walk away from each other in different directions" },
+              { isCorrect: true, text: "Come together close in a group" }
+            ]
+          },
+          { 
+            term: "suit", 
+            options: [
+              { isCorrect: true, text: "Formal clothes with a matching jacket and pants" },
+              { isCorrect: false, text: "Casual clothes like a t-shirt and shorts" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "dropped", ex: "I accidentally dropped my keys on the street.", trans: "Eu deixei minhas chaves caírem na rua sem querer." },
+          { term: "picking it up", ex: "Thank you for picking up my pen.", trans: "Obrigado por pegar minha caneta do chão." },
+          { term: "lusts", ex: "Barney says the camera lusts after his good looks.", trans: "O Barney diz que a câmera é caidinha pela beleza dele." },
+          { term: "gather around", ex: "Let's gather around the table for dinner.", trans: "Vamos nos juntar em volta da mesa para o jantar." },
+          { term: "suit", ex: "He wears a dark suit to work every day.", trans: "Ele usa um terno escuro para trabalhar todos os dias." }
+        ],
+        gaps: ["dropped", "picking it up", "lusts", "gather around", "suit"],
+        fullScript: `
+          <p><strong>Robin:</strong> Oh, oopsies! Hey, I <span class="gap-target" data-answer="dropped"></span> my phone. You mind <span class="gap-target" data-answer="picking it up"></span> for me?</p>
+          <p><strong>Barney:</strong> Yeah, sure.</p>
+          <p><strong>Robin:</strong> Smile, you son of a bitch! Got it!</p>
+          <p><strong>Barney:</strong> Did you, though?</p>
+          <p><strong>Robin:</strong> What? How did you do that? You weren't even standing up!</p>
+          <p><strong>Barney:</strong> The camera loves me, Robin. More than loves me, the camera <span class="gap-target" data-answer="lusts"></span> after me. The camera...</p>
+          <p><strong>Lily:</strong> All right, people, <span class="gap-target" data-answer="gather around"></span>. Let's make a memory.</p>
+          <p><strong>Ted:</strong> Okay, Marshall. Marshall, try this: keep your eyes closed until the last second, and when I say so, open them.</p>
+          <p><strong>Marshall:</strong> Okay.</p>
+          <p><strong>Robin:</strong> Hey, Barney, is that a hole in your <span class="gap-target" data-answer="suit"></span> jacket?</p>
+          <p><strong>Barney:</strong> What? Where?</p>
+          <p><strong>Ted:</strong> Now Marshall.</p>
+          <p><strong>Robin:</strong> Damn it!</p>
+        `
+      }
+    };
+
+    const questionsByTime = [
+      { q: "1. Are you photogenic, or do you feel like Marshall when taking pictures?", start: "When I take pictures, I usually feel like ______ because ______.", ex: "When I take pictures, I usually feel like Marshall because I always blink at the wrong moment!" },
+      { q: "2. Do you have a default pose or expression when someone takes a picture of you?", start: "Whenever someone takes a picture of me, I always ______.", ex: "Whenever someone takes a picture of me, I always give a big smile and peace signs!" },
+      { q: "3. What was Robin's strategy to try to catch Barney in a bad photo?", start: "Robin tried to catch Barney by ______.", ex: "Robin tried to catch Barney by offering him food and dropping her phone to snap a surprise photo!" },
+      { q: "4. Do you believe some people are naturally photogenic, or is it all about practice?", start: "In my opinion, being photogenic is ______ because ______.", ex: "In my opinion, being photogenic is mostly about knowing your best angles and practicing in front of a mirror!" }
+    ];
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 1 : 2;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube.com/embed/i5CthfjN_zs?start=0&end=83&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3";
+        
+        let warmupOptions1 = shuffleArray([
+          { val: "correct", text: "He has the exact same pose in every picture" },
+          { val: "wrong", text: "He always wears the same red tie" }
+        ]);
+
+        let warmupOptions2 = shuffleArray([
+          { val: "wrong", text: "Robin" },
+          { val: "correct", text: "Marshall" }
+        ]);
+
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. What does Robin notice about all of Barney's pictures?</strong>
+            <select class="custom-select" data-correct="correct">
+              <option value="">-- Select --</option>
+              ${warmupOptions1.map(opt => `<option value="${opt.val}">${opt.text}</option>`).join('')}
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. According to Barney and the narrator, who always takes bad pictures?</strong>
+            <select class="custom-select" data-correct="correct">
+              <option value="">-- Select --</option>
+              ${warmupOptions2.map(opt => `<option value="${opt.val}">${opt.text}</option>`).join('')}
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          
+          let vocabHTML = "";
+          if (pData.selectType === "dropdown") {
+            vocabHTML = pData.vocab.map(v => {
+              let shuffledOpts = shuffleArray(v.options);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="true">
+                    <option value="">-- Choose the best meaning --</option>
+                    ${shuffledOpts.map(opt => `<option value="${opt.isCorrect}">${opt.text}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          } else {
+            vocabHTML = pData.vocab.map(v => {
+              let shuffledOpts = shuffleArray(v.options);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    ${shuffledOpts.map(opt => `
+                      <button class="ab-btn" data-correct="${opt.isCorrect}" onclick="clickAB(this)">${opt.text}</button>
+                    `).join('')}
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Choose the correct meaning for each vocabulary word:</p>
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to the examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/i5CthfjN_zs?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1.05em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart == 1 ? 3 : 5;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = chosenTime === 10 ? 83 : 127;
+        player.src = `https://www.youtube.com/embed/i5CthfjN_zs?start=0&end=${endCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the scene again without interruptions:</p>
+          <div style="background:#f3e8ff; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#6b21a8;">
+            🎉 <strong>Awesome progress!</strong> You've mastered this iconic scene.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        let qHTML = questionsByTime.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#f3e8ff; color:#7e22ce; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#f3e8ff; border-left-color:#a855f7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Robin notices that Barney has the exact same pose in every single photograph." },
+        { order: 2, text: "Barney states that he never takes a bad picture and always looks amazing." },
+        { order: 3, text: "Robin tries to catch Barney with food (chip and dip), but fails to take a bad photo." },
+        { order: 4, text: "Robin drops her phone on purpose to snap a bad photo, but Barney still poses perfectly." },
+        { order: 5, text: "Robin distracts Barney with a fake hole in his jacket while Lily tries to take a group photo." }
+      ];
+
+      const count = maxPart === 1 ? 3 : 5;
+      const retellData = allRetell.slice(0, count);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
