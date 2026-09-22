@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Harry Potter: Felix Felicis & Aragog's Farewell by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --border-dark: #334155;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --gradient-brand: linear-gradient(90deg, #9333ea, #a855f7);
+      --gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-dark);
+      background-color: #0b0f19;
+      min-height: 60px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 36px; border-radius: 8px; }
+    .brand-text h1 { 
+      font-size: 1.2em; 
+      font-weight: 800; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+      font-size: 0.9em;
+    }
+    .nav-back:hover { color: var(--accent-pink); }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 20px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid var(--border-dark);
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 180px; 
+      object-fit: cover; 
+      object-position: center;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 16px; 
+      display: block;
+      pointer-events: none;
+      border: 1px solid var(--border-dark);
+    }
+
+    .hero-title { 
+      font-size: 1.4em; 
+      margin-bottom: 4px; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.9em; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px; }
+    .hero-desc { font-size: 0.9em; color: #94a3b8; margin-bottom: 18px; }
+
+    .time-title { font-size: 0.98em; font-weight: 700; margin-bottom: 12px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 20px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #1e293b; color: white; border: 2px solid var(--border-dark);
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.15);
+      transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--gradient-brand); color: white; border: none;
+      padding: 12px 32px; border-radius: 10px; font-size: 1.05em;
+      font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-dark);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; border: 1px solid var(--border-dark); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #0b0f19; padding: 10px 14px;
+      border-bottom: 1px solid var(--border-dark); overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: #1e293b;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700;
+      color: #94a3b8; border: 1px solid var(--border-dark); white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #334155; color: #f8fafc; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85em;
+    }
+
+    .cool-step-pill.active { background: var(--gradient-brand); color: white; border-color: var(--accent-purple); }
+    .cool-step-pill.active .step-num { background: white; color: var(--accent-purple); font-weight: 800; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 14px; }
+    .part-subtab-btn {
+      flex: 1; padding: 9px 6px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.88em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { 
+      flex: 1; 
+      padding: 18px 20px; 
+      overflow-y: auto; 
+      font-size: 1.1em;
+      line-height: 1.6;
+      position: relative; 
+    }
+
+    .content-area h3 {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25em;
+      margin-bottom: 10px;
+    }
+
+    .content-area p { font-size: 1.02em; }
+
+    .question-block { margin-bottom: 18px; }
+    .question-block strong { display: block; font-size: 1.05em; margin-bottom: 8px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 12px 14px; font-size: 1.02em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select:hover { border-color: var(--accent-purple); }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 12px 14px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1.02em; color: #334155;
+      line-height: 1.4;
+    }
+    .ab-btn:hover { border-color: var(--accent-purple); background: #faf5ff; }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-purple);
+      padding: 14px 16px; border-radius: var(--radius-soft); margin-bottom: 14px;
+    }
+    .vocab-card-example h4 { font-size: 1.15em; color: var(--accent-purple); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .vocab-card-example p { font-size: 1.05em; }
+    .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
+
+    /* Word Bank FIXO (Sticky Top) */
+    .word-bank { 
+      position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px; 
+      margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); min-height: 48px; 
+    }
+    .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+    .gap-target {
+      display: inline-block; min-width: 85px; height: 32px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 10px; margin-top: 10px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 10px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 32px; height: 42px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .retell-item {
+      background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 42px; display: flex; align-items: center; font-size: 0.95em; line-height: 1.4;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 12px 14px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.85em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 10px; border-radius: 6px; margin-top: 6px; font-size: 0.92em; }
+
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-action { 
+      background: var(--gradient-brand); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92em; 
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #0284c7, #0369a1); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    @media (max-width: 768px) {
+      body { height: auto; overflow-y: auto; }
+      header { padding: 8px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 480px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; font-size: 1.05em; padding: 12px; }
+      
+      .word-bank { position: sticky; top: 0; z-index: 100; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+    <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/t0Dg38A.jpeg" class="banner-img" alt="Harry Potter Felix Felicis Scene">
+      <h2 class="hero-title">Harry Potter: Felix Felicis & Aragog's Farewell</h2>
+      <div class="hero-subtitle">• The Half-Blood Prince •</div>
+      <p class="hero-desc">Harry takes a magic potion for good luck and goes to say goodbye to Hagrid's giant spider, Aragog.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Parts 1 & 2)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "I have um tempinho hoje!" (Parts 1 to 4)</span> <strong>20 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/DKGd6ari8KA?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2 style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">CONGRATULATIONS! 🎉</h2>
+      <br>
+      <p>You've mastered this iconic scene with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 0:48)", start: 0, end: 48, vocabType: "multi",
+        vocab: [
+          { 
+            term: "get out", 
+            options: [
+              { text: "To leave a place or exit a building", correct: "true" },
+              { text: "To enter a room or stay inside", correct: "false" }
+            ]
+          },
+          { 
+            term: "I'm off", 
+            options: [
+              { text: "To stay here and sit down", correct: "false" },
+              { text: "I am leaving or going somewhere now", correct: "true" }
+            ]
+          },
+          { 
+            term: "fancied", 
+            options: [
+              { text: "Hated or avoided doing something", correct: "false" },
+              { text: "Wanted or felt like doing something", correct: "true" }
+            ]
+          },
+          { 
+            term: "nightfall", 
+            options: [
+              { text: "The time in the evening when it becomes dark", correct: "true" },
+              { text: "The time early in the morning when the sun comes up", correct: "false" }
+            ]
+          },
+          { 
+            term: "allow", 
+            options: [
+              { text: "To stop or forbid someone from doing something", correct: "false" },
+              { text: "To give permission or let someone do something", correct: "true" }
+            ]
+          },
+          { 
+            term: "roaming", 
+            options: [
+              { text: "Walking or traveling around without a clear plan", correct: "true" },
+              { text: "Sitting quietly in one single place", correct: "false" }
+            ]
+          },
+          { 
+            term: "come along", 
+            options: [
+              { text: "To accompany or go somewhere together with someone", correct: "true" },
+              { text: "To stay behind alone and not follow", correct: "false" }
+            ]
+          },
+          { 
+            term: "counterproductive", 
+            options: [
+              { text: "Very useful and helpful for achieving a goal", correct: "false" },
+              { text: "Having the opposite result of what you want", correct: "true" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "get out", ex: "I need to get out of the house and buy some groceries.", trans: "Eu preciso sair de casa e comprar alguns mantimentos." },
+          { term: "I'm off", ex: "I'm off to the gym now. See you later!", trans: "Estou saindo para a academia agora. Até mais!" },
+          { term: "fancied", ex: "She fancied a cup of hot tea after work.", trans: "Ela ficou com vontade de tomar uma xícara de chá quente depois do trabalho." },
+          { term: "nightfall", ex: "We usually get back home before nightfall.", trans: "Nós geralmente voltamos para casa antes do anoitecer." },
+          { term: "allow", ex: "My parents allow me to stay out late on weekends.", trans: "Meus pais me permitem ficar na rua até tarde nos finais de semana." },
+          { term: "roaming", ex: "We spent the afternoon roaming around the city center.", trans: "Nós passamos a tarde caminhando pelo centro da cidade." },
+          { term: "come along", ex: "Do you want to come along to the supermarket with me?", trans: "Você quer vir junto comigo ao supermercado?" },
+          { term: "counterproductive", ex: "Studying all night without sleeping is counterproductive.", trans: "Estudar a noite toda sem dormir é contraproducente." }
+        ],
+        gaps: ["get out", "I'm off", "fancied", "nightfall", "allow", "roaming", "come along", "counterproductive"],
+        fullScript: `
+          <p><strong>Slughorn:</strong> Mm. Exactly how did you <span class="gap-target" data-answer="get out"></span> of the castle, Harry?</p>
+          <p><strong>Harry:</strong> Oh, through the front door, sir. <span class="gap-target" data-answer="I'm off"></span> to Hagrid's, you see. He's a very dear friend, and I just <span class="gap-target" data-answer="fancied"></span> paying him a visit. So, if you don't mind, I will be going now.</p>
+          <p><strong>Slughorn:</strong> Harry!</p>
+          <p><strong>Harry:</strong> Sir?</p>
+          <p><strong>Slughorn:</strong> It's nearly <span class="gap-target" data-answer="nightfall"></span>. Surely you realise I can't <span class="gap-target" data-answer="allow"></span> you to go <span class="gap-target" data-answer="roaming"></span> the grounds by yourself.</p>
+          <p><strong>Harry:</strong> Well then, by all means <span class="gap-target" data-answer="come along"></span>, sir.</p>
+          <p><strong>Slughorn:</strong> Harry, I must insist you accompany me back to the castle immediately!</p>
+          <p><strong>Harry:</strong> That would be <span class="gap-target" data-answer="counterproductive"></span>, sir.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (0:48 - 1:32)", start: 48, end: 92, vocabType: "select",
+        vocab: [
+          { 
+            term: "beard", 
+            def: "hair growing on a man's chin and cheeks",
+            distractors: ["hair on top of a person's head", "a mustache under a person's nose"]
+          },
+          { 
+            term: "fellow", 
+            def: "a man or boy",
+            distractors: ["a young woman or girl", "a group of close friends"]
+          },
+          { 
+            term: "however", 
+            def: "in what way or by what means",
+            distractors: ["at what time or when", "for what reason or why"]
+          },
+          { 
+            term: "misunderstood", 
+            def: "not correctly known or appreciated",
+            distractors: ["very dangerous and aggressive", "very simple and easy to teach"]
+          },
+          { 
+            term: "reckon", 
+            def: "to think or believe something",
+            distractors: ["to forget or ignore something", "to hear or listen to something"]
+          },
+          { 
+            term: "unnerve", 
+            def: "to make someone feel nervous or uneasy",
+            distractors: ["to make someone feel very angry", "to make someone laugh out loud"]
+          },
+          { 
+            term: "folk", 
+            def: "people in general",
+            distractors: ["wild animals in nature", "family relatives only"]
+          },
+          { 
+            term: "pincers", 
+            def: "a front gripping claw of an insect or spider",
+            distractors: ["the long legs of an insect", "the wings of a flying bug"]
+          }
+        ],
+        examples: [
+          { term: "beard", ex: "My grandfather decided to grow a thick white beard.", trans: "Meu avô decidiu deixar crescer uma barba branca e espessa." },
+          { term: "fellow", ex: "He seems like a very friendly young fellow.", trans: "Ele parece ser um rapaz muito amigável." },
+          { term: "however", ex: "However did you complete this project so quickly?", trans: "De que maneira você concluiu este projeto tão rápido?" },
+          { term: "misunderstood", ex: "Cats are often misunderstood animals.", trans: "Gatos são frequentemente animais incompreendidos." },
+          { term: "reckon", ex: "I reckon we will arrive at the train station on time.", trans: "Eu acho / imagino que chegaremos à estação de trem a tempo." },
+          { term: "unnerve", ex: "Loud unexpected sounds can unnerve young children.", trans: "Sons altos e inesperados podem deixar crianças pequenas apreensivas." },
+          { term: "folk", ex: "Many local folk visit the farmers market every Sunday.", trans: "Muitas pessoas locais visitam a feira livre todo domingo." },
+          { term: "pincers", ex: "The crab used its strong pincers to grab food.", trans: "O caranguejo usou suas fortes pinças para pegar comida." }
+        ],
+        gaps: ["beard", "fellow", "however", "misunderstood", "unnerve", "folk", "pincers", "reckon"],
+        fullScript: `
+          <p><strong>Hagrid:</strong> Horace.</p>
+          <p><strong>Slughorn:</strong> Merlin's <span class="gap-target" data-answer="beard"></span>! Is that an actual Acromantula?</p>
+          <p><strong>Harry:</strong> A dead one, I think, sir.</p>
+          <p><strong>Slughorn:</strong> Good God. Dear <span class="gap-target" data-answer="fellow"></span>, <span class="gap-target" data-answer="however"></span> did you manage to kill it?</p>
+          <p><strong>Hagrid:</strong> Kill it? My oldest friend, he was.</p>
+          <p><strong>Slughorn:</strong> I'm so sorry. I didn't-</p>
+          <p><strong>Hagrid:</strong> Oh, don't worry yourself. You're not alone. Seriously <span class="gap-target" data-answer="misunderstood"></span> creatures, spiders are. It's the eyes, I reckon, they <span class="gap-target" data-answer="unnerve"></span> some <span class="gap-target" data-answer="folk"></span>.</p>
+          <p><strong>Slughorn:</strong> Not to mention the <span class="gap-target" data-answer="pincers"></span>.</p>
+          <p><strong>Harry:</strong> Yeah, I <span class="gap-target" data-answer="reckon"></span> that too.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (1:32 - 2:14)", start: 92, end: 134, vocabType: "multi",
+        vocab: [
+          { 
+            term: "wish", 
+            options: [
+              { text: "To want or desire something to happen", correct: "true" },
+              { text: "To refuse or reject an offer", correct: "false" }
+            ]
+          },
+          { 
+            term: "venom", 
+            options: [
+              { text: "Poisonous liquid produced by some animals", correct: "true" },
+              { text: "Pure fresh water from a clean lake", correct: "false" }
+            ]
+          },
+          { 
+            term: "uncommonly", 
+            options: [
+              { text: "In a very normal and ordinary way", correct: "false" },
+              { text: "Very unusually or exceptionally", correct: "true" }
+            ]
+          },
+          { 
+            term: "vial", 
+            options: [
+              { text: "A small glass container for liquid", correct: "true" },
+              { text: "A large heavy wooden barrel", correct: "false" }
+            ]
+          },
+          { 
+            term: "purposes", 
+            options: [
+              { text: "Accidents that happen without planning", correct: "false" },
+              { text: "The reasons or intentions for doing something", correct: "true" }
+            ]
+          },
+          { 
+            term: "thoughts", 
+            options: [
+              { text: "Ideas, opinions, or beliefs in your mind", correct: "true" },
+              { text: "Physical actions made with hands", correct: "false" }
+            ]
+          },
+          { 
+            term: "ampoule", 
+            options: [
+              { text: "A large metal cooking pot", correct: "false" },
+              { text: "A small sealed capsule or glass bottle", correct: "true" }
+            ]
+          },
+          { 
+            term: "prime", 
+            options: [
+              { text: "The best period of power and vigor", correct: "true" },
+              { text: "The worst stage or period of weakness", correct: "false" }
+            ]
+          },
+          { 
+            term: "magnificent", 
+            options: [
+              { text: "Very ugly, boring, and small", correct: "false" },
+              { text: "Extremely impressive, beautiful, or grand", correct: "true" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "wish", ex: "I wish you good luck on your English exam tomorrow.", trans: "Desejo a você boa sorte no seu exame de inglês amanhã." },
+          { term: "venom", ex: "Snake venom can be used to create medical treatments.", trans: "O veneno de cobra pode ser usado para criar tratamentos médicos." },
+          { term: "uncommonly", ex: "It was an uncommonly warm afternoon for winter.", trans: "Estava uma tarde incomumente quente para o inverno." },
+          { term: "vial", ex: "The doctor kept the medicine sample in a small vial.", trans: "O médico guardou a amostra de remédio em um pequeno frasco." },
+          { term: "purposes", ex: "We use this room mostly for study purposes.", trans: "Nós usamos este cômodo principalmente para fins de estudo." },
+          { term: "thoughts", ex: "Thank you for sharing your thoughts with us.", trans: "Obrigado por compartilhar suas ideias conosco." },
+          { term: "ampoule", ex: "The nurse opened a glass ampoule to prepare the vaccine.", trans: "A enfermeira abriu uma ampola de vidro para preparar a vacina." },
+          { term: "prime", ex: "Professional athletes train hard during their prime years.", trans: "Atletas profissionais treinam duro durante seus anos de auge." },
+          { term: "magnificent", ex: "The view of the ocean from the mountain was magnificent.", trans: "A vista do oceano a partir da montanha era magnífica." }
+        ],
+        gaps: ["wish", "venom", "uncommonly", "vial", "purposes", "thoughts", "ampoule", "prime", "magnificent"],
+        fullScript: `
+          <p><strong>Slughorn:</strong> Hagrid, the last thing I <span class="gap-target" data-answer="wish"></span> to be is indelicate, but Acromantula <span class="gap-target" data-answer="venom"></span> is <span class="gap-target" data-answer="uncommonly"></span> rare. Would you allow me to extract a <span class="gap-target" data-answer="vial"></span> or two? Purely for academic <span class="gap-target" data-answer="purposes"></span>, you understand.</p>
+          <p><strong>Hagrid:</strong> Well, I don't suppose it's going to do him much good now, is it?</p>
+          <p><strong>Slughorn:</strong> My <span class="gap-target" data-answer="thoughts"></span> exactly. Always have a <span class="gap-target" data-answer="ampoule"></span> or two about my person for just such occasions as this. Old Potion Master's habit, you know.</p>
+          <p><strong>Hagrid:</strong> I wish you could have seen him in his <span class="gap-target" data-answer="prime"></span>. Magnificent, he was. Just <span class="gap-target" data-answer="magnificent"></span>.</p>
+        `
+      },
+      4: {
+        title: "Part 4 (2:14 - 3:02)", start: 134, end: 182, vocabType: "select",
+        vocab: [
+          { 
+            term: "farewell", 
+            def: "an expression of good wishes at parting or saying goodbye",
+            distractors: ["a warm welcoming greeting to a guest", "a question asked when meeting someone"]
+          },
+          { 
+            term: "arachnids", 
+            def: "eight-legged arthropods such as spiders or scorpions",
+            distractors: ["flying insects with wings like bees", "small furry mammals like mice"]
+          },
+          { 
+            term: "decay", 
+            def: "to rot or decompose through natural causes",
+            distractors: ["to grow stronger and bigger over time", "to stay fresh and clean forever"]
+          },
+          { 
+            term: "lingers on", 
+            def: "continues to stay or remain for a long time",
+            distractors: ["disappears immediately without a trace", "moves very fast to another place"]
+          },
+          { 
+            term: "solace", 
+            def: "comfort or consolation in a time of sadness or grief",
+            distractors: ["great anger or frustration about something", "feeling very sleepy and tired"]
+          },
+          { 
+            term: "sustained", 
+            def: "experienced or suffered a loss, pain, or injury",
+            distractors: ["enjoyed or celebrated a happy moment", "forgot or ignored a past event"]
+          }
+        ],
+        examples: [
+          { term: "farewell", ex: "We organized a nice farewell party for our manager.", trans: "Nós organizamos uma boa festa de despedida para nosso gerente." },
+          { term: "arachnids", ex: "Spiders and scorpions belong to the group of arachnids.", trans: "Aranhas e escorpiões pertencem ao grupo dos aracnídeos." },
+          { term: "decay", ex: "Fallen leaves begin to decay quickly on damp ground.", trans: "Folhas caídas começam a se decompor rapidamente no solo úmido." },
+          { term: "lingers on", ex: "The sweet scent of flowers lingers on in the garden.", trans: "O perfume doce das flores permanece no jardim." },
+          { term: "solace", ex: "Listening to soft acoustic music gives me solace when stressed.", trans: "Ouvir música acústica suave me dá consolo quando estou estressado." },
+          { term: "sustained", ex: "The business sustained financial losses during the storm.", trans: "A empresa sofreu perdas financeiras durante a tempestade." }
+        ],
+        gaps: ["Farewell", "arachnids", "decay", "lingers on", "solace", "sustained"],
+        fullScript: `
+          <p><strong>Slughorn:</strong> Would you like me to say a few words?</p>
+          <p><strong>Hagrid:</strong> Yes.</p>
+          <p><strong>Slughorn:</strong> He had a family, I trust?</p>
+          <p><strong>Hagrid:</strong> Oh, yeah.</p>
+          <p><strong>Slughorn:</strong> Farewell...</p>
+          <p><strong>Hagrid:</strong> Aragog.</p>
+          <p><strong>Slughorn:</strong> <span class="gap-target" data-answer="Farewell"></span>, Aragog. King of the <span class="gap-target" data-answer="arachnids"></span>. Your body will <span class="gap-target" data-answer="decay"></span>, but your spirit <span class="gap-target" data-answer="lingers on"></span>. And your human friends find <span class="gap-target" data-answer="solace"></span> for the loss they have <span class="gap-target" data-answer="sustained"></span>...</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      10: [
+        { 
+          q: "1. Have you ever felt lucky on an important day or exam? What happened?", 
+          start: "I felt really lucky when ______.", 
+          ex: "I felt really lucky when I took my driving test and passed on the first try!" 
+        },
+        { 
+          q: "2. Do you have a favorite teacher or mentor like Slughorn or Hagrid? Why?", 
+          start: "My favorite teacher/mentor is ______ because ______.", 
+          ex: "My favorite teacher was my high school English teacher because she was always patient and kind." 
+        }
+      ],
+      20: [
+        { 
+          q: "1. Have you ever felt lucky on an important day or exam? What happened?", 
+          start: "I felt really lucky when ______.", 
+          ex: "I felt really lucky when I took my driving test and passed on the first try!" 
+        },
+        { 
+          q: "2. Do you have a favorite teacher or mentor like Slughorn or Hagrid? Why?", 
+          start: "My favorite teacher/mentor is ______ because ______.", 
+          ex: "My favorite teacher was my high school English teacher because she was always patient and kind." 
+        },
+        { 
+          q: "3. Have you ever had a special pet or animal that you loved a lot?", 
+          start: "Yes/No, I had a pet ______ named ______.", 
+          ex: "Yes, I had a dog named Max. He was super friendly and loved going to the park." 
+        },
+        { 
+          q: "4. If you could have a potion for 12 hours of perfect luck, where would you go?", 
+          start: "If I had 12 hours of perfect luck, I would go to ______ and ______.", 
+          ex: "If I had 12 hours of perfect luck, I would go to a job interview and apply for my dream position!" 
+        }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 2 : 4;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        // CORTE DINÂMICO DE ACORDO COM A TRILHA SELECIONADA
+        const warmupEndCut = chosenTime === 10 ? 92 : 182;
+        player.src = `https://www.youtube.com/embed/DKGd6ari8KA?start=0&end=${warmupEndCut}&autoplay=0&enablejsapi=1`;
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the snippet and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. Where is Harry heading when Slughorn meets him?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">Down to Hagrid's hut</option>
+              <option value="b">Back to the Gryffindor common room</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. Why is Hagrid upset when Slughorn and Harry arrive?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">He lost his magic wand</option>
+              <option value="b">His giant spider friend Aragog has died</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+          
+          if (pData.vocabType === 'multi') {
+            vocabHTML = pData.vocab.map(v => `
+              <div class="question-block">
+                <strong>${v.term}:</strong>
+                <div class="ab-card-container">
+                  ${v.options.map(opt => `
+                    <button class="ab-btn" data-correct="${opt.correct}" onclick="clickAB(this)">${opt.text}</button>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('');
+          } else if (pData.vocabType === 'select') {
+            vocabHTML = pData.vocab.map(v => {
+              const shuffledOptions = shuffleArray([v.def, ...v.distractors]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.def}">
+                    <option value="">-- Choose meaning --</option>
+                    ${shuffledOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Match each key term with its definition:</p>
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to the examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/DKGd6ari8KA?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        // CORTE DINÂMICO DE ACORDO COM A TRILHA SELECIONADA
+        const endCut = chosenTime === 10 ? 92 : 182;
+        player.src = `https://www.youtube.com/embed/DKGd6ari8KA?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the scene.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Harry sneaks out to visit Hagrid and invites Slughorn to come along." },
+        { order: 2, text: "Slughorn and Harry meet Hagrid, who is mourning the death of his giant spider Aragog." },
+        { order: 3, text: "Slughorn asks Hagrid for permission to extract valuable Acromantula venom." },
+        { order: 4, text: "Slughorn delivers a poetic farewell speech in honor of Aragog." }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
