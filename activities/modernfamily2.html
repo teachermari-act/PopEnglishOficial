@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Modern Family Jay's Self-Diagnosis by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --border-dark: #334155;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --gradient-brand: linear-gradient(90deg, #9333ea, #a855f7);
+      --gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-dark);
+      background-color: #0b0f19;
+      min-height: 60px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 36px; border-radius: 8px; }
+    .brand-text h1 { 
+      font-size: 1.2em; 
+      font-weight: 800; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+      font-size: 0.9em;
+    }
+    .nav-back:hover { color: var(--accent-pink); }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 20px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid var(--border-dark);
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 180px; 
+      object-fit: cover; 
+      object-position: top;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 16px; 
+      display: block;
+      pointer-events: none;
+      border: 1px solid var(--border-dark);
+    }
+
+    .hero-title { 
+      font-size: 1.4em; 
+      margin-bottom: 4px; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.9em; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px; }
+    .hero-desc { font-size: 0.9em; color: #94a3b8; margin-bottom: 18px; }
+
+    .time-title { font-size: 0.98em; font-weight: 700; margin-bottom: 12px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 20px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #1e293b; color: white; border: 2px solid var(--border-dark);
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.15);
+      transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--gradient-brand); color: white; border: none;
+      padding: 12px 32px; border-radius: 10px; font-size: 1.05em;
+      font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-dark);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; border: 1px solid var(--border-dark); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #0b0f19; padding: 10px 14px;
+      border-bottom: 1px solid var(--border-dark); overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: #1e293b;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700;
+      color: #94a3b8; border: 1px solid var(--border-dark); white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #334155; color: #f8fafc; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85em;
+    }
+
+    .cool-step-pill.active { background: var(--gradient-brand); color: white; border-color: var(--accent-purple); }
+    .cool-step-pill.active .step-num { background: white; color: var(--accent-purple); font-weight: 800; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 14px; }
+    .part-subtab-btn {
+      flex: 1; padding: 9px 6px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.88em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { 
+      flex: 1; 
+      padding: 18px 20px; 
+      overflow-y: auto; 
+      font-size: 1.1em;
+      line-height: 1.6;
+      position: relative; 
+    }
+
+    .content-area h3 {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25em;
+      margin-bottom: 10px;
+    }
+
+    .content-area p { font-size: 1.02em; }
+
+    .question-block { margin-bottom: 18px; }
+    .question-block strong { display: block; font-size: 1.05em; margin-bottom: 8px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 12px 14px; font-size: 1.02em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select:hover { border-color: var(--accent-purple); }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 12px 14px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1.02em; color: #334155;
+      line-height: 1.4;
+    }
+    .ab-btn:hover { border-color: var(--accent-purple); background: #faf5ff; }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-purple);
+      padding: 14px 16px; border-radius: var(--radius-soft); margin-bottom: 14px;
+    }
+    .vocab-card-example h4 { font-size: 1.15em; color: var(--accent-purple); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .vocab-card-example p { font-size: 1.05em; }
+    .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
+
+    /* WORD BANK FIXA NO TOPO DURANTE A ROLAGEM */
+    .word-bank { 
+      position: sticky; 
+      top: 0; 
+      z-index: 100; 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 8px; 
+      margin-bottom: 16px; 
+      padding: 12px 14px; 
+      background: #cbd5e1; 
+      border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); 
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); 
+      min-height: 48px; 
+    }
+    .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+    .gap-target {
+      display: inline-block; min-width: 85px; height: 32px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 10px; margin-top: 10px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 10px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 32px; height: 42px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .retell-item {
+      background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 42px; display: flex; align-items: center; font-size: 0.95em; line-height: 1.4;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 12px 14px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.85em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 10px; border-radius: 6px; margin-top: 6px; font-size: 0.92em; }
+
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-action { 
+      background: var(--gradient-brand); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92em; 
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #0284c7, #0369a1); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    /* RESPONSIVIDADE PARA TELAS MENORES / MOBILE */
+    @media (max-width: 768px) {
+      body { height: auto; overflow-y: auto; }
+      header { padding: 8px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; font-size: 1.05em; padding: 12px; }
+      
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+    <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
+  </header>
+
+  <!-- WELCOME SCREEN -->
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/NAvqvSu.jpeg" class="banner-img" alt="Modern Family Jay Self Diagnosis Scene">
+      <h2 class="hero-title">Modern Family: Jay's Self-Diagnosis</h2>
+      <div class="hero-subtitle">• Season 2, Episode 19 •</div>
+      <p class="hero-desc">Watch Jay try to diagnose his stomach pain online with Manny while hiding it from Gloria.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Parts 1 & 2)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "Nem tão busy, nem tão free" (Parts 1 to 4)</span> <strong>20 min</strong>
+          </button>
+          <button class="time-btn" onclick="selectTime(30, this)">
+            <span>🔥 "I have um tempinho hoje!" (Parts 1 to 6)</span> <strong>30 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <!-- WORKSPACE SCREEN -->
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/WSx3g8dpq2Q?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2 style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">CONGRATULATIONS! 🎉</h2>
+      <br>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 0:52)", start: 0, end: 52, vocabType: "ab",
+        vocab: [
+          { 
+            term: "stomach", 
+            options: [
+              { text: "The front part of your body below the chest", correct: "true" },
+              { text: "The back part of your head above the neck", correct: "false" }
+            ]
+          },
+          { 
+            term: "crib", 
+            options: [
+              { text: "A small bed for a baby", correct: "true" },
+              { text: "A large bed for adults", correct: "false" }
+            ]
+          },
+          { 
+            term: "lay down", 
+            options: [
+              { text: "To rest your body in a flat position", correct: "true" },
+              { text: "To stand up straight on your feet", correct: "false" }
+            ]
+          },
+          { 
+            term: "sniffle", 
+            options: [
+              { text: "A slight sound when breathing through a runny nose", correct: "true" },
+              { text: "A completely clear and normal breath", correct: "false" }
+            ]
+          },
+          { 
+            term: "dislocated", 
+            options: [
+              { text: "Forced out of its normal position", correct: "true" },
+              { text: "Kept in its correct and fixed place", correct: "false" }
+            ]
+          },
+          { 
+            term: "shoulder", 
+            options: [
+              { text: "The part of the body between the neck and arm", correct: "true" },
+              { text: "The part of the body between the knee and foot", correct: "false" }
+            ]
+          },
+          { 
+            term: "bloating", 
+            options: [
+              { text: "A swollen and uncomfortable feeling in the tummy", correct: "true" },
+              { text: "An empty and flat feeling in the tummy", correct: "false" }
+            ]
+          },
+          { 
+            term: "worried", 
+            options: [
+              { text: "Feeling nervous or unhappy about a problem", correct: "true" },
+              { text: "Feeling calm and relaxed about everything", correct: "false" }
+            ]
+          },
+          { 
+            term: "blockage", 
+            options: [
+              { text: "Something that stops movement through a space", correct: "true" },
+              { text: "An open space that allows easy movement", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "stomach", ex: "My stomach hurts after eating that fast food.", trans: "Meu estômago dói depois de comer aquele fast food." },
+          { term: "crib", ex: "The baby is sleeping peacefully in her crib.", trans: "O bebê está dormindo tranquilamente em seu berço." },
+          { term: "lay down", ex: "I need to lay down for fifteen minutes.", trans: "Preciso me deitar por quinze minutos." },
+          { term: "sniffle", ex: "Take a tissue if you have a sniffle.", trans: "Pegue um lenço se estiver com coriza." },
+          { term: "dislocated", ex: "He fell off the bed and dislocated his elbow.", trans: "Ele caiu da cama e deslocou o cotovelo." },
+          { term: "shoulder", ex: "She carries her bag on her right shoulder.", trans: "Ela carrega a bolsa no ombro direito." },
+          { term: "bloating", ex: "Drinking water helps reduce bloating.", trans: "Beber água ajuda a reduzir o inchaço abdominal." },
+          { term: "worried", ex: "My mother is worried because I am late.", trans: "Minha mãe está preocupada porque estou atrasado." },
+          { term: "blockage", ex: "There is a pipe blockage in the bathroom.", trans: "Há um entupimento no cano do banheiro." }
+        ],
+        gaps: ["stomach's", "crib", "lay down", "sniffle", "dislocated", "shoulder", "bloating", "worried", "blockage"],
+        fullScript: `
+          <p><strong>Gloria:</strong> Jay, you want to go to the mall with me?</p>
+          <p><strong>Jay:</strong> No, actually, my <span class="gap-target" data-answer="stomach's"></span> a little funny today.</p>
+          <p><strong>Gloria:</strong> Oh, I am so sorry, papi. Maybe we'd stop first at the <span class="gap-target" data-answer="crib"></span> store and you <span class="gap-target" data-answer="lay down"></span> and I buy you a little dress, hmm?</p>
+          <p><strong>Jay:</strong> Gloria thinks Americans are babies.</p>
+          <p><strong>Gloria:</strong> Well, in Colombia we couldn't go run to the hospital for every little <span class="gap-target" data-answer="sniffle"></span> or <span class="gap-target" data-answer="dislocated"></span> <span class="gap-target" data-answer="shoulder"></span>.</p>
+          <p><strong>Jay:</strong> Okay, good.</p>
+          <p><strong>Manny:</strong> Jay, what are your symptoms? Nausea? <span class="gap-target" data-answer="bloating"></span>?</p>
+          <p><strong>Gloria:</strong> What did I say about getting off that crazy doctor Web site?</p>
+          <p><strong>Manny:</strong> I'm just <span class="gap-target" data-answer="worried"></span> about Jay. Stomach pains can mean a lot of things. Intestinal <span class="gap-target" data-answer="blockage"></span>? Do you have a fever?</p>
+          <p><strong>Gloria:</strong> Stop it! Manny, he's fine. Tell him you're fine.</p>
+          <p><strong>Jay:</strong> I'm fine.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (0:52 - 1:28)", start: 52, end: 88, vocabType: "select",
+        vocab: [
+          { 
+            term: "shop", 
+            correct: "To buy things in a store or online",
+            distractors: ["To sell products to customers", "To look at items in a museum"]
+          },
+          { 
+            term: "angry", 
+            correct: "Feeling mad or upset about something",
+            distractors: ["Feeling tired and sleepy", "Feeling sad and lonely"]
+          },
+          { 
+            term: "clear a space", 
+            correct: "To make room by removing things",
+            distractors: ["To clean dirty furniture", "To put things away neatly"]
+          },
+          { 
+            term: "round", 
+            correct: "A stage or period in a game or match",
+            distractors: ["A quick exercise workout", "A short break from playing"]
+          },
+          { 
+            term: "couple", 
+            correct: "A small number, usually two or three",
+            distractors: ["A large group of things", "A single item on a list"]
+          },
+          { 
+            term: "a while", 
+            correct: "A period or length of time",
+            distractors: ["A specific minute of the day", "A very short second"]
+          }
+        ],
+        examples: [
+          { term: "shop", ex: "I like to shop for clothes on the weekend.", trans: "Gosto de comprar roupas no fim de semana." },
+          { term: "angry", ex: "He was angry because he missed the bus.", trans: "Ele ficou irritado porque perdeu o ônibus." },
+          { term: "clear a space", ex: "Let's clear a space on the table for lunch.", trans: "Vamos abrir espaço na mesa para o almoço." },
+          { term: "round", ex: "We played another round of board games.", trans: "Jogamos mais uma rodada de jogos de tabuleiro." },
+          { term: "couple", ex: "I will be back in a couple of minutes.", trans: "Volto em alguns minutos." },
+          { term: "a while", ex: "We waited for a while outside the store.", trans: "Esperamos um pouco do lado de fora da loja." }
+        ],
+        gaps: ["shop", "clear a space", "round", "couple", "a while"],
+        fullScript: `
+          <p><strong>Gloria:</strong> Okay, good. Get in the car.</p>
+          <p><strong>Jay:</strong> Uh, home fine, not mall fine.</p>
+          <p><strong>Gloria:</strong> Jay, you know what happens when I <span class="gap-target" data-answer="shop"></span> angry.</p>
+          <p><strong>Jay:</strong> I'll <span class="gap-target" data-answer="clear a space"></span>.</p>
+          <p><strong>Manny:</strong> Mmm. I'm not loving your color.</p>
+          <p><strong>Jay:</strong> Go play.</p>
+          <p><strong>Manny:</strong> Don't be a hero.</p>
+          <p><strong>Jay:</strong> Hey, kid, you got a minute? I need the name of that medical Web site.</p>
+          <p><strong>Manny:</strong> Can this wait until I'm home? I'm having the <span class="gap-target" data-answer="round"></span> of my life.</p>
+          <p><strong>Jay:</strong> I've been thinking I might have a <span class="gap-target" data-answer="couple"></span> of those symptoms you were talking about.</p>
+          <p><strong>Manny:</strong> Oh. I see. You might as well play through. It's going to be <span class="gap-target" data-answer="a while"></span>.</p>
+          <p><strong>Jay:</strong> I'm probably wrong, but I just want to make sure.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (1:28 - 1:58)", start: 88, end: 118, vocabType: "ab",
+        vocab: [
+          { 
+            term: "order", 
+            options: [
+              { text: "A request for goods or food to be delivered", correct: "true" },
+              { text: "A free gift given to someone without asking", correct: "false" }
+            ]
+          },
+          { 
+            term: "sounded", 
+            options: [
+              { text: "Seemed to be true when heard", correct: "true" },
+              { text: "Looked colorful when seen with eyes", correct: "false" }
+            ]
+          },
+          { 
+            term: "diverticulitis", 
+            options: [
+              { text: "A painful medical condition in the digestive system", correct: "true" },
+              { text: "A state of complete health and painless digestion", correct: "false" }
+            ]
+          },
+          { 
+            term: "treat", 
+            options: [
+              { text: "To give medical care to cure an illness", correct: "true" },
+              { text: "To ignore a disease and do nothing", correct: "false" }
+            ]
+          },
+          { 
+            term: "heating pad", 
+            options: [
+              { text: "A warm pad used to soothe body pain", correct: "true" },
+              { text: "A cold bag of ice used to freeze skin", correct: "false" }
+            ]
+          },
+          { 
+            term: "stabbed", 
+            options: [
+              { text: "Feeling a very sharp and sudden pain", correct: "true" },
+              { text: "Feeling a soft and gentle touch", correct: "false" }
+            ]
+          },
+          { 
+            term: "scallop", 
+            options: [
+              { text: "A soft sea creature with a hard shell", correct: "true" },
+              { text: "A type of fruit that grows on trees", correct: "false" }
+            ]
+          },
+          { 
+            term: "colorful", 
+            options: [
+              { text: "Full of interesting and vivid details", correct: "true" },
+              { text: "Boring, empty and without any details", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "order", ex: "I placed an order for a new book online.", trans: "Fiz um pedido de um livro novo pela internet." },
+          { term: "sounded", ex: "Your idea sounded great on the phone.", trans: "Sua ideia pareceu ótima ao telefone." },
+          { term: "diverticulitis", ex: "The patient was treated for diverticulitis at the clinic.", trans: "O paciente foi tratado de diverticulite na clínica." },
+          { term: "treat", ex: "Doctors use simple medicine to treat a cold.", trans: "Médicos usam remédios simples para tratar um resfriado." },
+          { term: "heating pad", ex: "I put a heating pad on my neck after work.", trans: "Coloquei uma bolsa térmica no pescoço depois do trabalho." },
+          { term: "stabbed", ex: "I felt a sharp pain like I was stabbed in the leg.", trans: "Senti uma dor aguda como se tivesse levado uma picada/estocada na perna." },
+          { term: "scallop", ex: "We ordered grilled scallops for dinner.", trans: "Pedimos vieiras grelhadas para o jantar." },
+          { term: "colorful", ex: "He told a colorful story about his trip.", trans: "Ele contou uma história cheia de detalhes sobre sua viagem." }
+        ],
+        gaps: ["order", "sounded", "diverticulitis", "treat", "heating pad", "stabbed", "scallop", "colorful"],
+        fullScript: `
+          <p><strong>Gloria:</strong> Is that Manny?</p>
+          <p><strong>Jay:</strong> Work. So tell them I'll get that <span class="gap-target" data-answer="order"></span> out this afternoon, huh?</p>
+          <p><strong>Manny:</strong> Did she buy that? Because it <span class="gap-target" data-answer="sounded"></span> fake on this end.</p>
+          <p><strong>Jay:</strong> I'll talk to you later, Tom. Tom.</p>
+          <p><strong>Manny:</strong> I have got to tell you, this is looking more and more like <span class="gap-target" data-answer="diverticulitis"></span>.</p>
+          <p><strong>Jay:</strong> Do they say how to <span class="gap-target" data-answer="treat"></span> it, like a <span class="gap-target" data-answer="heating pad"></span> or... There it is again!</p>
+          <p><strong>Manny:</strong> Describe the pain.</p>
+          <p><strong>Jay:</strong> It's like I'm being <span class="gap-target" data-answer="stabbed"></span>. But also like I ate a bad <span class="gap-target" data-answer="scallop"></span> that's stabbing me from the inside.</p>
+          <p><strong>Manny:</strong> That's <span class="gap-target" data-answer="colorful"></span>, but there's no box for that.</p>
+        `
+      },
+      4: {
+        title: "Part 4 (1:57 - 2:36)", start: 117, end: 156, vocabType: "select",
+        vocab: [
+          { 
+            term: "looking at", 
+            correct: "Directing your eyes toward something",
+            distractors: ["Listening carefully to a sound", "Reading silently from a book"]
+          },
+          { 
+            term: "screen", 
+            correct: "The flat surface on a computer or TV showing images",
+            distractors: ["The glass window on a car", "A mirror hanging on the wall"]
+          },
+          { 
+            term: "fault", 
+            correct: "Responsibility for a mistake or wrong action",
+            distractors: ["A bad habit or negative trait", "A sudden problem or difficulty"]
+          },
+          { 
+            term: "cured", 
+            correct: "Made healthy again after being sick",
+            distractors: ["Feeling rested after sleeping", "Getting help from a doctor"]
+          },
+          { 
+            term: "pillow", 
+            correct: "A soft cushion used to rest your head in bed",
+            distractors: ["A warm blanket for sleeping", "A soft mattress on a frame"]
+          },
+          { 
+            term: "ulcer", 
+            correct: "A painful sore inside your stomach or body",
+            distractors: ["A mild stomach ache", "A temporary indigestion pain"]
+          },
+          { 
+            term: "burp", 
+            correct: "To release gas noisily from the stomach through the mouth",
+            distractors: ["To cough loudly when sick", "To breathe out heavily when tired"]
+          }
+        ],
+        examples: [
+          { term: "looking at", ex: "She is looking at the painting on the wall.", trans: "Ela está olhando para o quadro na parede." },
+          { term: "screen", ex: "Don't sit too close to the TV screen.", trans: "Não sente muito perto da tela da TV." },
+          { term: "fault", ex: "It was my fault that we were late.", trans: "Foi minha culpa estarmos atrasados." },
+          { term: "cured", ex: "The medicine cured his cough in two days.", trans: "O remédio curou a tosse dele em dois dias." },
+          { term: "pillow", ex: "I like to sleep with a soft pillow.", trans: "Gosto de dormir com um travesseiro macio." },
+          { term: "ulcer", ex: "Drinking coffee on an empty stomach can hurt an ulcer.", trans: "Beber café de estômago vazio pode machucar uma úlcera." },
+          { term: "burp", ex: "The baby will burp after drinking her milk.", trans: "O bebê vai arrotar depois de beber o leite." }
+        ],
+        gaps: ["looking at", "screen", "fault", "cured", "pillow", "ulcer", "burp"],
+        fullScript: `
+          <p><strong>Gloria:</strong> What are you guys <span class="gap-target" data-answer="looking at"></span>?</p>
+          <p><strong>Jay:</strong> Girls!</p>
+          <p><strong>Manny:</strong> Huffington Post! Uh, girls.</p>
+          <p><strong>Gloria:</strong> Manny, let me see that <span class="gap-target" data-answer="screen"></span>. What did I tell you?</p>
+          <p><strong>Jay:</strong> It's not his <span class="gap-target" data-answer="fault"></span>. I asked him to look. I'm starting to think I have a serious problem here.</p>
+          <p><strong>Gloria:</strong> Yes, you do! That computer! You read it there, you think it here, you feel it here. You want to feel better? There. You're <span class="gap-target" data-answer="cured"></span>!</p>
+          <p><strong>Jay:</strong> Give me 15 minutes, then tell Florence Nightingale I went to the hospital.</p>
+          <p><strong>Gloria:</strong> Are you okay, baby? Do you need another <span class="gap-target" data-answer="pillow"></span>?</p>
+          <p><strong>Jay:</strong> I know you think this is nothing, but he did say it could be an <span class="gap-target" data-answer="ulcer"></span>.</p>
+          <p><strong>Gloria:</strong> He also said it could be gas. Do you want me to <span class="gap-target" data-answer="burp"></span> you? Come here. Come here.</p>
+        `
+      },
+      5: {
+        title: "Part 5 (2:36 - 2:59)", start: 156, end: 179, vocabType: "ab",
+        vocab: [
+          { 
+            term: "dollars to doughnuts", 
+            options: [
+              { text: "A phrase used when you are almost 100% sure", correct: "true" },
+              { text: "A phrase used when you are completely doubtful and unsure", correct: "false" }
+            ]
+          },
+          { 
+            term: "acute", 
+            options: [
+              { text: "Sudden, severe and intense", correct: "true" },
+              { text: "Mild, slow and weak", correct: "false" }
+            ]
+          },
+          { 
+            term: "surgery", 
+            options: [
+              { text: "A medical operation where doctors cut open the body to fix it", correct: "true" },
+              { text: "A simple doctor checkup without any tools or treatment", correct: "false" }
+            ]
+          },
+          { 
+            term: "worst", 
+            options: [
+              { text: "The most terrible or bad thing of all", correct: "true" },
+              { text: "The best or most wonderful thing of all", correct: "false" }
+            ]
+          },
+          { 
+            term: "whole wide world", 
+            options: [
+              { text: "Everywhere on Earth, emphasizing everything", correct: "true" },
+              { text: "A single tiny room in a house", correct: "false" }
+            ]
+          },
+          { 
+            term: "suffer", 
+            options: [
+              { text: "To feel physical or emotional pain", correct: "true" },
+              { text: "To feel happy, relaxed and comfortable", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "dollars to doughnuts", ex: "Dollars to doughnuts, our team will win the game.", trans: "Pode apostar que nosso time vai ganhar o jogo." },
+          { term: "acute", ex: "She felt an acute pain in her knee during the run.", trans: "Ela sentiu uma dor aguda no joelho durante a corrida." },
+          { term: "surgery", ex: "The doctor said I need surgery on my arm.", trans: "O médico disse que preciso de cirurgia no braço." },
+          { term: "worst", ex: "That was the worst movie I have ever seen.", trans: "Aquele foi o pior filme que já vi." },
+          { term: "whole wide world", ex: "This is the best ice cream in the whole wide world!", trans: "Este é o melhor sorvete do mundo inteiro!" },
+          { term: "suffer", ex: "Nobody should suffer from a simple toothache.", trans: "Ninguém deveria sofrer com uma simples dor de dente." }
+        ],
+        gaps: ["dollars to doughnuts", "acute", "surgery", "worst", "whole wide world", "suffer"],
+        fullScript: `
+          <p><strong>Manny:</strong> <span class="gap-target" data-answer="dollars to doughnuts"></span> it's diverticulitis.</p>
+          <p><strong>Doctor:</strong> Actually, it's not.</p>
+          <p><strong>Gloria:</strong> Aha!</p>
+          <p><strong>Doctor:</strong> You have <span class="gap-target" data-answer="acute"></span> appendicitis. We need to get you into <span class="gap-target" data-answer="surgery"></span> right away.</p>
+          <p><strong>Jay:</strong> Emergency surgery. I told you it was something. Aha!</p>
+          <p><strong>Gloria:</strong> That can't be right. You have to check again.</p>
+          <p><strong>Doctor:</strong> The tests are conclusive. Everything will be all right, Mr. Pritchett. Let's go.</p>
+          <p><strong>Gloria:</strong> No, Jay! If that's true, then I'm the <span class="gap-target" data-answer="worst"></span> wife in the <span class="gap-target" data-answer="whole wide world"></span>! I made you <span class="gap-target" data-answer="suffer"></span> for two whole days!</p>
+        `
+      },
+      6: {
+        title: "Part 6 (2:59 - 3:24)", start: 179, end: 204, vocabType: "select",
+        vocab: [
+          { 
+            term: "almost", 
+            correct: "Nearly or very close to happening",
+            distractors: ["Completely finished and done", "At a very distant time"]
+          },
+          { 
+            term: "counting down", 
+            correct: "Calculating the time left before an event happens",
+            distractors: ["Checking the time on a watch", "Counting items one by one"]
+          },
+          { 
+            term: "rupture", 
+            correct: "To burst, pop or break open suddenly",
+            distractors: ["To stretch slowly without breaking", "To shrink in size"]
+          },
+          { 
+            term: "forgiving", 
+            correct: "Pardoning or excusing someone for a mistake",
+            distractors: ["Blaming someone for an error", "Asking for help from a friend"]
+          },
+          { 
+            term: "gets you", 
+            correct: "Causes you harm, trouble or illness",
+            distractors: ["Gives you a surprise gift", "Helps you feel much better"]
+          },
+          { 
+            term: "over", 
+            correct: "Older or more than a specific age/number",
+            distractors: ["Exactly equal to a number", "Younger or less than an age"]
+          },
+          { 
+            term: "caring", 
+            correct: "Showing worry, love or concern for others",
+            distractors: ["Ignoring people completely", "Acting very busy with work"]
+          }
+        ],
+        examples: [
+          { term: "almost", ex: "We are almost ready to go home.", trans: "Estamos quase prontos para ir para casa." },
+          { term: "counting down", ex: "The kids are counting down the days until summer.", trans: "As crianças estão contando os dias até o verão." },
+          { term: "rupture", ex: "High water pressure can rupture the pipe.", trans: "A alta pressão da água pode estourar o cano." },
+          { term: "forgiving", ex: "Thank you for forgiving my mistake.", trans: "Obrigado por perdoar meu erro." },
+          { term: "gets you", ex: "Working too hard without sleep usually gets you in the end.", trans: "Trabalhar demais sem dormir geralmente te prejudica/pega no final." },
+          { term: "over", ex: "You must be over eighteen to drive a car.", trans: "Você precisa ter mais de dezoito anos para dirigir um carro." },
+          { term: "caring", ex: "She is a very kind and caring person.", trans: "Ela é uma pessoa muito gentil e carinhosa." }
+        ],
+        gaps: ["almost", "counting down", "rupture", "forgiving", "gets you", "over", "caring"],
+        fullScript: `
+          <p><strong>Jay:</strong> Honey, it's okay.</p>
+          <p><strong>Gloria:</strong> No, it's not okay! Why? Why do I always <span class="gap-target" data-answer="almost"></span> kill my husbands?</p>
+          <p><strong>Jay:</strong> And I want to hear this story sometime, but I'm sort of <span class="gap-target" data-answer="counting down"></span> to a <span class="gap-target" data-answer="rupture"></span> here!</p>
+          <p><strong>Gloria:</strong> No! You can't go without <span class="gap-target" data-answer="forgiving"></span> me! What if you die in there? What do I do without you?</p>
+          <p><strong>Jay:</strong> I forgive you! But nobody dies of an appendectomy.</p>
+          <p><strong>Manny:</strong> True. It's usually the anesthesia that <span class="gap-target" data-answer="gets you"></span>. You're <span class="gap-target" data-answer="over"></span> 60, right?</p>
+          <p><strong>Gloria:</strong> I will never forget you, Jay!</p>
+          <p><strong>Jay:</strong> Could you go back to not <span class="gap-target" data-answer="caring"></span>, please?</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      20: [
+        { q: "1. Do you usually search your symptoms online when you feel sick?", start: "Yes/No, whenever I feel sick, I usually ______.", ex: "Yes, I often Google my symptoms first, but it always makes me paranoid!" },
+        { q: "2. Who is more like you when sick: Jay (worried & researching) or Gloria (tough & tough-love)?", start: "I think I am more like ______ because ______.", ex: "I am definitely more like Jay because I overthink every minor ache!" },
+        { q: "3. Have you ever had a medical emergency or minor surgery like an appendectomy?", start: "Yes/No, I once had ______.", ex: "No, luckily I have never needed emergency surgery, but my brother had an appendectomy!" }
+      ],
+      30: [
+        { q: "1. Do you usually search your symptoms online when you feel sick?", start: "Yes/No, whenever I feel sick, I usually ______.", ex: "Yes, I often Google my symptoms first, but it always makes me paranoid!" },
+        { q: "2. Who is more like you when sick: Jay (worried & researching) or Gloria (tough & tough-love)?", start: "I think I am more like ______ because ______.", ex: "I am definitely more like Jay because I overthink every minor ache!" },
+        { q: "3. Have you ever had a medical emergency or minor surgery like an appendectomy?", start: "Yes/No, I once had ______.", ex: "No, luckily I have never needed emergency surgery, but my brother had an appendectomy!" },
+        { q: "4. Why do you think people get anxious when reading medical information on the internet?", start: "I think people get anxious because medical websites always ______.", ex: "I think people get anxious because medical websites always show worst-case scenarios first!" }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 2 : chosenTime === 20 ? 4 : 6;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      }
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      if (chosenTime > 10) {
+        globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+      }
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        
+        // CORTES DO WARM-UP AJUSTADOS POR TRILHA DE TEMPO
+        const warmupEndCut = chosenTime === 10 ? 88 : chosenTime === 20 ? 156 : 204;
+        player.src = `https://www.youtube.com/embed/WSx3g8dpq2Q?start=0&end=${warmupEndCut}&autoplay=0&enablejsapi=1`;
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the snippet and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. Why doesn't Jay want to go to the mall with Gloria?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">His stomach feels a little funny / bad</option>
+              <option value="b">He has to stay home and work on his computer</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. How does Gloria view Jay's complaints about his health?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">She gets extremely panicked immediately</option>
+              <option value="b">She thinks Americans complain too much about minor issues</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+          let vocabHTML = "";
+
+          if (pData.vocabType === 'ab') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([...v.options]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    <button class="ab-btn" data-correct="${options[0].correct}" onclick="clickAB(this)">${options[0].text}</button>
+                    <button class="ab-btn" data-correct="${options[1].correct}" onclick="clickAB(this)">${options[1].text}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          } else if (pData.vocabType === 'select') {
+            vocabHTML = pData.vocab.map(v => {
+              const options = shuffleArray([v.correct, ...v.distractors]);
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="${v.correct}">
+                    <option value="">-- Choose meaning --</option>
+                    ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            }).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Match each key term with its definition:</p>
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to the examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/WSx3g8dpq2Q?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        
+        // CORTES DA CENA COMPLETA AJUSTADOS POR TRILHA DE TEMPO
+        const endCut = chosenTime === 10 ? 88 : chosenTime === 20 ? 156 : 204;
+        player.src = `https://www.youtube.com/embed/WSx3g8dpq2Q?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the episode.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Jay complains of a stomachache, but Gloria mocks him for being dramatic." },
+        { order: 2, text: "Jay secretly asks Manny for the medical website name to check his symptoms." },
+        { order: 3, text: "Jay describes his sharp pain as 'feeling like eating a bad scallop stabbing from inside'." },
+        { order: 4, text: "Gloria catches them on the computer, closes it, and claims Jay is cured." },
+        { order: 5, text: "At the hospital, the doctor confirms Jay has acute appendicitis needing immediate surgery." },
+        { order: 6, text: "Gloria dramatically begs for forgiveness as Jay is prepped for surgery." }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
