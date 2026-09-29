@@ -230,9 +230,9 @@
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.85em; }
 
     .word-bank { 
-      position: sticky; top: -14px; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; 
+      position: sticky; top: -14px; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px; 
       margin-bottom: 14px; padding: 12px; background: #cbd5e1; border: 1px solid #94a3b8;
-      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 48px; 
+      border-radius: var(--radius-soft); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); min-height: 48px; 
     }
     .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
     .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
@@ -1323,7 +1323,6 @@
       if (step.type === 'part') {
         if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
         if (activeSubTab === 'examples') { 
-          concluirEtapa('thelastofus.html', step.partNum, 50);
           activeSubTab = 'listening'; 
           renderCurrentStep(); 
           return; 
@@ -1350,16 +1349,15 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
-    function concluirEtapa(arquivo, numParte, xpPontos = 50) {
-      let progressoLocal = JSON.parse(localStorage.getItem('pop_activities_progress') || '{}');
-      if (!progressoLocal[arquivo]) {
-        progressoLocal[arquivo] = [];
-      }
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
 
-      if (!progressoLocal[arquivo].includes(numParte)) {
-        progressoLocal[arquivo].push(numParte);
-        localStorage.setItem('pop_activities_progress', JSON.stringify(progressoLocal));
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
 
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
         let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
         xpAtual += xpPontos;
         localStorage.setItem('pop_user_xp', xpAtual.toString());
@@ -1368,10 +1366,7 @@
 
     const originalShowCompletionModal = showCompletionModal;
     showCompletionModal = function() {
-      const maxPart = chosenTime === 10 ? 1 : 3;
-      for (let p = 1; p <= maxPart; p++) {
-        concluirEtapa('thelastofus.html', p, 50);
-      }
+      concluirTrilhaAtual('thelastofus.html');
       originalShowCompletionModal();
     };
   </script>
