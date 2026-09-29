@@ -16,19 +16,32 @@
     
     .activity-list { display: flex; flex-direction: column; gap: 15px; }
     .activity-card { background: #1e293b; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #ec4899; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .card-content { display: flex; align-items: center; gap: 16px; }
+    .activity-card.completed { border-left-color: #22c55e; background: #1a2e3b; }
+    .card-content { display: flex; align-items: center; gap: 16px; flex-grow: 1; }
     
-    /* Imagem quadrada com cantos arredondados */
     .card-avatar { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #ec4899; background-color: #0f172a; }
 
-    .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; }
-    .activity-card p { font-size: 0.9rem; color: #94a3b8; }
-    .btn-start { background: linear-gradient(90deg, #db2777, #ec4899); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; flex-shrink: 0; margin-left: 15px; }
+    .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .activity-card p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; }
+    .badge-completed { background: #22c55e; color: #022c22; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; }
+
+    /* Barras de Progresso Segmentadas */
+    .progress-segments { display: flex; gap: 4px; width: 100%; max-width: 180px; margin-top: 6px; }
+    .segment { height: 6px; flex: 1; background-color: #334155; border-radius: 3px; transition: background-color 0.3s; }
+    .segment.filled { background: linear-gradient(90deg, #ec4899, #f43f5e); }
+    .segment.completed-all { background-color: #22c55e; }
+
+    .card-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; margin-left: 15px; }
+    .progress-text { font-size: 0.78rem; color: #94a3b8; font-weight: 600; }
+
+    .btn-start { background: linear-gradient(90deg, #db2777, #ec4899); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; text-align: center; }
     .btn-start:hover { opacity: 0.9; }
 
     @media (max-width: 600px) {
       .activity-card { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .btn-start { margin-left: 0; width: 100%; text-align: center; }
+      .card-actions { width: 100%; margin-left: 0; align-items: stretch; }
+      .btn-start { width: 100%; text-align: center; }
+      .progress-segments { max-width: 100%; }
     }
   </style>
 </head>
@@ -51,36 +64,71 @@
         serieInfo: "The Devil Wears Prada • Iconic Scene",
         tituloAula: "The Cerulean Sweater Speech",
         arquivo: "devilwearsprada.html",
-        imagem: "https://i.imgur.com/EHdz14o.jpeg"
+        imagem: "https://i.imgur.com/EHdz14o.jpeg",
+        totalPartes: 2
       },
       {
         serieInfo: "The Last of Us • Season 1, Episode 01",
         tituloAula: "The Fungal Pandemic Warning",
         arquivo: "thelastofus.html",
-        imagem: "https://i.imgur.com/SmGN2Hh.jpeg"
+        imagem: "https://i.imgur.com/SmGN2Hh.jpeg",
+        totalPartes: 3
       },
       {
         serieInfo: "The Matrix • Iconic Scene",
         tituloAula: "What is the Matrix?",
         arquivo: "matrix.html",
-        imagem: "https://i.imgur.com/FeUlEV2.jpeg"
+        imagem: "https://i.imgur.com/FeUlEV2.jpeg",
+        totalPartes: 4
       }
     ];
 
     function renderizarCards() {
+      const progressoLocal = JSON.parse(localStorage.getItem('pop_activities_progress') || '{}');
       const container = document.getElementById('activityListContainer');
-      container.innerHTML = atividades.map(act => `
-        <div class="activity-card">
-          <div class="card-content">
-            <img src="${act.imagem}" alt="${act.serieInfo}" class="card-avatar">
-            <div>
-              <h3>${act.serieInfo}</h3>
-              <p>${act.tituloAula}</p>
+
+      container.innerHTML = atividades.map(act => {
+        const partesConcluidas = progressoLocal[act.arquivo] || [];
+        const qtdConcluida = partesConcluidas.length;
+        const total = act.totalPartes;
+        const is100Percent = qtdConcluida >= total;
+
+        // Gerador das barrinhas de segmento
+        let segmentsHTML = '<div class="progress-segments">';
+        for (let i = 1; i <= total; i++) {
+          const isFilled = partesConcluidas.includes(i);
+          const className = is100Percent ? 'segment completed-all' : (isFilled ? 'segment filled' : 'segment');
+          segmentsHTML += `<div class="${className}"></div>`;
+        }
+        segmentsHTML += '</div>';
+
+        let labelBotao = 'Start 💥';
+        if (is100Percent) {
+          labelBotao = 'Replay 💥';
+        } else if (qtdConcluida > 0) {
+          labelBotao = 'Continue 🚀';
+        }
+
+        return `
+          <div class="activity-card ${is100Percent ? 'completed' : ''}">
+            <div class="card-content">
+              <img src="${act.imagem}" alt="${act.serieInfo}" class="card-avatar">
+              <div>
+                <h3>
+                  ${act.serieInfo}
+                  ${is100Percent ? '<span class="badge-completed">✓ 100% Done</span>' : ''}
+                </h3>
+                <p>${act.tituloAula}</p>
+                ${segmentsHTML}
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="progress-text">${qtdConcluida}/${total} Partes</span>
+              <a href="../activities/${act.arquivo}" class="btn-start">${labelBotao}</a>
             </div>
           </div>
-          <a href="../activities/${act.arquivo}" class="btn-start">Start 💥</a>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     renderizarCards();

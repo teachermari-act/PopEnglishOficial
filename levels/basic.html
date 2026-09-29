@@ -16,13 +16,15 @@
     
     .activity-list { display: flex; flex-direction: column; gap: 15px; }
     .activity-card { background: #1e293b; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #a855f7; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .activity-card.completed { border-left-color: #22c55e; background: #1a2e3b; }
     .card-content { display: flex; align-items: center; gap: 16px; }
     
-    /* Imagem quadrada com cantos arredondados */
     .card-avatar { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #a855f7; background-color: #0f172a; }
     
-    .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; }
+    .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
     .activity-card p { font-size: 0.9rem; color: #94a3b8; }
+    .badge-completed { background: #22c55e; color: #022c22; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; }
+
     .btn-start { background: linear-gradient(90deg, #9333ea, #a855f7); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; flex-shrink: 0; margin-left: 15px; }
     .btn-start:hover { opacity: 0.9; }
 
@@ -79,20 +81,38 @@
       }
     ];
 
+    function registrarConclusao(arquivo) {
+      const concluidas = JSON.parse(localStorage.getItem('pop_completed_activities') || '[]');
+      if (!concluidas.includes(arquivo)) {
+        concluidas.push(arquivo);
+        localStorage.setItem('pop_completed_activities', JSON.stringify(concluidas));
+      }
+    }
+
     function renderizarCards() {
+      const concluidas = JSON.parse(localStorage.getItem('pop_completed_activities') || '[]');
       const container = document.getElementById('activityListContainer');
-      container.innerHTML = atividades.map(act => `
-        <div class="activity-card">
-          <div class="card-content">
-            <img src="${act.imagem}" alt="${act.serieInfo}" class="card-avatar">
-            <div>
-              <h3>${act.serieInfo}</h3>
-              <p>${act.tituloAula}</p>
+
+      container.innerHTML = atividades.map(act => {
+        const isDone = concluidas.includes(act.arquivo);
+        return `
+          <div class="activity-card ${isDone ? 'completed' : ''}">
+            <div class="card-content">
+              <img src="${act.imagem}" alt="${act.serieInfo}" class="card-avatar">
+              <div>
+                <h3>
+                  ${act.serieInfo}
+                  ${isDone ? '<span class="badge-completed">✓ Done</span>' : ''}
+                </h3>
+                <p>${act.tituloAula}</p>
+              </div>
             </div>
+            <a href="../activities/${act.arquivo}" onclick="registrarConclusao('${act.arquivo}')" class="btn-start">
+              ${isDone ? 'Replay 🎧' : 'Start 🎧 (+100 XP)'}
+            </a>
           </div>
-          <a href="../activities/${act.arquivo}" class="btn-start">Start 🎧</a>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     renderizarCards();
