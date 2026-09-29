@@ -25,7 +25,7 @@
     .activity-card p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; }
     .badge-completed { background: #22c55e; color: #022c22; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; }
 
-    /* Barras de Progresso Segmentadas */
+    /* Barras Segmentadas por Trilhas de Tempo */
     .progress-segments { display: flex; gap: 4px; width: 100%; max-width: 180px; margin-top: 6px; }
     .segment { height: 6px; flex: 1; background-color: #334155; border-radius: 3px; transition: background-color 0.3s; }
     .segment.filled { background: linear-gradient(90deg, #ec4899, #f43f5e); }
@@ -65,48 +65,47 @@
         tituloAula: "The Cerulean Sweater Speech",
         arquivo: "devilwearsprada.html",
         imagem: "https://i.imgur.com/EHdz14o.jpeg",
-        totalPartes: 2
+        trilhasDisponiveis: [10, 20] // 2 trilhas (10 min e 20 min)
       },
       {
         serieInfo: "The Last of Us • Season 1, Episode 01",
         tituloAula: "The Fungal Pandemic Warning",
         arquivo: "thelastofus.html",
         imagem: "https://i.imgur.com/SmGN2Hh.jpeg",
-        totalPartes: 3
+        trilhasDisponiveis: [10, 20] // 2 trilhas (10 min e 20 min)
       },
       {
         serieInfo: "The Matrix • Iconic Scene",
         tituloAula: "What is the Matrix?",
         arquivo: "matrix.html",
         imagem: "https://i.imgur.com/FeUlEV2.jpeg",
-        totalPartes: 4
+        trilhasDisponiveis: [20, 30] // 2 trilhas (20 min e 30 min)
       }
     ];
 
     function renderizarCards() {
-      const progressoLocal = JSON.parse(localStorage.getItem('pop_activities_progress') || '{}');
+      const progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
       const container = document.getElementById('activityListContainer');
 
       container.innerHTML = atividades.map(act => {
-        const partesConcluidas = progressoLocal[act.arquivo] || [];
-        const qtdConcluida = partesConcluidas.length;
-        const total = act.totalPartes;
-        const is100Percent = qtdConcluida >= total;
+        const trilhasFeitas = progressoLocal[act.arquivo] || [];
+        const qtdConcluida = trilhasFeitas.length;
+        const totalTrilhas = act.trilhasDisponiveis.length;
+        const is100Percent = qtdConcluida >= totalTrilhas;
 
-        // Gerador das barrinhas de segmento
         let segmentsHTML = '<div class="progress-segments">';
-        for (let i = 1; i <= total; i++) {
-          const isFilled = partesConcluidas.includes(i);
+        act.trilhasDisponiveis.forEach(tempo => {
+          const isFilled = trilhasFeitas.includes(tempo);
           const className = is100Percent ? 'segment completed-all' : (isFilled ? 'segment filled' : 'segment');
           segmentsHTML += `<div class="${className}"></div>`;
-        }
+        });
         segmentsHTML += '</div>';
 
         let labelBotao = 'Start 💥';
         if (is100Percent) {
           labelBotao = 'Replay 💥';
         } else if (qtdConcluida > 0) {
-          labelBotao = 'Continue 🚀';
+          labelBotao = 'Continue 💥';
         }
 
         return `
@@ -123,7 +122,7 @@
               </div>
             </div>
             <div class="card-actions">
-              <span class="progress-text">${qtdConcluida}/${total} Partes</span>
+              <span class="progress-text">${qtdConcluida}/${totalTrilhas} Trilhas</span>
               <a href="../activities/${act.arquivo}" class="btn-start">${labelBotao}</a>
             </div>
           </div>
