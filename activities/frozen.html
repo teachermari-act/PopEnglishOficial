@@ -232,7 +232,6 @@
     .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
 
-    /* Word Bank FIXO DURANTE ROLAGEM (Sticky Top) */
     .word-bank { 
       position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px; 
       margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
@@ -758,7 +757,6 @@
       container.innerHTML = "";
       renderCoolStepper();
 
-      // DURAÇÃO DE ACORDO COM A TRILHA SELECIONADA
       const totalCut = chosenTime === 10 ? 115 : 214;
 
       if (step.type === 'warmup') {
@@ -1127,6 +1125,27 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('frozen.html');
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>

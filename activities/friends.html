@@ -38,7 +38,6 @@
       font-size: 15px;
     }
 
-    /* Botão de Voltar */
     .nav-back-container {
       padding: 10px 16px;
       background-color: #0b0f19;
@@ -230,7 +229,6 @@
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
-    /* IMAGENS DA GRADE */
     .pic-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
     .pic-card { background: white; border: 1px solid #cbd5e0; border-radius: 8px; padding: 6px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
     .pic-card img { 
@@ -253,7 +251,6 @@
     
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85em; box-shadow: none; }
 
-    /* WORD BANK FIXO NO TOPO DO CONTEÚDO */
     .word-bank { 
       position: sticky;
       top: 0;
@@ -315,7 +312,6 @@
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; }
     .modal-card { background: white; color: var(--text-dark); padding: 36px; border-radius: var(--radius-round); text-align: center; max-width: 440px; }
 
-    /* RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS */
     @media (max-width: 768px) {
       body { height: auto; overflow: auto; }
       .workspace { flex-direction: column; height: auto; min-height: unset; overflow: visible; }
@@ -327,7 +323,6 @@
 </head>
 <body>
 
-  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
   <div class="nav-back-container">
     <a href="../index.html" class="nav-back">
       ← Back to Homepage
@@ -344,7 +339,6 @@
     </div>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://i.imgur.com/nmDeP90.png" class="banner-img" alt="Friends Scene">
@@ -374,7 +368,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -1105,6 +1098,27 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : chosenTime === 30 ? 150 : 200;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('friends.html');
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>

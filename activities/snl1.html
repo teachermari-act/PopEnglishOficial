@@ -199,10 +199,6 @@
       margin-bottom: 10px;
     }
 
-    .content-area p {
-      font-size: 1.02em;
-    }
-
     .question-block { margin-bottom: 18px; }
     .question-block strong { display: block; font-size: 1.05em; margin-bottom: 8px; color: #1e293b; }
 
@@ -225,7 +221,6 @@
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
-    /* IMAGE MATCHING GRID */
     .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
     .image-card {
       background: white; border: 2px solid #cbd5e0; border-radius: var(--radius-soft);
@@ -243,7 +238,7 @@
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
 
     .word-bank { 
-      position: sticky; top: -18px; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; 
+      position: sticky; top: -18px; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px; 
       margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
       border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 48px; 
     }
@@ -251,9 +246,9 @@
     .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
 
     .gap-target {
-      display: inline-block; min-width: 85px; height: 32px; border-bottom: 2px solid var(--accent-purple);
+      display: inline-block; min-width: 80px; height: 30px; border-bottom: 2px solid var(--accent-purple);
       background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
-      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 30px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
     }
     .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
@@ -1160,10 +1155,6 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        // CORTE DINÂMICO DE ACORDO COM A TRILHA SELECIONADA:
-        // 10 min -> Parte 2 encerra aos 93s (1:33)
-        // 20 min -> Parte 4 encerra aos 185s (3:05)
-        // 30 min -> Parte 6 encerra aos 280s (4:40)
         const endCut = chosenTime === 10 ? 93 : chosenTime === 20 ? 185 : 280;
         player.src = `https://www.youtube.com/embed/JYqfVE-fykk?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
@@ -1407,6 +1398,27 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('snl1.html');
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>
