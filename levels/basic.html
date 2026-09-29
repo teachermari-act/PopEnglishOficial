@@ -8,29 +8,40 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
     .container { max-width: 800px; margin: 0 auto; }
-    .nav-back { display: inline-block; margin-bottom: 20px; color: #a855f7; text-decoration: none; font-weight: 700; transition: color 0.2s; }
-    .nav-back:hover { color: #c084fc; text-decoration: underline; }
+    .nav-back { display: inline-block; margin-bottom: 20px; color: #c084fc; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+    .nav-back:hover { color: #d8b4fe; text-decoration: underline; }
     header { margin-bottom: 30px; }
-    header h1 { font-size: 1.8rem; margin-bottom: 6px; background: linear-gradient(90deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header h1 { font-size: 1.8rem; margin-bottom: 6px; background: linear-gradient(90deg, #9333ea, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     header p { color: #94a3b8; font-size: 1rem; }
     
     .activity-list { display: flex; flex-direction: column; gap: 15px; }
     .activity-card { background: #1e293b; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #a855f7; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .activity-card.completed { border-left-color: #22c55e; background: #1a2e3b; }
-    .card-content { display: flex; align-items: center; gap: 16px; }
+    .card-content { display: flex; align-items: center; gap: 16px; flex-grow: 1; }
     
     .card-avatar { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #a855f7; background-color: #0f172a; }
-    
-    .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-    .activity-card p { font-size: 0.9rem; color: #94a3b8; }
+
+    .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .activity-card p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; }
     .badge-completed { background: #22c55e; color: #022c22; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; }
 
-    .btn-start { background: linear-gradient(90deg, #9333ea, #a855f7); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; flex-shrink: 0; margin-left: 15px; }
+    /* Barras Segmentadas por Trilhas de Tempo */
+    .progress-segments { display: flex; gap: 4px; width: 100%; max-width: 180px; margin-top: 6px; }
+    .segment { height: 6px; flex: 1; background-color: #334155; border-radius: 3px; transition: background-color 0.3s; }
+    .segment.filled { background: linear-gradient(90deg, #9333ea, #a855f7); }
+    .segment.completed-all { background-color: #22c55e; }
+
+    .card-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; margin-left: 15px; }
+    .progress-text { font-size: 0.78rem; color: #94a3b8; font-weight: 600; }
+
+    .btn-start { background: linear-gradient(90deg, #9333ea, #a855f7); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; text-align: center; }
     .btn-start:hover { opacity: 0.9; }
 
     @media (max-width: 600px) {
       .activity-card { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .btn-start { margin-left: 0; width: 100%; text-align: center; }
+      .card-actions { width: 100%; margin-left: 0; align-items: stretch; }
+      .btn-start { width: 100%; text-align: center; }
+      .progress-segments { max-width: 100%; }
     }
   </style>
 </head>
@@ -41,7 +52,7 @@
 
     <header>
       <h1>Little by little the chicken enche o papo ✨</h1>
-      <p>Selecione uma atividade para treinar seu listening no seu tempo:</p>
+      <p>Selecione uma atividade para treinar o ouvido sem neura:</p>
     </header>
 
     <main class="activity-list" id="activityListContainer"></main>
@@ -53,63 +64,81 @@
         serieInfo: "Friends • Season 9, Episode 19",
         tituloAula: "Loading Up on Hotel Amenities",
         arquivo: "friends.html",
-        imagem: "https://i.imgur.com/nmDeP90.png"
+        imagem: "https://i.imgur.com/nmDeP90.png",
+        trilhasDisponiveis: [10, 20, 30, 45]
       },
       {
-        serieInfo: "Saturday Night Live • Nate Bargatze",
-        tituloAula: "Washington's Dream #1",
-        arquivo: "snl1.html",
-        imagem: "https://i.imgur.com/vtgcENZ.jpeg"
-      },
-      {
-        serieInfo: "Saturday Night Live • Nate Bargatze",
-        tituloAula: "Washington's Dream #2",
-        arquivo: "snl2.html",
-        imagem: "https://i.imgur.com/vtgcENZ.jpeg"
+        serieInfo: "Frozen • Coronation Day",
+        tituloAula: "Coronation Day!",
+        arquivo: "frozen.html",
+        imagem: "https://i.imgur.com/Z6bZTkO.png",
+        trilhasDisponiveis: [10, 20]
       },
       {
         serieInfo: "How I Met Your Mother • Season 5, Episode 18",
         tituloAula: "Barney's Perfect Picture",
         arquivo: "himym.html",
-        imagem: "https://i.imgur.com/jUrxPRp.jpeg"
+        imagem: "https://i.imgur.com/C7fC0pL.jpeg",
+        trilhasDisponiveis: [10, 20]
       },
       {
-        serieInfo: "Frozen",
-        tituloAula: "Coronation Day!",
-        arquivo: "frozen.html",
-        imagem: "https://i.imgur.com/Z6bZTkO.png"
+        serieInfo: "SNL • Washington's Dream Part 1",
+        tituloAula: "Washington's Dream - Weights & Measures",
+        arquivo: "snl1.html",
+        imagem: "https://i.imgur.com/vtgcENZ.jpeg",
+        trilhasDisponiveis: [10, 20, 30]
+      },
+      {
+        serieInfo: "SNL • Washington's Dream Part 2",
+        tituloAula: "Washington's Dream - Language & Culture",
+        arquivo: "snl2.html",
+        imagem: "https://i.imgur.com/vtgcENZ.jpeg",
+        trilhasDisponiveis: [10, 20, 30]
       }
     ];
 
-    function registrarConclusao(arquivo) {
-      const concluidas = JSON.parse(localStorage.getItem('pop_completed_activities') || '[]');
-      if (!concluidas.includes(arquivo)) {
-        concluidas.push(arquivo);
-        localStorage.setItem('pop_completed_activities', JSON.stringify(concluidas));
-      }
-    }
-
     function renderizarCards() {
-      const concluidas = JSON.parse(localStorage.getItem('pop_completed_activities') || '[]');
+      const progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
       const container = document.getElementById('activityListContainer');
 
       container.innerHTML = atividades.map(act => {
-        const isDone = concluidas.includes(act.arquivo);
+        const trilhasFeitas = progressoLocal[act.arquivo] || [];
+        const qtdConcluida = trilhasFeitas.length;
+        const totalTrilhas = act.trilhasDisponiveis.length;
+        const is100Percent = qtdConcluida >= totalTrilhas;
+
+        let segmentsHTML = '<div class="progress-segments">';
+        act.trilhasDisponiveis.forEach(tempo => {
+          const isFilled = trilhasFeitas.includes(tempo);
+          const className = is100Percent ? 'segment completed-all' : (isFilled ? 'segment filled' : 'segment');
+          segmentsHTML += `<div class="${className}"></div>`;
+        });
+        segmentsHTML += '</div>';
+
+        let labelBotao = 'Start 🎧';
+        if (is100Percent) {
+          labelBotao = 'Replay 🎧';
+        } else if (qtdConcluida > 0) {
+          labelBotao = 'Continue 🎧';
+        }
+
         return `
-          <div class="activity-card ${isDone ? 'completed' : ''}">
+          <div class="activity-card ${is100Percent ? 'completed' : ''}">
             <div class="card-content">
               <img src="${act.imagem}" alt="${act.serieInfo}" class="card-avatar">
               <div>
                 <h3>
                   ${act.serieInfo}
-                  ${isDone ? '<span class="badge-completed">✓ Done</span>' : ''}
+                  ${is100Percent ? '<span class="badge-completed">✓ 100% Done</span>' : ''}
                 </h3>
                 <p>${act.tituloAula}</p>
+                ${segmentsHTML}
               </div>
             </div>
-            <a href="../activities/${act.arquivo}" onclick="registrarConclusao('${act.arquivo}')" class="btn-start">
-              ${isDone ? 'Replay 🎧' : 'Start 🎧 (+100 XP)'}
-            </a>
+            <div class="card-actions">
+              <span class="progress-text">${qtdConcluida}/${totalTrilhas} Trilhas</span>
+              <a href="../activities/${act.arquivo}" class="btn-start">${labelBotao}</a>
+            </div>
           </div>
         `;
       }).join('');
