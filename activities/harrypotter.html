@@ -1135,6 +1135,27 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('harrypotter.html');
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>

@@ -103,7 +103,7 @@
     .time-btn {
       background: #334155; color: white; border: 2px solid transparent;
       padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.98em; font-weight: 600;
-      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-space-between; align-items: center;
       position: relative; z-index: 4; text-align: left;
     }
 
@@ -199,7 +199,7 @@
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
 
     .word-bank { 
-      position: sticky; top: -14px; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px; 
+      position: sticky; top: -14px; z-index: 100; display: flex; flex-wrap: wrap; gap: 6px; 
       margin-bottom: 12px; padding: 10px; background: #cbd5e1; border: 1px solid #94a3b8;
       border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 44px; 
     }
@@ -1027,6 +1027,27 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('thepitt.html');
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>

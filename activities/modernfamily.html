@@ -233,9 +233,9 @@
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
 
     .word-bank { 
-      position: sticky; top: -18px; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; 
+      position: sticky; top: -18px; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px; 
       margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
-      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 48px; 
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); min-height: 48px; 
     }
     .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
     .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
@@ -318,7 +318,6 @@
     <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://i.imgur.com/IHeLljv.jpeg?v=4" class="banner-img" alt="Modern Family Airport Scene">
@@ -345,7 +344,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -818,7 +816,6 @@
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
         
-        // CORREÇÃO DOS CORTES DO WARM-UP DE ACORDO COM O TEMPO ESCOLHIDO
         const warmupEndCut = chosenTime === 10 ? 64 : chosenTime === 20 ? 210 : 334;
         player.src = `https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=${warmupEndCut}&autoplay=0&enablejsapi=1`;
         
@@ -958,8 +955,6 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        
-        // CORREÇÃO DO CORTE DA CENA FINAL DE ACORDO COM O TEMPO ESCOLHIDO
         const endCut = chosenTime === 10 ? 111 : chosenTime === 20 ? 210 : 334;
         player.src = `https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
@@ -1203,6 +1198,27 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('modernfamily.html');
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>

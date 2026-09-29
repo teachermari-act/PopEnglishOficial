@@ -119,7 +119,6 @@
 
     .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
-    /* WORKSPACE RESPONSIVO */
     .workspace { 
       display: none; 
       flex: 1; 
@@ -199,7 +198,6 @@
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
-    /* GRADE DE IMAGENS */
     .pic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
     .pic-card { 
       background: #f1f5f9; 
@@ -321,7 +319,6 @@
 </head>
 <body>
 
-  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
   <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
     <a href="../index.html" style="color: #a855f7; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 0.95em; display: inline-flex; align-items: center; gap: 6px;">
       ← Back to Homepage
@@ -338,7 +335,6 @@
     </div>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://i.imgur.com/WD06S2Q.jpeg" class="banner-img" alt="Wednesday Roommate Scene">
@@ -362,7 +358,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -1397,6 +1392,27 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      if (!progressoLocal[arquivo].includes(chosenTime)) {
+        progressoLocal[arquivo].push(chosenTime);
+        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('wednesday.html');
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>
