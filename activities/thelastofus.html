@@ -119,7 +119,6 @@
 
     .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
 
-    /* WORKSPACE RESPONSIVO */
     .workspace { 
       display: none; 
       flex: 1; 
@@ -199,7 +198,6 @@
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
-    /* GRADE DE IMAGENS */
     .pic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
     .pic-card { 
       background: #f1f5f9; 
@@ -294,7 +292,6 @@
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
     .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 400px; width: 100%; }
 
-    /* REGRAS CSS PARA CELULAR E DISPOSITIVOS MÓVEIS (TELA < 768px) */
     @media (max-width: 768px) {
       body { height: auto; overflow-y: auto; padding: 0; font-size: 16px; }
       header { padding: 10px 14px; }
@@ -322,7 +319,6 @@
 </head>
 <body>
 
-  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
   <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
     <a href="../index.html" style="color: #a855f7; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 0.95em; display: inline-flex; align-items: center; gap: 6px;">
       ← Back to Homepage
@@ -339,7 +335,6 @@
     </div>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://i.imgur.com/SmGN2Hh.jpeg" class="banner-img" alt="The Last of Us Talk Show Scene">
@@ -363,7 +358,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -1328,7 +1322,12 @@
       const step = globalStepsSequence[mainStepIndex];
       if (step.type === 'part') {
         if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
-        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { 
+          concluirEtapa('thelastofus.html', step.partNum, 50);
+          activeSubTab = 'listening'; 
+          renderCurrentStep(); 
+          return; 
+        }
       }
 
       if (mainStepIndex < globalStepsSequence.length - 1) {
@@ -1350,6 +1349,31 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirEtapa(arquivo, numParte, xpPontos = 50) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_activities_progress') || '{}');
+      if (!progressoLocal[arquivo]) {
+        progressoLocal[arquivo] = [];
+      }
+
+      if (!progressoLocal[arquivo].includes(numParte)) {
+        progressoLocal[arquivo].push(numParte);
+        localStorage.setItem('pop_activities_progress', JSON.stringify(progressoLocal));
+
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      const maxPart = chosenTime === 10 ? 1 : 3;
+      for (let p = 1; p <= maxPart; p++) {
+        concluirEtapa('thelastofus.html', p, 50);
+      }
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>

@@ -327,7 +327,6 @@
     <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://i.imgur.com/FeUlEV2.jpeg" class="banner-img" alt="The Matrix Banner">
@@ -351,7 +350,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -389,11 +387,6 @@
     let activeSubTab = 'prepare';
     let selectedWord = "";
 
-    // CORTES DE TEMPO DAS PARTES DO VÍDEO (iCsercnqtAg):
-    // Part 1: 0 - 84s (0:00 - 1:24)
-    // Part 2: 84s - 172s (1:24 - 2:52)
-    // Part 3: 172s - 233s (2:52 - 3:53)
-    // Part 4: 233s - 316s (3:53 - 5:16)
     const partsData = {
       1: {
         title: "Part 1 (0:00 - 1:24)", start: 0, end: 84, vocabType: "select",
@@ -1198,7 +1191,12 @@
       const step = globalStepsSequence[mainStepIndex];
       if (step.type === 'part') {
         if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
-        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { 
+          concluirEtapa('matrix.html', step.partNum, 50);
+          activeSubTab = 'listening'; 
+          renderCurrentStep(); 
+          return; 
+        }
       }
 
       if (mainStepIndex < globalStepsSequence.length - 1) {
@@ -1220,6 +1218,31 @@
       document.getElementById('workspaceScreen').style.display = 'none';
       document.getElementById('welcomeScreen').style.display = 'block';
     }
+
+    function concluirEtapa(arquivo, numParte, xpPontos = 50) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_activities_progress') || '{}');
+      if (!progressoLocal[arquivo]) {
+        progressoLocal[arquivo] = [];
+      }
+
+      if (!progressoLocal[arquivo].includes(numParte)) {
+        progressoLocal[arquivo].push(numParte);
+        localStorage.setItem('pop_activities_progress', JSON.stringify(progressoLocal));
+
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpPontos;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      const maxPart = chosenTime === 20 ? 2 : 4;
+      for (let p = 1; p <= maxPart; p++) {
+        concluirEtapa('matrix.html', p, 50);
+      }
+      originalShowCompletionModal();
+    };
   </script>
 </body>
 </html>
