@@ -65,21 +65,21 @@
         tituloAula: "The Cerulean Sweater Speech",
         arquivo: "devilwearsprada.html",
         imagem: "https://i.imgur.com/EHdz14o.jpeg",
-        trilhasDisponiveis: [10, 20] // 2 trilhas (10 min e 20 min)
+        trilhasDisponiveis: [10, 20]
       },
       {
         serieInfo: "The Last of Us • Season 1, Episode 01",
         tituloAula: "The Fungal Pandemic Warning",
         arquivo: "thelastofus.html",
         imagem: "https://i.imgur.com/SmGN2Hh.jpeg",
-        trilhasDisponiveis: [10, 20] // 2 trilhas (10 min e 20 min)
+        trilhasDisponiveis: [10, 20]
       },
       {
         serieInfo: "The Matrix • Iconic Scene",
         tituloAula: "What is the Matrix?",
         arquivo: "matrix.html",
         imagem: "https://i.imgur.com/FeUlEV2.jpeg",
-        trilhasDisponiveis: [20, 30] // 2 trilhas (20 min e 30 min)
+        trilhasDisponiveis: [20, 30]
       }
     ];
 
@@ -89,13 +89,21 @@
 
       container.innerHTML = atividades.map(act => {
         const trilhasFeitas = progressoLocal[act.arquivo] || [];
-        const qtdConcluida = trilhasFeitas.length;
+        const maxTrilhaFeita = trilhasFeitas.length > 0 ? Math.max(...trilhasFeitas) : 0;
+        
+        let concluidasContagem = 0;
+        act.trilhasDisponiveis.forEach(tempo => {
+          if (trilhasFeitas.includes(tempo) || tempo <= maxTrilhaFeita) {
+            concluidasContagem++;
+          }
+        });
+
         const totalTrilhas = act.trilhasDisponiveis.length;
-        const is100Percent = qtdConcluida >= totalTrilhas;
+        const is100Percent = concluidasContagem >= totalTrilhas;
 
         let segmentsHTML = '<div class="progress-segments">';
         act.trilhasDisponiveis.forEach(tempo => {
-          const isFilled = trilhasFeitas.includes(tempo);
+          const isFilled = trilhasFeitas.includes(tempo) || tempo <= maxTrilhaFeita;
           const className = is100Percent ? 'segment completed-all' : (isFilled ? 'segment filled' : 'segment');
           segmentsHTML += `<div class="${className}"></div>`;
         });
@@ -104,7 +112,7 @@
         let labelBotao = 'Start 💥';
         if (is100Percent) {
           labelBotao = 'Replay 💥';
-        } else if (qtdConcluida > 0) {
+        } else if (concluidasContagem > 0) {
           labelBotao = 'Continue 💥';
         }
 
@@ -122,7 +130,7 @@
               </div>
             </div>
             <div class="card-actions">
-              <span class="progress-text">${qtdConcluida}/${totalTrilhas} Trilhas</span>
+              <span class="progress-text">${concluidasContagem}/${totalTrilhas} Trilhas</span>
               <a href="../activities/${act.arquivo}" class="btn-start">${labelBotao}</a>
             </div>
           </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Little by little the chicken enche o papo - POP English</title>
+  <title>Basic Level - PopEnglish</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
@@ -25,7 +25,6 @@
     .activity-card p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; }
     .badge-completed { background: #22c55e; color: #022c22; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; }
 
-    /* Barras Segmentadas por Trilhas de Tempo */
     .progress-segments { display: flex; gap: 4px; width: 100%; max-width: 180px; margin-top: 6px; }
     .segment { height: 6px; flex: 1; background-color: #334155; border-radius: 3px; transition: background-color 0.3s; }
     .segment.filled { background: linear-gradient(90deg, #9333ea, #a855f7); }
@@ -78,7 +77,7 @@
         serieInfo: "How I Met Your Mother • Season 5, Episode 18",
         tituloAula: "Barney's Perfect Picture",
         arquivo: "himym.html",
-        imagem: "https://i.imgur.com/C7fC0pL.jpeg",
+        imagem: "https://i.imgur.com/x2N5HRz.png",
         trilhasDisponiveis: [10, 20]
       },
       {
@@ -103,13 +102,21 @@
 
       container.innerHTML = atividades.map(act => {
         const trilhasFeitas = progressoLocal[act.arquivo] || [];
-        const qtdConcluida = trilhasFeitas.length;
+        const maxTrilhaFeita = trilhasFeitas.length > 0 ? Math.max(...trilhasFeitas) : 0;
+        
+        let concluidasContagem = 0;
+        act.trilhasDisponiveis.forEach(tempo => {
+          if (trilhasFeitas.includes(tempo) || tempo <= maxTrilhaFeita) {
+            concluidasContagem++;
+          }
+        });
+
         const totalTrilhas = act.trilhasDisponiveis.length;
-        const is100Percent = qtdConcluida >= totalTrilhas;
+        const is100Percent = concluidasContagem >= totalTrilhas;
 
         let segmentsHTML = '<div class="progress-segments">';
         act.trilhasDisponiveis.forEach(tempo => {
-          const isFilled = trilhasFeitas.includes(tempo);
+          const isFilled = trilhasFeitas.includes(tempo) || tempo <= maxTrilhaFeita;
           const className = is100Percent ? 'segment completed-all' : (isFilled ? 'segment filled' : 'segment');
           segmentsHTML += `<div class="${className}"></div>`;
         });
@@ -118,7 +125,7 @@
         let labelBotao = 'Start 🎧';
         if (is100Percent) {
           labelBotao = 'Replay 🎧';
-        } else if (qtdConcluida > 0) {
+        } else if (concluidasContagem > 0) {
           labelBotao = 'Continue 🎧';
         }
 
@@ -136,7 +143,7 @@
               </div>
             </div>
             <div class="card-actions">
-              <span class="progress-text">${qtdConcluida}/${totalTrilhas} Trilhas</span>
+              <span class="progress-text">${concluidasContagem}/${totalTrilhas} Trilhas</span>
               <a href="../activities/${act.arquivo}" class="btn-start">${labelBotao}</a>
             </div>
           </div>
