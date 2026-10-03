@@ -233,9 +233,9 @@
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
 
     .word-bank { 
-      position: sticky; top: -18px; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px; 
+      position: sticky; top: -18px; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; 
       margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
-      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); min-height: 48px; 
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 48px; 
     }
     .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
     .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
@@ -385,30 +385,9 @@
       1: {
         title: "Part 1 (0:00 - 1:04)", start: 0, end: 64, vocabType: "multi",
         vocab: [
-          { 
-            term: "flying medicine", 
-            options: [
-              { text: "Pills to help you sleep or relax on a plane", correct: "true" },
-              { text: "A ticket you buy at the airport", correct: "false" },
-              { text: "Food served during a flight", correct: "false" }
-            ]
-          },
-          { 
-            term: "glimpse", 
-            options: [
-              { text: "A very short look at something or someone", correct: "true" },
-              { text: "A long stare at a picture", correct: "false" },
-              { text: "A loud sound inside a plane", correct: "false" }
-            ]
-          },
-          { 
-            term: "scramble", 
-            options: [
-              { text: "To move or act very fast because you are in a hurry", correct: "true" },
-              { text: "To sit and wait quietly", correct: "false" },
-              { text: "To buy clothes at a store", correct: "false" }
-            ]
-          }
+          { term: "flying medicine", options: [{ text: "Pills to help you sleep or relax on a plane", correct: "true" }, { text: "A ticket you buy at the airport", correct: "false" }, { text: "Food served during a flight", correct: "false" }] },
+          { term: "glimpse", options: [{ text: "A very short look at something or someone", correct: "true" }, { text: "A long stare at a picture", correct: "false" }, { text: "A loud sound inside a plane", correct: "false" }] },
+          { term: "scramble", options: [{ text: "To move or act very fast because you are in a hurry", correct: "true" }, { text: "To sit and wait quietly", correct: "false" }, { text: "To buy clothes at a store", correct: "false" }] }
         ],
         examples: [
           { term: "flying medicine", ex: "I always take my flying medicine right before boarding long flights so I can sleep.", trans: "Eu sempre tomo meu remédio de voar logo antes de embarcar em voos longos para conseguir dormir." },
@@ -438,30 +417,9 @@
       2: {
         title: "Part 2 (1:04 - 1:51)", start: 64, end: 111, vocabType: "multi",
         vocab: [
-          { 
-            term: "connecting flight", 
-            options: [
-              { text: "A second flight you take to reach your final destination", correct: "true" },
-              { text: "A bus trip to another city", correct: "false" },
-              { text: "A direct flight with no stops", correct: "false" }
-            ]
-          },
-          { 
-            term: "hurry", 
-            options: [
-              { text: "To move, walk, or do something very fast", correct: "true" },
-              { text: "To sit and rest for a long time", correct: "false" },
-              { text: "To sleep on a plane", correct: "false" }
-            ]
-          },
-          { 
-            term: "make your way", 
-            options: [
-              { text: "To walk or go to a specific place", correct: "true" },
-              { text: "To lose your luggage at the airport", correct: "false" },
-              { text: "To ask for help in English", correct: "false" }
-            ]
-          }
+          { term: "connecting flight", options: [{ text: "A second flight you take to reach your final destination", correct: "true" }, { text: "A bus trip to another city", correct: "false" }, { text: "A direct flight with no stops", correct: "false" }] },
+          { term: "hurry", options: [{ text: "To move, walk, or do something very fast", correct: "true" }, { text: "To sit and rest for a long time", correct: "false" }, { text: "To sleep on a plane", correct: "false" }] },
+          { term: "make your way", options: [{ text: "To walk or go to a specific place", correct: "true" }, { text: "To lose your luggage at the airport", correct: "false" }, { text: "To ask for help in English", correct: "false" }] }
         ],
         examples: [
           { term: "connecting flight", ex: "We only have 30 minutes to catch our connecting flight in Atlanta.", trans: "Temos apenas 30 minutos para pegar nosso voo de conexão em Atlanta." },
@@ -488,30 +446,9 @@
       3: {
         title: "Part 3 (1:51 - 2:24)", start: 111, end: 144, vocabType: "multi",
         vocab: [
-          { 
-            term: "into me", 
-            options: [
-              { text: "To like someone in a romantic way", correct: "true" },
-              { text: "To be angry at someone", correct: "false" },
-              { text: "To be confused by someone", correct: "false" }
-            ]
-          },
-          { 
-            term: "instinct", 
-            options: [
-              { text: "A natural feeling that tells you what to do without thinking", correct: "true" },
-              { text: "A written rule on a ticket", correct: "false" },
-              { text: "A map of the airport", correct: "false" }
-            ]
-          },
-          { 
-            term: "stealing", 
-            options: [
-              { text: "Taking something that is not yours without asking", correct: "true" },
-              { text: "Buying a gift at a shop", correct: "false" },
-              { text: "Lending money to a friend", correct: "false" }
-            ]
-          }
+          { term: "into me", options: [{ text: "To like someone in a romantic way", correct: "true" }, { text: "To be angry at someone", correct: "false" }, { text: "To be confused by someone", correct: "false" }] },
+          { term: "instinct", options: [{ text: "A natural feeling that tells you what to do without thinking", correct: "true" }, { text: "A written rule on a ticket", correct: "false" }, { text: "A map of the airport", correct: "false" }] },
+          { term: "stealing", options: [{ text: "Taking something that is not yours without asking", correct: "true" }, { text: "Buying a gift at a shop", correct: "false" }, { text: "Lending money to a friend", correct: "false" }] }
         ],
         examples: [
           { term: "into me", ex: "She smiled at you again! Are you sure she isn't into you?", trans: "Ela sorriu para você de novo! Tem certeza de que ela não está a fim de você?" },
@@ -534,30 +471,9 @@
       4: {
         title: "Part 4 (2:25 - 3:30)", start: 145, end: 210, vocabType: "multi",
         vocab: [
-          { 
-            term: "proprietor", 
-            options: [
-              { text: "The owner of a shop or business", correct: "true" },
-              { text: "A person buying products", correct: "false" },
-              { text: "A pilot flying a plane", correct: "false" }
-            ]
-          },
-          { 
-            term: "haberdashery", 
-            options: [
-              { text: "A shop that sells clothes and accessories for men", correct: "true" },
-              { text: "A place where you buy fresh bread", correct: "false" },
-              { text: "A small coffee shop", correct: "false" }
-            ]
-          },
-          { 
-            term: "relevant", 
-            options: [
-              { text: "Important or connected to what you are doing", correct: "true" },
-              { text: "Very expensive to buy", correct: "false" },
-              { text: "Old and broken", correct: "false" }
-            ]
-          }
+          { term: "proprietor", options: [{ text: "The owner of a shop or business", correct: "true" }, { text: "A person buying products", correct: "false" }, { text: "A pilot flying a plane", correct: "false" }] },
+          { term: "haberdashery", options: [{ text: "A shop that sells clothes and accessories for men", correct: "true" }, { text: "A place where you buy fresh bread", correct: "false" }, { text: "A small coffee shop", correct: "false" }] },
+          { term: "relevant", options: [{ text: "Important or connected to what you are doing", correct: "true" }, { text: "Very expensive to buy", correct: "false" }, { text: "Old and broken", correct: "false" }] }
         ],
         examples: [
           { term: "proprietor", ex: "She is the proprietor of a small bakery in the city center.", trans: "Ela é a proprietária de uma pequena padaria no centro da cidade." },
@@ -592,38 +508,10 @@
       5: {
         title: "Part 5 (3:30 - 4:52)", start: 210, end: 292, vocabType: "multi",
         vocab: [
-          { 
-            term: "suck it up", 
-            options: [
-              { text: "To accept a hard situation and not complain", correct: "true" },
-              { text: "To sleep on the floor", correct: "false" },
-              { text: "To buy new shoes", correct: "false" }
-            ]
-          },
-          { 
-            term: "pull your act together", 
-            options: [
-              { text: "To calm down and control your emotions", correct: "true" },
-              { text: "To pack your bags quickly", correct: "false" },
-              { text: "To call a taxi", correct: "false" }
-            ]
-          },
-          { 
-            term: "lifesaver", 
-            options: [
-              { text: "A person or thing that helps you in a difficult moment", correct: "true" },
-              { text: "A ticket discount", correct: "false" },
-              { text: "A security guard", correct: "false" }
-            ]
-          },
-          { 
-            term: "knock it off", 
-            options: [
-              { text: "An easy way to tell someone to stop doing something", correct: "true" },
-              { text: "To drop something on the floor", correct: "false" },
-              { text: "To take a fast nap", correct: "false" }
-            ]
-          }
+          { term: "suck it up", options: [{ text: "To accept a hard situation and not complain", correct: "true" }, { text: "To sleep on the floor", correct: "false" }, { text: "To buy new shoes", correct: "false" }] },
+          { term: "pull your act together", options: [{ text: "To calm down and control your emotions", correct: "true" }, { text: "To pack your bags quickly", correct: "false" }, { text: "To call a taxi", correct: "false" }] },
+          { term: "lifesaver", options: [{ text: "A person or thing that helps you in a difficult moment", correct: "true" }, { text: "A ticket discount", correct: "false" }, { text: "A security guard", correct: "false" }] },
+          { term: "knock it off", options: [{ text: "An easy way to tell someone to stop doing something", correct: "true" }, { text: "To drop something on the floor", correct: "false" }, { text: "To take a fast nap", correct: "false" }] }
         ],
         examples: [
           { term: "suck it up", ex: "I know the training is exhausting, but you just have to suck it up and finish the workout.", trans: "Eu sei que o treino é exaustivo, mas você só precisa engolir o choro / aguentar firme e terminar o exercício." },
@@ -644,7 +532,7 @@
           <p><strong>Cam:</strong> No, I... It just looks so <span class="gap-target" data-answer="soft"></span> and inviting. I... I don't think I can go on. Tell Linda I love her!</p>
           <p><strong>Mitch:</strong> You're going to tell Linda yourself, okay? I cannot go to Dallas without you, the <span class="gap-target" data-answer="portions"></span> there are so big!</p>
           <p><strong>Cam:</strong> I'm just so tired... I'm so very tired, I just need to close my eyes.</p>
-          <p><strong>Mitch:</strong> <span class="gap-target" data-answer="knock it off"></span>! You're gonna <span class="gap-target" data-answer="suck it up"></span>. You're gonna <span class="gap-target" data-answer="pull your act together"></span>, and you're coming with me to Gate 3232! That can't be right.</p>
+          <p><strong>Mitch:</strong> <span class="gap-target" data-answer="knock it off"></span>! You're gonna <span class="gap-target" data-answer="suck it up"></span>. You're gonna <span class="gap-target" data-answer="pull your act together"></span>, and you'coming with me to Gate 3232! That can't be right.</p>
           <p><strong>Cam:</strong> We're just never going to make it.</p>
           <p><strong>Mitch:</strong> Oh my God, you're right. We're going to die in this airport!</p>
           <p><strong>P.A. Announcer:</strong> This is the final <span class="gap-target" data-answer="boarding call"></span> for flight 224 to Dallas.</p>
@@ -666,46 +554,11 @@
       6: {
         title: "Part 6 (4:52 - 5:34)", start: 292, end: 334, vocabType: "multi",
         vocab: [
-          { 
-            term: "slept through it", 
-            options: [
-              { text: "To sleep continuously and not wake up during an event", correct: "true" },
-              { text: "To wake up many times at night", correct: "false" },
-              { text: "To stay awake all night", correct: "false" }
-            ]
-          },
-          { 
-            term: "board", 
-            options: [
-              { text: "To get on a plane, train, or bus", correct: "true" },
-              { text: "To leave the airport terminal", correct: "false" },
-              { text: "To pay for a meal", correct: "false" }
-            ]
-          },
-          { 
-            term: "refused", 
-            options: [
-              { text: "To say no to something or say you will not do it", correct: "true" },
-              { text: "To agree happily to do something", correct: "false" },
-              { text: "To forget an instruction", correct: "false" }
-            ]
-          },
-          { 
-            term: "heavy", 
-            options: [
-              { text: "Having a lot of weight and difficult to lift", correct: "true" },
-              { text: "Very light and easy to carry", correct: "false" },
-              { text: "Brightly colored", correct: "false" }
-            ]
-          },
-          { 
-            term: "so it appears", 
-            options: [
-              { text: "A simple way to say 'it looks like it is true'", correct: "true" },
-              { text: "Something that is impossible", correct: "false" },
-              { text: "A plan for next year", correct: "false" }
-            ]
-          }
+          { term: "slept through it", options: [{ text: "To sleep continuously and not wake up during an event", correct: "true" }, { text: "To wake up many times at night", correct: "false" }, { text: "To stay awake all night", correct: "false" }] },
+          { term: "board", options: [{ text: "To get on a plane, train, or bus", correct: "true" }, { text: "To leave the airport terminal", correct: "false" }, { text: "To pay for a meal", correct: "false" }] },
+          { term: "refused", options: [{ text: "To say no to something or say you will not do it", correct: "true" }, { text: "To agree happily to do something", correct: "false" }, { text: "To forget an instruction", correct: "false" }] },
+          { term: "heavy", options: [{ text: "Having a lot of weight and difficult to lift", correct: "true" }, { text: "Very light and easy to carry", correct: "false" }, { text: "Brightly colored", correct: "false" }] },
+          { term: "so it appears", options: [{ text: "A simple way to say 'it looks like it is true'", correct: "true" }, { text: "Something that is impossible", correct: "false" }, { text: "A plan for next year", correct: "false" }] }
         ],
         examples: [
           { term: "slept through it", ex: "There was a loud thunderstorm last night, but I slept through it.", trans: "Houve uma tempestade forte ontem à noite, mas eu dormi direto / nem vi." },
@@ -815,7 +668,6 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        
         const warmupEndCut = chosenTime === 10 ? 64 : chosenTime === 20 ? 210 : 334;
         player.src = `https://www.youtube.com/embed/QFMHbHLNq2k?start=0&end=${warmupEndCut}&autoplay=0&enablejsapi=1`;
         
@@ -1199,17 +1051,35 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
+    // LÓGICA DE PROGRESSÃO CUMULATIVA E XP INCREMENTAL
+    const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
+
     function concluirTrilhaAtual(arquivo) {
       let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
       if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
 
-      if (!progressoLocal[arquivo].includes(chosenTime)) {
-        progressoLocal[arquivo].push(chosenTime);
-        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+      const opcoesTempo = [10, 20, 30, 45];
+      const trilhasCobertas = opcoesTempo.filter(t => t <= chosenTime);
 
-        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+      let maxTempoAnterior = 0;
+      progressoLocal[arquivo].forEach(t => {
+        if (t > maxTempoAnterior) maxTempoAnterior = t;
+      });
+      let xpJaGanho = TABELA_XP[maxTempoAnterior] || 0;
+
+      trilhasCobertas.forEach(t => {
+        if (!progressoLocal[arquivo].includes(t)) {
+          progressoLocal[arquivo].push(t);
+        }
+      });
+
+      localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+      let xpNovoTotal = TABELA_XP[chosenTime] || 0;
+      if (xpNovoTotal > xpJaGanho) {
+        let xpDiferenca = xpNovoTotal - xpJaGanho;
         let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
-        xpAtual += xpPontos;
+        xpAtual += xpDiferenca;
         localStorage.setItem('pop_user_xp', xpAtual.toString());
       }
     }

@@ -199,9 +199,9 @@
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
 
     .word-bank { 
-      position: sticky; top: -14px; z-index: 100; display: flex; flex-wrap: wrap; gap: 6px; 
+      position: sticky; top: -14px; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px; 
       margin-bottom: 12px; padding: 10px; background: #cbd5e1; border: 1px solid #94a3b8;
-      border-radius: var(--radius-soft); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); min-height: 44px; 
+      border-radius: var(--radius-soft); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1); min-height: 44px; 
     }
     .chip { background: white; padding: 5px 10px; border-radius: 14px; font-weight: 700; font-size: 0.85em; cursor: pointer; border: 1px solid #cbd5e0; }
     .chip.selected { background: #9333ea; color: white; border-color: #9333ea; }
@@ -275,7 +275,7 @@
       margin-bottom: 8px;
       font-size: 1.35em;
     }
-</style>
+  </style>
 </head>
 <body>
 
@@ -358,70 +358,14 @@
       1: {
         title: "Part 1 (0:00 - 1:23)", start: 0, end: 83, selectType: "dropdown",
         vocab: [
-          { 
-            term: "shot", 
-            options: [
-              { isCorrect: true, text: "A single photograph" },
-              { isCorrect: false, text: "A small quick drink" },
-              { isCorrect: false, text: "A goal in a sports game" }
-            ]
-          },
-          { 
-            term: "years apart", 
-            options: [
-              { isCorrect: false, text: "Taken in different rooms" },
-              { isCorrect: true, text: "Separated by many years" },
-              { isCorrect: false, text: "Taken on the exact same day" }
-            ]
-          },
-          { 
-            term: "never have, never will", 
-            options: [
-              { isCorrect: true, text: "I didn't do it before and I won't do it in the future" },
-              { isCorrect: false, text: "I used to do it in the past, but I will stop soon" },
-              { isCorrect: false, text: "I don't like doing it now, but I might try later" }
-            ]
-          },
-          { 
-            term: "drop-dead", 
-            options: [
-              { isCorrect: false, text: "Feeling very sick or tired" },
-              { isCorrect: false, text: "Falling down by accident" },
-              { isCorrect: true, text: "Extremely attractive or handsome" }
-            ]
-          },
-          { 
-            term: "stone-cold amazing", 
-            options: [
-              { isCorrect: true, text: "Completely and undeniably impressive" },
-              { isCorrect: false, text: "Very cold and freezing outdoors" },
-              { isCorrect: false, text: "Quiet and not talking to anyone" }
-            ]
-          },
-          { 
-            term: "stoned", 
-            options: [
-              { isCorrect: false, text: "Sitting on a hard rock" },
-              { isCorrect: true, text: "Looking dazed, confused, or sleepy" },
-              { isCorrect: false, text: "Feeling very cold in the winter" }
-            ]
-          },
-          { 
-            term: "chip", 
-            options: [
-              { isCorrect: false, text: "A small piece of wood" },
-              { isCorrect: false, text: "A sweet chocolate candy bar" },
-              { isCorrect: true, text: "A thin, crispy snack food" }
-            ]
-          },
-          { 
-            term: "dip", 
-            options: [
-              { isCorrect: false, text: "A cold drink in a glass" },
-              { isCorrect: true, text: "A creamy sauce for snack food" },
-              { isCorrect: false, text: "A quick jump into a swimming pool" }
-            ]
-          }
+          { term: "shot", options: [{ isCorrect: true, text: "A single photograph" }, { isCorrect: false, text: "A small quick drink" }, { isCorrect: false, text: "A goal in a sports game" }] },
+          { term: "years apart", options: [{ isCorrect: false, text: "Taken in different rooms" }, { isCorrect: true, text: "Separated by many years" }, { isCorrect: false, text: "Taken on the exact same day" }] },
+          { term: "never have, never will", options: [{ isCorrect: true, text: "I didn't do it before and I won't do it in the future" }, { isCorrect: false, text: "I used to do it in the past, but I will stop soon" }, { isCorrect: false, text: "I don't like doing it now, but I might try later" }] },
+          { term: "drop-dead", options: [{ isCorrect: false, text: "Feeling very sick or tired" }, { isCorrect: false, text: "Falling down by accident" }, { isCorrect: true, text: "Extremely attractive or handsome" }] },
+          { term: "stone-cold amazing", options: [{ isCorrect: true, text: "Completely and undeniably impressive" }, { isCorrect: false, text: "Very cold and freezing outdoors" }, { isCorrect: false, text: "Quiet and not talking to anyone" }] },
+          { term: "stoned", options: [{ isCorrect: false, text: "Sitting on a hard rock" }, { isCorrect: true, text: "Looking dazed, confused, or sleepy" }, { isCorrect: false, text: "Feeling very cold in the winter" }] },
+          { term: "chip", options: [{ isCorrect: false, text: "A small piece of wood" }, { isCorrect: false, text: "A sweet chocolate candy bar" }, { isCorrect: true, text: "A thin, crispy snack food" }] },
+          { term: "dip", options: [{ isCorrect: false, text: "A cold drink in a glass" }, { isCorrect: true, text: "A creamy sauce for snack food" }, { isCorrect: false, text: "A quick jump into a swimming pool" }] }
         ],
         examples: [
           { term: "shot", ex: "This is a great photo shot from our vacation.", trans: "Esta é uma ótima foto das nossas férias." },
@@ -454,41 +398,11 @@
       2: {
         title: "Part 2 (1:23 - 2:07)", start: 83, end: 127, selectType: "ab",
         vocab: [
-          { 
-            term: "dropped", 
-            options: [
-              { isCorrect: true, text: "Let something fall to the ground" },
-              { isCorrect: false, text: "Lifted something up into the air" }
-            ]
-          },
-          { 
-            term: "picking it up", 
-            options: [
-              { isCorrect: false, text: "Throwing something away on the floor" },
-              { isCorrect: true, text: "Lifting an item from the floor with your hands" }
-            ]
-          },
-          { 
-            term: "lusts", 
-            options: [
-              { isCorrect: true, text: "Feels a strong attraction or desire for something" },
-              { isCorrect: false, text: "Feels a deep disgust or hate for something" }
-            ]
-          },
-          { 
-            term: "gather around", 
-            options: [
-              { isCorrect: false, text: "Walk away from each other in different directions" },
-              { isCorrect: true, text: "Come together close in a group" }
-            ]
-          },
-          { 
-            term: "suit", 
-            options: [
-              { isCorrect: true, text: "Formal clothes with a matching jacket and pants" },
-              { isCorrect: false, text: "Casual clothes like a t-shirt and shorts" }
-            ]
-          }
+          { term: "dropped", options: [{ isCorrect: true, text: "Let something fall to the ground" }, { isCorrect: false, text: "Lifted something up into the air" }] },
+          { term: "picking it up", options: [{ isCorrect: false, text: "Throwing something away on the floor" }, { isCorrect: true, text: "Lifting an item from the floor with your hands" }] },
+          { term: "lusts", options: [{ isCorrect: true, text: "Feels a strong attraction or desire for something" }, { isCorrect: false, text: "Feels a deep disgust or hate for something" }] },
+          { term: "gather around", options: [{ isCorrect: false, text: "Walk away from each other in different directions" }, { isCorrect: true, text: "Come together close in a group" }] },
+          { term: "suit", options: [{ isCorrect: true, text: "Formal clothes with a matching jacket and pants" }, { isCorrect: false, text: "Casual clothes like a t-shirt and shorts" }] }
         ],
         examples: [
           { term: "dropped", ex: "I accidentally dropped my keys on the street.", trans: "Eu deixei minhas chaves caírem na rua sem querer." },
@@ -959,17 +873,35 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
+    // LÓGICA DE PROGRESSÃO E XP
+    const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
+
     function concluirTrilhaAtual(arquivo) {
       let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
       if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
 
-      if (!progressoLocal[arquivo].includes(chosenTime)) {
-        progressoLocal[arquivo].push(chosenTime);
-        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+      const opcoesTempo = [10, 20, 30, 45];
+      const trilhasCobertas = opcoesTempo.filter(t => t <= chosenTime);
 
-        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+      let maxTempoAnterior = 0;
+      progressoLocal[arquivo].forEach(t => {
+        if (t > maxTempoAnterior) maxTempoAnterior = t;
+      });
+      let xpJaGanho = TABELA_XP[maxTempoAnterior] || 0;
+
+      trilhasCobertas.forEach(t => {
+        if (!progressoLocal[arquivo].includes(t)) {
+          progressoLocal[arquivo].push(t);
+        }
+      });
+
+      localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+      let xpNovoTotal = TABELA_XP[chosenTime] || 0;
+      if (xpNovoTotal > xpJaGanho) {
+        let xpDiferenca = xpNovoTotal - xpJaGanho;
         let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
-        xpAtual += xpPontos;
+        xpAtual += xpDiferenca;
         localStorage.setItem('pop_user_xp', xpAtual.toString());
       }
     }

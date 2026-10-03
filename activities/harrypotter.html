@@ -232,7 +232,6 @@
     .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
 
-    /* Word Bank FIXO (Sticky Top) */
     .word-bank { 
       position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; gap: 8px; 
       margin-bottom: 16px; padding: 12px 14px; background: #cbd5e1; border: 1px solid #94a3b8;
@@ -319,7 +318,6 @@
     <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://i.imgur.com/t0Dg38A.jpeg" class="banner-img" alt="Harry Potter Felix Felicis Scene">
@@ -343,7 +341,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -385,62 +382,14 @@
       1: {
         title: "Part 1 (0:00 - 0:48)", start: 0, end: 48, vocabType: "multi",
         vocab: [
-          { 
-            term: "get out", 
-            options: [
-              { text: "To leave a place or exit a building", correct: "true" },
-              { text: "To enter a room or stay inside", correct: "false" }
-            ]
-          },
-          { 
-            term: "I'm off", 
-            options: [
-              { text: "To stay here and sit down", correct: "false" },
-              { text: "I am leaving or going somewhere now", correct: "true" }
-            ]
-          },
-          { 
-            term: "fancied", 
-            options: [
-              { text: "Hated or avoided doing something", correct: "false" },
-              { text: "Wanted or felt like doing something", correct: "true" }
-            ]
-          },
-          { 
-            term: "nightfall", 
-            options: [
-              { text: "The time in the evening when it becomes dark", correct: "true" },
-              { text: "The time early in the morning when the sun comes up", correct: "false" }
-            ]
-          },
-          { 
-            term: "allow", 
-            options: [
-              { text: "To stop or forbid someone from doing something", correct: "false" },
-              { text: "To give permission or let someone do something", correct: "true" }
-            ]
-          },
-          { 
-            term: "roaming", 
-            options: [
-              { text: "Walking or traveling around without a clear plan", correct: "true" },
-              { text: "Sitting quietly in one single place", correct: "false" }
-            ]
-          },
-          { 
-            term: "come along", 
-            options: [
-              { text: "To accompany or go somewhere together with someone", correct: "true" },
-              { text: "To stay behind alone and not follow", correct: "false" }
-            ]
-          },
-          { 
-            term: "counterproductive", 
-            options: [
-              { text: "Very useful and helpful for achieving a goal", correct: "false" },
-              { text: "Having the opposite result of what you want", correct: "true" }
-            ]
-          }
+          { term: "get out", options: [{ text: "To leave a place or exit a building", correct: "true" }, { text: "To enter a room or stay inside", correct: "false" }] },
+          { term: "I'm off", options: [{ text: "To stay here and sit down", correct: "false" }, { text: "I am leaving or going somewhere now", correct: "true" }] },
+          { term: "fancied", options: [{ text: "Hated or avoided doing something", correct: "false" }, { text: "Wanted or felt like doing something", correct: "true" }] },
+          { term: "nightfall", options: [{ text: "The time in the evening when it becomes dark", correct: "true" }, { text: "The time early in the morning when the sun comes up", correct: "false" }] },
+          { term: "allow", options: [{ text: "To stop or forbid someone from doing something", correct: "false" }, { text: "To give permission or let someone do something", correct: "true" }] },
+          { term: "roaming", options: [{ text: "Walking or traveling around without a clear plan", correct: "true" }, { text: "Sitting quietly in one single place", correct: "false" }] },
+          { term: "come along", options: [{ text: "To accompany or go somewhere together with someone", correct: "true" }, { text: "To stay behind alone and not follow", correct: "false" }] },
+          { term: "counterproductive", options: [{ text: "Very useful and helpful for achieving a goal", correct: "false" }, { text: "Having the opposite result of what you want", correct: "true" }] }
         ],
         examples: [
           { term: "get out", ex: "I need to get out of the house and buy some groceries.", trans: "Eu preciso sair de casa e comprar alguns mantimentos." },
@@ -467,46 +416,14 @@
       2: {
         title: "Part 2 (0:48 - 1:32)", start: 48, end: 92, vocabType: "select",
         vocab: [
-          { 
-            term: "beard", 
-            def: "hair growing on a man's chin and cheeks",
-            distractors: ["hair on top of a person's head", "a mustache under a person's nose"]
-          },
-          { 
-            term: "fellow", 
-            def: "a man or boy",
-            distractors: ["a young woman or girl", "a group of close friends"]
-          },
-          { 
-            term: "however", 
-            def: "in what way or by what means",
-            distractors: ["at what time or when", "for what reason or why"]
-          },
-          { 
-            term: "misunderstood", 
-            def: "not correctly known or appreciated",
-            distractors: ["very dangerous and aggressive", "very simple and easy to teach"]
-          },
-          { 
-            term: "reckon", 
-            def: "to think or believe something",
-            distractors: ["to forget or ignore something", "to hear or listen to something"]
-          },
-          { 
-            term: "unnerve", 
-            def: "to make someone feel nervous or uneasy",
-            distractors: ["to make someone feel very angry", "to make someone laugh out loud"]
-          },
-          { 
-            term: "folk", 
-            def: "people in general",
-            distractors: ["wild animals in nature", "family relatives only"]
-          },
-          { 
-            term: "pincers", 
-            def: "a front gripping claw of an insect or spider",
-            distractors: ["the long legs of an insect", "the wings of a flying bug"]
-          }
+          { term: "beard", def: "hair growing on a man's chin and cheeks", distractors: ["hair on top of a person's head", "a mustache under a person's nose"] },
+          { term: "fellow", def: "a man or boy", distractors: ["a young woman or girl", "a group of close friends"] },
+          { term: "however", def: "in what way or by what means", distractors: ["at what time or when", "for what reason or why"] },
+          { term: "misunderstood", def: "not correctly known or appreciated", distractors: ["very dangerous and aggressive", "very simple and easy to teach"] },
+          { term: "reckon", def: "to think or believe something", distractors: ["to forget or ignore something", "to hear or listen to something"] },
+          { term: "unnerve", def: "to make someone feel nervous or uneasy", distractors: ["to make someone feel very angry", "to make someone laugh out loud"] },
+          { term: "folk", def: "people in general", distractors: ["wild animals in nature", "family relatives only"] },
+          { term: "pincers", def: "a front gripping claw of an insect or spider", distractors: ["the long legs of an insect", "the wings of a flying bug"] }
         ],
         examples: [
           { term: "beard", ex: "My grandfather decided to grow a thick white beard.", trans: "Meu avô decidiu deixar crescer uma barba branca e espessa." },
@@ -534,69 +451,15 @@
       3: {
         title: "Part 3 (1:32 - 2:14)", start: 92, end: 134, vocabType: "multi",
         vocab: [
-          { 
-            term: "wish", 
-            options: [
-              { text: "To want or desire something to happen", correct: "true" },
-              { text: "To refuse or reject an offer", correct: "false" }
-            ]
-          },
-          { 
-            term: "venom", 
-            options: [
-              { text: "Poisonous liquid produced by some animals", correct: "true" },
-              { text: "Pure fresh water from a clean lake", correct: "false" }
-            ]
-          },
-          { 
-            term: "uncommonly", 
-            options: [
-              { text: "In a very normal and ordinary way", correct: "false" },
-              { text: "Very unusually or exceptionally", correct: "true" }
-            ]
-          },
-          { 
-            term: "vial", 
-            options: [
-              { text: "A small glass container for liquid", correct: "true" },
-              { text: "A large heavy wooden barrel", correct: "false" }
-            ]
-          },
-          { 
-            term: "purposes", 
-            options: [
-              { text: "Accidents that happen without planning", correct: "false" },
-              { text: "The reasons or intentions for doing something", correct: "true" }
-            ]
-          },
-          { 
-            term: "thoughts", 
-            options: [
-              { text: "Ideas, opinions, or beliefs in your mind", correct: "true" },
-              { text: "Physical actions made with hands", correct: "false" }
-            ]
-          },
-          { 
-            term: "ampoule", 
-            options: [
-              { text: "A large metal cooking pot", correct: "false" },
-              { text: "A small sealed capsule or glass bottle", correct: "true" }
-            ]
-          },
-          { 
-            term: "prime", 
-            options: [
-              { text: "The best period of power and vigor", correct: "true" },
-              { text: "The worst stage or period of weakness", correct: "false" }
-            ]
-          },
-          { 
-            term: "magnificent", 
-            options: [
-              { text: "Very ugly, boring, and small", correct: "false" },
-              { text: "Extremely impressive, beautiful, or grand", correct: "true" }
-            ]
-          }
+          { term: "wish", options: [{ text: "To want or desire something to happen", correct: "true" }, { text: "To refuse or reject an offer", correct: "false" }] },
+          { term: "venom", options: [{ text: "Poisonous liquid produced by some animals", correct: "true" }, { text: "Pure fresh water from a clean lake", correct: "false" }] },
+          { term: "uncommonly", options: [{ text: "In a very normal and ordinary way", correct: "false" }, { text: "Very unusually or exceptionally", correct: "true" }] },
+          { term: "vial", options: [{ text: "A small glass container for liquid", correct: "true" }, { text: "A large heavy wooden barrel", correct: "false" }] },
+          { term: "purposes", options: [{ text: "Accidents that happen without planning", correct: "false" }, { text: "The reasons or intentions for doing something", correct: "true" }] },
+          { term: "thoughts", options: [{ text: "Ideas, opinions, or beliefs in your mind", correct: "true" }, { text: "Physical actions made with hands", correct: "false" }] },
+          { term: "ampoule", options: [{ text: "A large metal cooking pot", correct: "false" }, { text: "A small sealed capsule or glass bottle", correct: "true" }] },
+          { term: "prime", options: [{ text: "The best period of power and vigor", correct: "true" }, { text: "The worst stage or period of weakness", correct: "false" }] },
+          { term: "magnificent", options: [{ text: "Very ugly, boring, and small", correct: "false" }, { text: "Extremely impressive, beautiful, or grand", correct: "true" }] }
         ],
         examples: [
           { term: "wish", ex: "I wish you good luck on your English exam tomorrow.", trans: "Desejo a você boa sorte no seu exame de inglês amanhã." },
@@ -620,36 +483,12 @@
       4: {
         title: "Part 4 (2:14 - 3:02)", start: 134, end: 182, vocabType: "select",
         vocab: [
-          { 
-            term: "farewell", 
-            def: "an expression of good wishes at parting or saying goodbye",
-            distractors: ["a warm welcoming greeting to a guest", "a question asked when meeting someone"]
-          },
-          { 
-            term: "arachnids", 
-            def: "eight-legged arthropods such as spiders or scorpions",
-            distractors: ["flying insects with wings like bees", "small furry mammals like mice"]
-          },
-          { 
-            term: "decay", 
-            def: "to rot or decompose through natural causes",
-            distractors: ["to grow stronger and bigger over time", "to stay fresh and clean forever"]
-          },
-          { 
-            term: "lingers on", 
-            def: "continues to stay or remain for a long time",
-            distractors: ["disappears immediately without a trace", "moves very fast to another place"]
-          },
-          { 
-            term: "solace", 
-            def: "comfort or consolation in a time of sadness or grief",
-            distractors: ["great anger or frustration about something", "feeling very sleepy and tired"]
-          },
-          { 
-            term: "sustained", 
-            def: "experienced or suffered a loss, pain, or injury",
-            distractors: ["enjoyed or celebrated a happy moment", "forgot or ignored a past event"]
-          }
+          { term: "farewell", def: "an expression of good wishes at parting or saying goodbye", distractors: ["a warm welcoming greeting to a guest", "a question asked when meeting someone"] },
+          { term: "arachnids", def: "eight-legged arthropods such as spiders or scorpions", distractors: ["flying insects with wings like bees", "small furry mammals like mice"] },
+          { term: "decay", def: "to rot or decompose through natural causes", distractors: ["to grow stronger and bigger over time", "to stay fresh and clean forever"] },
+          { term: "lingers on", def: "continues to stay or remain for a long time", distractors: ["disappears immediately without a trace", "moves very fast to another place"] },
+          { term: "solace", def: "comfort or consolation in a time of sadness or grief", distractors: ["great anger or frustration about something", "feeling very sleepy and tired"] },
+          { term: "sustained", def: "experienced or suffered a loss, pain, or injury", distractors: ["enjoyed or celebrated a happy moment", "forgot or ignored a past event"] }
         ],
         examples: [
           { term: "farewell", ex: "We organized a nice farewell party for our manager.", trans: "Nós organizamos uma boa festa de despedida para nosso gerente." },
@@ -674,38 +513,14 @@
 
     const questionsByTime = {
       10: [
-        { 
-          q: "1. Have you ever felt lucky on an important day or exam? What happened?", 
-          start: "I felt really lucky when ______.", 
-          ex: "I felt really lucky when I took my driving test and passed on the first try!" 
-        },
-        { 
-          q: "2. Do you have a favorite teacher or mentor like Slughorn or Hagrid? Why?", 
-          start: "My favorite teacher/mentor is ______ because ______.", 
-          ex: "My favorite teacher was my high school English teacher because she was always patient and kind." 
-        }
+        { q: "1. Have you ever felt lucky on an important day or exam? What happened?", start: "I felt really lucky when ______.", ex: "I felt really lucky when I took my driving test and passed on the first try!" },
+        { q: "2. Do you have a favorite teacher or mentor like Slughorn or Hagrid? Why?", start: "My favorite teacher/mentor is ______ because ______.", ex: "My favorite teacher was my high school English teacher because she was always patient and kind." }
       ],
       20: [
-        { 
-          q: "1. Have you ever felt lucky on an important day or exam? What happened?", 
-          start: "I felt really lucky when ______.", 
-          ex: "I felt really lucky when I took my driving test and passed on the first try!" 
-        },
-        { 
-          q: "2. Do you have a favorite teacher or mentor like Slughorn or Hagrid? Why?", 
-          start: "My favorite teacher/mentor is ______ because ______.", 
-          ex: "My favorite teacher was my high school English teacher because she was always patient and kind." 
-        },
-        { 
-          q: "3. Have you ever had a special pet or animal that you loved a lot?", 
-          start: "Yes/No, I had a pet ______ named ______.", 
-          ex: "Yes, I had a dog named Max. He was super friendly and loved going to the park." 
-        },
-        { 
-          q: "4. If you could have a potion for 12 hours of perfect luck, where would you go?", 
-          start: "If I had 12 hours of perfect luck, I would go to ______ and ______.", 
-          ex: "If I had 12 hours of perfect luck, I would go to a job interview and apply for my dream position!" 
-        }
+        { q: "1. Have you ever felt lucky on an important day or exam? What happened?", start: "I felt really lucky when ______.", ex: "I felt really lucky when I took my driving test and passed on the first try!" },
+        { q: "2. Do you have a favorite teacher or mentor like Slughorn or Hagrid? Why?", start: "My favorite teacher/mentor is ______ because ______.", ex: "My favorite teacher was my high school English teacher because she was always patient and kind." },
+        { q: "3. Have you ever had a special pet or animal that you loved a lot?", start: "Yes/No, I had a pet ______ named ______.", ex: "Yes, I had a dog named Max. He was super friendly and loved going to the park." },
+        { q: "4. If you could have a potion for 12 hours of perfect luck, where would you go?", start: "If I had 12 hours of perfect luck, I would go to ______ and ______.", ex: "If I had 12 hours of perfect luck, I would go to a job interview and apply for my dream position!" }
       ]
     };
 
@@ -770,7 +585,6 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        // CORTE DINÂMICO DE ACORDO COM A TRILHA SELECIONADA
         const warmupEndCut = chosenTime === 10 ? 92 : 182;
         player.src = `https://www.youtube.com/embed/DKGd6ari8KA?start=0&end=${warmupEndCut}&autoplay=0&enablejsapi=1`;
         
@@ -893,7 +707,6 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        // CORTE DINÂMICO DE ACORDO COM A TRILHA SELECIONADA
         const endCut = chosenTime === 10 ? 92 : 182;
         player.src = `https://www.youtube.com/embed/DKGd6ari8KA?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
@@ -1136,17 +949,35 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
+    // LÓGICA DE PROGRESSÃO CUMULATIVA E XP INCREMENTAL
+    const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
+
     function concluirTrilhaAtual(arquivo) {
       let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
       if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
 
-      if (!progressoLocal[arquivo].includes(chosenTime)) {
-        progressoLocal[arquivo].push(chosenTime);
-        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+      const opcoesTempo = [10, 20, 30, 45];
+      const trilhasCobertas = opcoesTempo.filter(t => t <= chosenTime);
 
-        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+      let maxTempoAnterior = 0;
+      progressoLocal[arquivo].forEach(t => {
+        if (t > maxTempoAnterior) maxTempoAnterior = t;
+      });
+      let xpJaGanho = TABELA_XP[maxTempoAnterior] || 0;
+
+      trilhasCobertas.forEach(t => {
+        if (!progressoLocal[arquivo].includes(t)) {
+          progressoLocal[arquivo].push(t);
+        }
+      });
+
+      localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+      let xpNovoTotal = TABELA_XP[chosenTime] || 0;
+      if (xpNovoTotal > xpJaGanho) {
+        let xpDiferenca = xpNovoTotal - xpJaGanho;
         let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
-        xpAtual += xpPontos;
+        xpAtual += xpDiferenca;
         localStorage.setItem('pop_user_xp', xpAtual.toString());
       }
     }

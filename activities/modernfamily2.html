@@ -232,7 +232,6 @@
     .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
 
-    /* WORD BANK FIXA NO TOPO DURANTE A ROLAGEM */
     .word-bank { 
       position: sticky; 
       top: 0; 
@@ -294,7 +293,6 @@
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
     .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
 
-    /* RESPONSIVIDADE PARA TELAS MENORES / MOBILE */
     @media (max-width: 768px) {
       body { height: auto; overflow-y: auto; }
       header { padding: 8px 12px; }
@@ -330,7 +328,6 @@
     <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://i.imgur.com/NAvqvSu.jpeg" class="banner-img" alt="Modern Family Jay Self Diagnosis Scene">
@@ -357,7 +354,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -399,69 +395,15 @@
       1: {
         title: "Part 1 (0:00 - 0:52)", start: 0, end: 52, vocabType: "ab",
         vocab: [
-          { 
-            term: "stomach", 
-            options: [
-              { text: "The front part of your body below the chest", correct: "true" },
-              { text: "The back part of your head above the neck", correct: "false" }
-            ]
-          },
-          { 
-            term: "crib", 
-            options: [
-              { text: "A small bed for a baby", correct: "true" },
-              { text: "A large bed for adults", correct: "false" }
-            ]
-          },
-          { 
-            term: "lay down", 
-            options: [
-              { text: "To rest your body in a flat position", correct: "true" },
-              { text: "To stand up straight on your feet", correct: "false" }
-            ]
-          },
-          { 
-            term: "sniffle", 
-            options: [
-              { text: "A slight sound when breathing through a runny nose", correct: "true" },
-              { text: "A completely clear and normal breath", correct: "false" }
-            ]
-          },
-          { 
-            term: "dislocated", 
-            options: [
-              { text: "Forced out of its normal position", correct: "true" },
-              { text: "Kept in its correct and fixed place", correct: "false" }
-            ]
-          },
-          { 
-            term: "shoulder", 
-            options: [
-              { text: "The part of the body between the neck and arm", correct: "true" },
-              { text: "The part of the body between the knee and foot", correct: "false" }
-            ]
-          },
-          { 
-            term: "bloating", 
-            options: [
-              { text: "A swollen and uncomfortable feeling in the tummy", correct: "true" },
-              { text: "An empty and flat feeling in the tummy", correct: "false" }
-            ]
-          },
-          { 
-            term: "worried", 
-            options: [
-              { text: "Feeling nervous or unhappy about a problem", correct: "true" },
-              { text: "Feeling calm and relaxed about everything", correct: "false" }
-            ]
-          },
-          { 
-            term: "blockage", 
-            options: [
-              { text: "Something that stops movement through a space", correct: "true" },
-              { text: "An open space that allows easy movement", correct: "false" }
-            ]
-          }
+          { term: "stomach", options: [{ text: "The front part of your body below the chest", correct: "true" }, { text: "The back part of your head above the neck", correct: "false" }] },
+          { term: "crib", options: [{ text: "A small bed for a baby", correct: "true" }, { text: "A large bed for adults", correct: "false" }] },
+          { term: "lay down", options: [{ text: "To rest your body in a flat position", correct: "true" }, { text: "To stand up straight on your feet", correct: "false" }] },
+          { term: "sniffle", options: [{ text: "A slight sound when breathing through a runny nose", correct: "true" }, { text: "A completely clear and normal breath", correct: "false" }] },
+          { term: "dislocated", options: [{ text: "Forced out of its normal position", correct: "true" }, { text: "Kept in its correct and fixed place", correct: "false" }] },
+          { term: "shoulder", options: [{ text: "The part of the body between the neck and arm", correct: "true" }, { text: "The part of the body between the knee and foot", correct: "false" }] },
+          { term: "bloating", options: [{ text: "A swollen and uncomfortable feeling in the tummy", correct: "true" }, { text: "An empty and flat feeling in the tummy", correct: "false" }] },
+          { term: "worried", options: [{ text: "Feeling nervous or unhappy about a problem", correct: "true" }, { text: "Feeling calm and relaxed about everything", correct: "false" }] },
+          { term: "blockage", options: [{ text: "Something that stops movement through a space", correct: "true" }, { text: "An open space that allows easy movement", correct: "false" }] }
         ],
         examples: [
           { term: "stomach", ex: "My stomach hurts after eating that fast food.", trans: "Meu estômago dói depois de comer aquele fast food." },
@@ -492,36 +434,12 @@
       2: {
         title: "Part 2 (0:52 - 1:28)", start: 52, end: 88, vocabType: "select",
         vocab: [
-          { 
-            term: "shop", 
-            correct: "To buy things in a store or online",
-            distractors: ["To sell products to customers", "To look at items in a museum"]
-          },
-          { 
-            term: "angry", 
-            correct: "Feeling mad or upset about something",
-            distractors: ["Feeling tired and sleepy", "Feeling sad and lonely"]
-          },
-          { 
-            term: "clear a space", 
-            correct: "To make room by removing things",
-            distractors: ["To clean dirty furniture", "To put things away neatly"]
-          },
-          { 
-            term: "round", 
-            correct: "A stage or period in a game or match",
-            distractors: ["A quick exercise workout", "A short break from playing"]
-          },
-          { 
-            term: "couple", 
-            correct: "A small number, usually two or three",
-            distractors: ["A large group of things", "A single item on a list"]
-          },
-          { 
-            term: "a while", 
-            correct: "A period or length of time",
-            distractors: ["A specific minute of the day", "A very short second"]
-          }
+          { term: "shop", correct: "To buy things in a store or online", distractors: ["To sell products to customers", "To look at items in a museum"] },
+          { term: "angry", correct: "Feeling mad or upset about something", distractors: ["Feeling tired and sleepy", "Feeling sad and lonely"] },
+          { term: "clear a space", correct: "To make room by removing things", distractors: ["To clean dirty furniture", "To put things away neatly"] },
+          { term: "round", correct: "A stage or period in a game or match", distractors: ["A quick exercise workout", "A short break from playing"] },
+          { term: "couple", correct: "A small number, usually two or three", distractors: ["A large group of things", "A single item on a list"] },
+          { term: "a while", correct: "A period or length of time", distractors: ["A specific minute of the day", "A very short second"] }
         ],
         examples: [
           { term: "shop", ex: "I like to shop for clothes on the weekend.", trans: "Gosto de comprar roupas no fim de semana." },
@@ -550,62 +468,14 @@
       3: {
         title: "Part 3 (1:28 - 1:58)", start: 88, end: 118, vocabType: "ab",
         vocab: [
-          { 
-            term: "order", 
-            options: [
-              { text: "A request for goods or food to be delivered", correct: "true" },
-              { text: "A free gift given to someone without asking", correct: "false" }
-            ]
-          },
-          { 
-            term: "sounded", 
-            options: [
-              { text: "Seemed to be true when heard", correct: "true" },
-              { text: "Looked colorful when seen with eyes", correct: "false" }
-            ]
-          },
-          { 
-            term: "diverticulitis", 
-            options: [
-              { text: "A painful medical condition in the digestive system", correct: "true" },
-              { text: "A state of complete health and painless digestion", correct: "false" }
-            ]
-          },
-          { 
-            term: "treat", 
-            options: [
-              { text: "To give medical care to cure an illness", correct: "true" },
-              { text: "To ignore a disease and do nothing", correct: "false" }
-            ]
-          },
-          { 
-            term: "heating pad", 
-            options: [
-              { text: "A warm pad used to soothe body pain", correct: "true" },
-              { text: "A cold bag of ice used to freeze skin", correct: "false" }
-            ]
-          },
-          { 
-            term: "stabbed", 
-            options: [
-              { text: "Feeling a very sharp and sudden pain", correct: "true" },
-              { text: "Feeling a soft and gentle touch", correct: "false" }
-            ]
-          },
-          { 
-            term: "scallop", 
-            options: [
-              { text: "A soft sea creature with a hard shell", correct: "true" },
-              { text: "A type of fruit that grows on trees", correct: "false" }
-            ]
-          },
-          { 
-            term: "colorful", 
-            options: [
-              { text: "Full of interesting and vivid details", correct: "true" },
-              { text: "Boring, empty and without any details", correct: "false" }
-            ]
-          }
+          { term: "order", options: [{ text: "A request for goods or food to be delivered", correct: "true" }, { text: "A free gift given to someone without asking", correct: "false" }] },
+          { term: "sounded", options: [{ text: "Seemed to be true when heard", correct: "true" }, { text: "Looked colorful when seen with eyes", correct: "false" }] },
+          { term: "diverticulitis", options: [{ text: "A painful medical condition in the digestive system", correct: "true" }, { text: "A state of complete health and painless digestion", correct: "false" }] },
+          { term: "treat", options: [{ text: "To give medical care to cure an illness", correct: "true" }, { text: "To ignore a disease and do nothing", correct: "false" }] },
+          { term: "heating pad", options: [{ text: "A warm pad used to soothe body pain", correct: "true" }, { text: "A cold bag of ice used to freeze skin", correct: "false" }] },
+          { term: "stabbed", options: [{ text: "Feeling a very sharp and sudden pain", correct: "true" }, { text: "Feeling a soft and gentle touch", correct: "false" }] },
+          { term: "scallop", options: [{ text: "A soft sea creature with a hard shell", correct: "true" }, { text: "A type of fruit that grows on trees", correct: "false" }] },
+          { term: "colorful", options: [{ text: "Full of interesting and vivid details", correct: "true" }, { text: "Boring, empty and without any details", correct: "false" }] }
         ],
         examples: [
           { term: "order", ex: "I placed an order for a new book online.", trans: "Fiz um pedido de um livro novo pela internet." },
@@ -633,41 +503,13 @@
       4: {
         title: "Part 4 (1:57 - 2:36)", start: 117, end: 156, vocabType: "select",
         vocab: [
-          { 
-            term: "looking at", 
-            correct: "Directing your eyes toward something",
-            distractors: ["Listening carefully to a sound", "Reading silently from a book"]
-          },
-          { 
-            term: "screen", 
-            correct: "The flat surface on a computer or TV showing images",
-            distractors: ["The glass window on a car", "A mirror hanging on the wall"]
-          },
-          { 
-            term: "fault", 
-            correct: "Responsibility for a mistake or wrong action",
-            distractors: ["A bad habit or negative trait", "A sudden problem or difficulty"]
-          },
-          { 
-            term: "cured", 
-            correct: "Made healthy again after being sick",
-            distractors: ["Feeling rested after sleeping", "Getting help from a doctor"]
-          },
-          { 
-            term: "pillow", 
-            correct: "A soft cushion used to rest your head in bed",
-            distractors: ["A warm blanket for sleeping", "A soft mattress on a frame"]
-          },
-          { 
-            term: "ulcer", 
-            correct: "A painful sore inside your stomach or body",
-            distractors: ["A mild stomach ache", "A temporary indigestion pain"]
-          },
-          { 
-            term: "burp", 
-            correct: "To release gas noisily from the stomach through the mouth",
-            distractors: ["To cough loudly when sick", "To breathe out heavily when tired"]
-          }
+          { term: "looking at", correct: "Directing your eyes toward something", distractors: ["Listening carefully to a sound", "Reading silently from a book"] },
+          { term: "screen", correct: "The flat surface on a computer or TV showing images", distractors: ["The glass window on a car", "A mirror hanging on the wall"] },
+          { term: "fault", correct: "Responsibility for a mistake or wrong action", distractors: ["A bad habit or negative trait", "A sudden problem or difficulty"] },
+          { term: "cured", correct: "Made healthy again after being sick", distractors: ["Feeling rested after sleeping", "Getting help from a doctor"] },
+          { term: "pillow", correct: "A soft cushion used to rest your head in bed", distractors: ["A warm blanket for sleeping", "A soft mattress on a frame"] },
+          { term: "ulcer", correct: "A painful sore inside your stomach or body", distractors: ["A mild stomach ache", "A temporary indigestion pain"] },
+          { term: "burp", correct: "To release gas noisily from the stomach through the mouth", distractors: ["To cough loudly when sick", "To breathe out heavily when tired"] }
         ],
         examples: [
           { term: "looking at", ex: "She is looking at the painting on the wall.", trans: "Ela está olhando para o quadro na parede." },
@@ -695,48 +537,12 @@
       5: {
         title: "Part 5 (2:36 - 2:59)", start: 156, end: 179, vocabType: "ab",
         vocab: [
-          { 
-            term: "dollars to doughnuts", 
-            options: [
-              { text: "A phrase used when you are almost 100% sure", correct: "true" },
-              { text: "A phrase used when you are completely doubtful and unsure", correct: "false" }
-            ]
-          },
-          { 
-            term: "acute", 
-            options: [
-              { text: "Sudden, severe and intense", correct: "true" },
-              { text: "Mild, slow and weak", correct: "false" }
-            ]
-          },
-          { 
-            term: "surgery", 
-            options: [
-              { text: "A medical operation where doctors cut open the body to fix it", correct: "true" },
-              { text: "A simple doctor checkup without any tools or treatment", correct: "false" }
-            ]
-          },
-          { 
-            term: "worst", 
-            options: [
-              { text: "The most terrible or bad thing of all", correct: "true" },
-              { text: "The best or most wonderful thing of all", correct: "false" }
-            ]
-          },
-          { 
-            term: "whole wide world", 
-            options: [
-              { text: "Everywhere on Earth, emphasizing everything", correct: "true" },
-              { text: "A single tiny room in a house", correct: "false" }
-            ]
-          },
-          { 
-            term: "suffer", 
-            options: [
-              { text: "To feel physical or emotional pain", correct: "true" },
-              { text: "To feel happy, relaxed and comfortable", correct: "false" }
-            ]
-          }
+          { term: "dollars to doughnuts", options: [{ text: "A phrase used when you are almost 100% sure", correct: "true" }, { text: "A phrase used when you are completely doubtful and unsure", correct: "false" }] },
+          { term: "acute", options: [{ text: "Sudden, severe and intense", correct: "true" }, { text: "Mild, slow and weak", correct: "false" }] },
+          { term: "surgery", options: [{ text: "A medical operation where doctors cut open the body to fix it", correct: "true" }, { text: "A simple doctor checkup without any tools or treatment", correct: "false" }] },
+          { term: "worst", options: [{ text: "The most terrible or bad thing of all", correct: "true" }, { text: "The best or most wonderful thing of all", correct: "false" }] },
+          { term: "whole wide world", options: [{ text: "Everywhere on Earth, emphasizing everything", correct: "true" }, { text: "A single tiny room in a house", correct: "false" }] },
+          { term: "suffer", options: [{ text: "To feel physical or emotional pain", correct: "true" }, { text: "To feel happy, relaxed and comfortable", correct: "false" }] }
         ],
         examples: [
           { term: "dollars to doughnuts", ex: "Dollars to doughnuts, our team will win the game.", trans: "Pode apostar que nosso time vai ganhar o jogo." },
@@ -761,41 +567,13 @@
       6: {
         title: "Part 6 (2:59 - 3:24)", start: 179, end: 204, vocabType: "select",
         vocab: [
-          { 
-            term: "almost", 
-            correct: "Nearly or very close to happening",
-            distractors: ["Completely finished and done", "At a very distant time"]
-          },
-          { 
-            term: "counting down", 
-            correct: "Calculating the time left before an event happens",
-            distractors: ["Checking the time on a watch", "Counting items one by one"]
-          },
-          { 
-            term: "rupture", 
-            correct: "To burst, pop or break open suddenly",
-            distractors: ["To stretch slowly without breaking", "To shrink in size"]
-          },
-          { 
-            term: "forgiving", 
-            correct: "Pardoning or excusing someone for a mistake",
-            distractors: ["Blaming someone for an error", "Asking for help from a friend"]
-          },
-          { 
-            term: "gets you", 
-            correct: "Causes you harm, trouble or illness",
-            distractors: ["Gives you a surprise gift", "Helps you feel much better"]
-          },
-          { 
-            term: "over", 
-            correct: "Older or more than a specific age/number",
-            distractors: ["Exactly equal to a number", "Younger or less than an age"]
-          },
-          { 
-            term: "caring", 
-            correct: "Showing worry, love or concern for others",
-            distractors: ["Ignoring people completely", "Acting very busy with work"]
-          }
+          { term: "almost", correct: "Nearly or very close to happening", distractors: ["Completely finished and done", "At a very distant time"] },
+          { term: "counting down", correct: "Calculating the time left before an event happens", distractors: ["Checking the time on a watch", "Counting items one by one"] },
+          { term: "rupture", correct: "To burst, pop or break open suddenly", distractors: ["To stretch slowly without breaking", "To shrink in size"] },
+          { term: "forgiving", correct: "Pardoning or excusing someone for a mistake", distractors: ["Blaming someone for an error", "Asking for help from a friend"] },
+          { term: "gets you", correct: "Causes you harm, trouble or illness", distractors: ["Gives you a surprise gift", "Helps you feel much better"] },
+          { term: "over", correct: "Older or more than a specific age/number", distractors: ["Exactly equal to a number", "Younger or less than an age"] },
+          { term: "caring", correct: "Showing worry, love or concern for others", distractors: ["Ignoring people completely", "Acting very busy with work"] }
         ],
         examples: [
           { term: "almost", ex: "We are almost ready to go home.", trans: "Estamos quase prontos para ir para casa." },
@@ -899,8 +677,6 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        
-        // CORTES DO WARM-UP AJUSTADOS POR TRILHA DE TEMPO
         const warmupEndCut = chosenTime === 10 ? 88 : chosenTime === 20 ? 156 : 204;
         player.src = `https://www.youtube.com/embed/WSx3g8dpq2Q?start=0&end=${warmupEndCut}&autoplay=0&enablejsapi=1`;
         
@@ -1025,8 +801,6 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        
-        // CORTES DA CENA COMPLETA AJUSTADOS POR TRILHA DE TEMPO
         const endCut = chosenTime === 10 ? 88 : chosenTime === 20 ? 156 : 204;
         player.src = `https://www.youtube.com/embed/WSx3g8dpq2Q?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
@@ -1271,17 +1045,35 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
+    // LÓGICA DE PROGRESSÃO CUMULATIVA E XP INCREMENTAL
+    const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
+
     function concluirTrilhaAtual(arquivo) {
       let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
       if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
 
-      if (!progressoLocal[arquivo].includes(chosenTime)) {
-        progressoLocal[arquivo].push(chosenTime);
-        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+      const opcoesTempo = [10, 20, 30, 45];
+      const trilhasCobertas = opcoesTempo.filter(t => t <= chosenTime);
 
-        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+      let maxTempoAnterior = 0;
+      progressoLocal[arquivo].forEach(t => {
+        if (t > maxTempoAnterior) maxTempoAnterior = t;
+      });
+      let xpJaGanho = TABELA_XP[maxTempoAnterior] || 0;
+
+      trilhasCobertas.forEach(t => {
+        if (!progressoLocal[arquivo].includes(t)) {
+          progressoLocal[arquivo].push(t);
+        }
+      });
+
+      localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+      let xpNovoTotal = TABELA_XP[chosenTime] || 0;
+      if (xpNovoTotal > xpJaGanho) {
+        let xpDiferenca = xpNovoTotal - xpJaGanho;
         let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
-        xpAtual += xpPontos;
+        xpAtual += xpDiferenca;
         localStorage.setItem('pop_user_xp', xpAtual.toString());
       }
     }

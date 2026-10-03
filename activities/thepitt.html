@@ -103,7 +103,7 @@
     .time-btn {
       background: #334155; color: white; border: 2px solid transparent;
       padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.98em; font-weight: 600;
-      cursor: pointer; transition: all 0.2s; display: flex; justify-space-between; align-items: center;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
       position: relative; z-index: 4; text-align: left;
     }
 
@@ -279,7 +279,6 @@
 </head>
 <body>
 
-  <!-- BOTÃO DE VOLTAR PARA A HOMEPAGE -->
   <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
     <a href="../index.html" class="nav-back">
       ← Back to Homepage
@@ -296,7 +295,6 @@
     </div>
   </header>
 
-  <!-- WELCOME SCREEN -->
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
       <img src="https://img.youtube.com/vi/6SpAi4SZMLY/maxresdefault.jpg" class="banner-img" alt="The Pitt - Stomach Pain Scene">
@@ -320,7 +318,6 @@
     </div>
   </div>
 
-  <!-- WORKSPACE SCREEN -->
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
@@ -361,70 +358,14 @@
       1: {
         title: "Part 1 (0:00 - 0:48)", start: 0, end: 48, selectType: "dropdown",
         vocab: [
-          { 
-            term: "BP", 
-            options: [
-              { isCorrect: true, text: "Blood Pressure (how hard your blood pumps)" },
-              { isCorrect: false, text: "Body Temperature (how warm your body is)" },
-              { isCorrect: false, text: "Bathing Protocol (a daily cleaning routine)" }
-            ]
-          },
-          { 
-            term: "touch high", 
-            options: [
-              { isCorrect: true, text: "A little bit above normal" },
-              { isCorrect: false, text: "Very high and dangerous" },
-              { isCorrect: false, text: "Very low and unusual" }
-            ]
-          },
-          { 
-            term: "belly", 
-            options: [
-              { isCorrect: true, text: "Stomach or front area of your body" },
-              { isCorrect: false, text: "Chest or upper rib cage area" },
-              { isCorrect: false, text: "Back area near your spine" }
-            ]
-          },
-          { 
-            term: "intense", 
-            options: [
-              { isCorrect: true, text: "Very strong or severe" },
-              { isCorrect: false, text: "Very light and mild" },
-              { isCorrect: false, text: "Very slow and calm" }
-            ]
-          },
-          { 
-            term: "lasted", 
-            options: [
-              { isCorrect: true, text: "Continued for a specific time" },
-              { isCorrect: false, text: "Stopped after one second" },
-              { isCorrect: false, text: "Started very late in the day" }
-            ]
-          },
-          { 
-            term: "fever", 
-            options: [
-              { isCorrect: true, text: "High body temperature when you are sick" },
-              { isCorrect: false, text: "Low body temperature when you are cold" },
-              { isCorrect: false, text: "Fast heartbeat after you exercise" }
-            ]
-          },
-          { 
-            term: "sick", 
-            options: [
-              { isCorrect: true, text: "Not feeling well or having an illness" },
-              { isCorrect: false, text: "Feeling very happy and energetic" },
-              { isCorrect: false, text: "Feeling sleepy late at night" }
-            ]
-          },
-          { 
-            term: "steak", 
-            options: [
-              { isCorrect: true, text: "A piece of beef cooked for a meal" },
-              { isCorrect: false, text: "A piece of grilled chicken breast" },
-              { isCorrect: false, text: "A type of fresh green salad" }
-            ]
-          }
+          { term: "BP", options: [{ isCorrect: true, text: "Blood Pressure (how hard your blood pumps)" }, { isCorrect: false, text: "Body Temperature (how warm your body is)" }, { isCorrect: false, text: "Bathing Protocol (a daily cleaning routine)" }] },
+          { term: "touch high", options: [{ isCorrect: true, text: "A little bit above normal" }, { isCorrect: false, text: "Very high and dangerous" }, { isCorrect: false, text: "Very low and unusual" }] },
+          { term: "belly", options: [{ isCorrect: true, text: "Stomach or front area of your body" }, { isCorrect: false, text: "Chest or upper rib cage area" }, { isCorrect: false, text: "Back area near your spine" }] },
+          { term: "intense", options: [{ isCorrect: true, text: "Very strong or severe" }, { isCorrect: false, text: "Very light and mild" }, { isCorrect: false, text: "Very slow and calm" }] },
+          { term: "lasted", options: [{ isCorrect: true, text: "Continued for a specific time" }, { isCorrect: false, text: "Stopped after one second" }, { isCorrect: false, text: "Started very late in the day" }] },
+          { term: "fever", options: [{ isCorrect: true, text: "High body temperature when you are sick" }, { isCorrect: false, text: "Low body temperature when you are cold" }, { isCorrect: false, text: "Fast heartbeat after you exercise" }] },
+          { term: "sick", options: [{ isCorrect: true, text: "Not feeling well or having an illness" }, { isCorrect: false, text: "Feeling very happy and energetic" }, { isCorrect: false, text: "Feeling sleepy late at night" }] },
+          { term: "steak", options: [{ isCorrect: true, text: "A piece of beef cooked for a meal" }, { isCorrect: false, text: "A piece of grilled chicken breast" }, { isCorrect: false, text: "A type of fresh green salad" }] }
         ],
         examples: [
           { term: "BP", ex: "The nurse checked my BP at the doctor's office.", trans: "A enfermeira checou minha pressão no consultório." },
@@ -455,104 +396,20 @@
       2: {
         title: "Part 2 (0:48 - 1:45)", start: 48, end: 105, selectType: "ab",
         vocab: [
-          { 
-            term: "benign", 
-            options: [
-              { isCorrect: true, text: "Safe and not dangerous" },
-              { isCorrect: false, text: "Dangerous and very harmful" }
-            ]
-          },
-          { 
-            term: "gallstones", 
-            options: [
-              { isCorrect: true, text: "Hard pieces formed in the gallbladder" },
-              { isCorrect: false, text: "Soft vitamins for digestion" }
-            ]
-          },
-          { 
-            term: "fatty food", 
-            options: [
-              { isCorrect: true, text: "Food with a lot of oil or fat" },
-              { isCorrect: false, text: "Healthy fresh fruits and water" }
-            ]
-          },
-          { 
-            term: "pain", 
-            options: [
-              { isCorrect: true, text: "An uncomfortable or hurting feeling" },
-              { isCorrect: false, text: "A pleasant and relaxed feeling" }
-            ]
-          },
-          { 
-            term: "gallbladder", 
-            options: [
-              { isCorrect: true, text: "A small organ under the liver that holds bile" },
-              { isCorrect: false, text: "A muscle that helps your lungs breathe" }
-            ]
-          },
-          { 
-            term: "contracts", 
-            options: [
-              { isCorrect: true, text: "Tightens or squeezes to get smaller" },
-              { isCorrect: false, text: "Relaxes and grows much larger" }
-            ]
-          },
-          { 
-            term: "surgery", 
-            options: [
-              { isCorrect: true, text: "Medical operation by cutting the body" },
-              { isCorrect: false, text: "Taking simple resting pills at home" }
-            ]
-          },
-          { 
-            term: "low-fat", 
-            options: [
-              { isCorrect: true, text: "Food with very little grease or oil" },
-              { isCorrect: false, text: "Food with double oil and butter" }
-            ]
-          },
-          { 
-            term: "send off labs", 
-            options: [
-              { isCorrect: true, text: "Send medical samples to test" },
-              { isCorrect: false, text: "Throw medical tests in the trash" }
-            ]
-          },
-          { 
-            term: "liver", 
-            options: [
-              { isCorrect: true, text: "An organ that cleans your blood" },
-              { isCorrect: false, text: "A bone inside your leg" }
-            ]
-          },
-          { 
-            term: "you bet", 
-            options: [
-              { isCorrect: true, text: "You are welcome / Sure" },
-              { isCorrect: false, text: "No way / Never" }
-            ]
-          },
-          { 
-            term: "EKG", 
-            options: [
-              { isCorrect: true, text: "A quick test for the heart" },
-              { isCorrect: false, text: "An X-ray for broken teeth" }
-            ]
-          },
-          { 
-            term: "heart attack", 
-            options: [
-              { isCorrect: true, text: "A dangerous sudden heart problem" },
-              { isCorrect: false, text: "A light headache from fatigue" }
-            ]
-          },
-          { 
-            term: "upper", 
-            options: [
-              { isCorrect: true, text: "The higher part of something" },
-              { isCorrect: false, text: "The lower part of something" }
-            ]
-          }
+          { term: "benign", options: [{ isCorrect: true, text: "Safe and not dangerous" }, { isCorrect: false, text: "Dangerous and very harmful" }] },
+          { term: "gallstones", options: [{ isCorrect: true, text: "Hard pieces formed in the gallbladder" }, { isCorrect: false, text: "Soft vitamins for digestion" }] },
+          { term: "fatty food", options: [{ isCorrect: true, text: "Food with a lot of oil or fat" }, { isCorrect: false, text: "Healthy fresh fruits and water" }] },
+          { term: "pain", options: [{ isCorrect: true, text: "An uncomfortable or hurting feeling" }, { isCorrect: false, text: "A pleasant and relaxed feeling" }] },
+          { term: "gallbladder", options: [{ isCorrect: true, text: "A small organ under the liver that holds bile" }, { isCorrect: false, text: "A muscle that helps your lungs breathe" }] },
+          { term: "contracts", options: [{ isCorrect: true, text: "Tightens or squeezes to get smaller" }, { isCorrect: false, text: "Relaxes and grows much larger" }] },
+          { term: "surgery", options: [{ isCorrect: true, text: "Medical operation by cutting the body" }, { isCorrect: false, text: "Taking simple resting pills at home" }] },
+          { term: "low-fat", options: [{ isCorrect: true, text: "Food with very little grease or oil" }, { isCorrect: false, text: "Food with double oil and butter" }] },
+          { term: "send off labs", options: [{ isCorrect: true, text: "Send medical samples to test" }, { isCorrect: false, text: "Throw medical tests in the trash" }] },
+          { term: "liver", options: [{ isCorrect: true, text: "An organ that cleans your blood" }, { isCorrect: false, text: "A bone inside your leg" }] },
+          { term: "you bet", options: [{ isCorrect: true, text: "You are welcome / Sure" }, { isCorrect: false, text: "No way / Never" }] },
+          { term: "EKG", options: [{ isCorrect: true, text: "A quick test for the heart" }, { isCorrect: false, text: "An X-ray for broken teeth" }] },
+          { term: "heart attack", options: [{ isCorrect: true, text: "A dangerous sudden heart problem" }, { isCorrect: false, text: "A light headache from fatigue" }] },
+          { term: "upper", options: [{ isCorrect: true, text: "The higher part of something" }, { isCorrect: false, text: "The lower part of something" }] }
         ],
         examples: [
           { term: "benign", ex: "The doctor said the test results were benign.", trans: "O médico disse que os resultados dos exames foram benignos." },
@@ -1028,17 +885,35 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
+    // LÓGICA DE PROGRESSÃO CUMULATIVA E XP INCREMENTAL
+    const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
+
     function concluirTrilhaAtual(arquivo) {
       let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
       if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
 
-      if (!progressoLocal[arquivo].includes(chosenTime)) {
-        progressoLocal[arquivo].push(chosenTime);
-        localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+      const opcoesTempo = [10, 20, 30, 45];
+      const trilhasCobertas = opcoesTempo.filter(t => t <= chosenTime);
 
-        let xpPontos = chosenTime === 10 ? 50 : chosenTime === 20 ? 100 : 150;
+      let maxTempoAnterior = 0;
+      progressoLocal[arquivo].forEach(t => {
+        if (t > maxTempoAnterior) maxTempoAnterior = t;
+      });
+      let xpJaGanho = TABELA_XP[maxTempoAnterior] || 0;
+
+      trilhasCobertas.forEach(t => {
+        if (!progressoLocal[arquivo].includes(t)) {
+          progressoLocal[arquivo].push(t);
+        }
+      });
+
+      localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+      let xpNovoTotal = TABELA_XP[chosenTime] || 0;
+      if (xpNovoTotal > xpJaGanho) {
+        let xpDiferenca = xpNovoTotal - xpJaGanho;
         let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
-        xpAtual += xpPontos;
+        xpAtual += xpDiferenca;
         localStorage.setItem('pop_user_xp', xpAtual.toString());
       }
     }
