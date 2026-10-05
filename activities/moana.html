@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Moana by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --border-dark: #334155;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --gradient-brand: linear-gradient(90deg, #9333ea, #a855f7);
+      --gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-dark);
+      background-color: #0b0f19;
+      min-height: 60px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 36px; border-radius: 8px; }
+    .brand-text h1 { 
+      font-size: 1.2em; 
+      font-weight: 800; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+      font-size: 0.9em;
+    }
+    .nav-back:hover { color: var(--accent-pink); }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 20px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+      border: 1px solid var(--border-dark);
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 180px; 
+      object-fit: cover; 
+      object-position: center;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 16px; 
+      display: block;
+      pointer-events: none;
+      border: 1px solid var(--border-dark);
+    }
+
+    .hero-title { 
+      font-size: 1.4em; 
+      margin-bottom: 4px; 
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.9em; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px; }
+    .hero-desc { font-size: 0.95em; color: #94a3b8; margin-bottom: 18px; }
+
+    .time-title { font-size: 0.98em; font-weight: 700; margin-bottom: 12px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 20px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #1e293b; color: white; border: 2px solid var(--border-dark);
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.88em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.15);
+      transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--gradient-brand); color: white; border: none;
+      padding: 12px 32px; border-radius: 10px; font-size: 1.05em;
+      font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-dark);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; border: 1px solid var(--border-dark); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #0b0f19; padding: 10px 14px;
+      border-bottom: 1px solid var(--border-dark); overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: #1e293b;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700;
+      color: #94a3b8; border: 1px solid var(--border-dark); white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #334155; color: #f8fafc; border-radius: 50%; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85em;
+    }
+
+    .cool-step-pill.active { background: var(--gradient-brand); color: white; border-color: var(--accent-purple); }
+    .cool-step-pill.active .step-num { background: white; color: var(--accent-purple); font-weight: 800; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 14px; }
+    .part-subtab-btn {
+      flex: 1; padding: 9px 6px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.88em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: var(--accent-purple); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { 
+      flex: 1; 
+      padding: 18px 20px; 
+      overflow-y: auto; 
+      font-size: 1.05em;
+      line-height: 1.6;
+      position: relative; 
+    }
+
+    .content-area h3 {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25em;
+      margin-bottom: 10px;
+    }
+
+    .question-block { margin-bottom: 18px; }
+    .question-block strong { display: block; font-size: 1.05em; margin-bottom: 8px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 12px 14px; font-size: 1.02em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select:hover { border-color: var(--accent-purple); }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 12px 14px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1.02em; color: #334155;
+      line-height: 1.4;
+    }
+    .ab-btn:hover { border-color: var(--accent-purple); background: #faf5ff; }
+    .ab-btn.selected-option { border-color: var(--accent-purple); background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 5px solid var(--accent-purple);
+      padding: 14px 16px; border-radius: var(--radius-soft); margin-bottom: 14px;
+    }
+    .vocab-card-example h4 { font-size: 1.15em; color: var(--accent-purple); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .vocab-card-example p { font-size: 1.05em; }
+    .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
+
+    .word-bank { 
+      position: sticky; 
+      top: -18px; 
+      z-index: 100; 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 8px; 
+      margin-bottom: 16px; 
+      padding: 12px 14px; 
+      background: #cbd5e1; 
+      border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); 
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); 
+      min-height: 48px; 
+    }
+    .chip { background: white; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 0.92em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
+
+    .gap-target {
+      display: inline-block; min-width: 85px; height: 32px; border-bottom: 2px solid var(--accent-purple);
+      background: #f3e8ff; margin: 0 3px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 6px; line-height: 32px; cursor: pointer; font-size: 0.95em; padding: 0 8px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 10px; margin-top: 10px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 10px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 32px; height: 42px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .retell-item {
+      background: white; padding: 10px 14px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 42px; display: flex; align-items: center; font-size: 0.95em; line-height: 1.4;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 12px 14px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 14px; font-size: 0.95em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 12px; border-radius: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.85em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 10px; border-radius: 6px; margin-top: 6px; font-size: 0.92em; }
+
+    .panel-footer { padding: 12px 18px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-action { 
+      background: var(--gradient-brand); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92em; 
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #0284c7, #0369a1); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 28px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    @media (max-width: 850px) {
+      body { height: auto; overflow-y: auto; }
+      header { padding: 8px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 480px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; font-size: 1.02em; padding: 12px; }
+      
+      .word-bank { position: sticky; top: 0; z-index: 100; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+    <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
+  </header>
+
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://img.youtube.com/vi/XAgbFxUq1xY/maxresdefault.jpg" class="banner-img" alt="Moana Scene">
+      <h2 class="hero-title">Moana: The Future of Motunui</h2>
+      <div class="hero-subtitle">• Motunui Island •</div>
+      <p class="hero-desc">Moana learns about her duties as the future chief of her people while facing challenges in the village.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(10, this)">
+            <span>⚡ "Putz, tô muito busy!" (Parts 1 & 2)</span> <strong>10 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(20, this)">
+            <span>🎯 "I have um tempinho hoje!" (Parts 1 to 4)</span> <strong>20 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/XAgbFxUq1xY?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2 style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">CONGRATULATIONS! 🎉</h2>
+      <br>
+      <p>You've mastered this iconic scene with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 20;
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 1:06)", start: 0, end: 66, vocabType: "select",
+        vocab: [
+          { 
+            term: "get on", 
+            options: [
+              { text: "To step inside or climb onto a vehicle or boat", correct: "true" },
+              { text: "To leave or jump off a moving boat quickly", correct: "false" },
+              { text: "To sit down and wait next to a vehicle", correct: "false" }
+            ] 
+          },
+          { 
+            term: "sacred", 
+            options: [
+              { text: "Very special, holy, and important to respect", correct: "true" },
+              { text: "Old, dirty, and dangerous to visit", correct: "false" },
+              { text: "Quiet, boring, and far from the city", correct: "false" }
+            ] 
+          },
+          { 
+            term: "chiefs", 
+            options: [
+              { text: "The main leaders of a group or community", correct: "true" },
+              { text: "The people who build boats and houses", correct: "false" },
+              { text: "Young children who play in the village", correct: "false" }
+            ] 
+          },
+          { 
+            term: "peak", 
+            options: [
+              { text: "The highest top point of a mountain", correct: "true" },
+              { text: "A deep hole under the ground", correct: "false" },
+              { text: "The flat land near the ocean", correct: "false" }
+            ] 
+          },
+          { 
+            term: "raise", 
+            options: [
+              { text: "To lift or move something to a higher place", correct: "true" },
+              { text: "To break or push something down", correct: "false" },
+              { text: "To clean or paint something again", correct: "false" }
+            ] 
+          }
+        ],
+        examples: [
+          { term: "get on", ex: "Hurry up! We need to get on the bus before it leaves.", trans: "Rápido! Nós precisamos entrar no ônibus antes que ele vá embora." },
+          { term: "sacred", ex: "This family photo album is sacred to my grandmother.", trans: "Este álbum de fotos de família é sagrado para minha avó." },
+          { term: "chiefs", ex: "The city chiefs had an important meeting this morning.", trans: "Os líderes da cidade tiveram uma reunião importante esta manhã." },
+          { term: "peak", ex: "We walked for two hours to reach the peak of the mountain.", trans: "Nós caminhamos por duas horas para alcançar o topo da montanha." },
+          { term: "raise", ex: "Please raise your hand if you want to ask a question.", trans: "Por favor, levante a mão se quiser fazer uma pergunta." }
+        ],
+        gaps: ["get on", "sacred", "chiefs", "peak", "raise"],
+        fullScript: `
+          <p><strong>Moana:</strong> Dad, I was only looking at the boats. I wasn't going to <span class="gap-target" data-answer="get on"></span> them.</p>
+          <p><strong>Chief Tui:</strong> Come on. There's something I need to show you.</p>
+          <p><strong>Chief Tui:</strong> I've wanted to bring you here from the moment you opened your eyes. This is a <span class="gap-target" data-answer="sacred"></span> place, a place of <span class="gap-target" data-answer="chiefs"></span>. There will come a time when you will stand on this <span class="gap-target" data-answer="peak"></span> and place a stone on this mountain, like I did, like my father did, and his father, and every chief that has ever been.</p>
+          <p><strong>Chief Tui:</strong> And on that day, when you add your stone, you will <span class="gap-target" data-answer="raise"></span> this whole island higher. You are the future of our people, Moana. They are not out there. They're right here. It's time to be who they need you to be.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (1:06 - 2:01)", start: 66, end: 121, vocabType: "multi",
+        vocab: [
+          { 
+            term: "leaks", 
+            options: [
+              { text: "Lets water come inside through a hole", correct: "true" },
+              { text: "Keeps water completely out and stays dry", correct: "false" }
+            ] 
+          },
+          { 
+            term: "fronds", 
+            options: [
+              { text: "Large, long leaves of palm trees", correct: "true" },
+              { text: "Small, hard roots under the ground", correct: "false" }
+            ] 
+          },
+          { 
+            term: "shifted", 
+            options: [
+              { text: "Moved from one position to another", correct: "true" },
+              { text: "Stayed completely still in the same spot", correct: "false" }
+            ] 
+          },
+          { 
+            term: "lack", 
+            options: [
+              { text: "To not have enough of something", correct: "true" },
+              { text: "To have a lot of extra things", correct: "false" }
+            ] 
+          },
+          { 
+            term: "strengths", 
+            options: [
+              { text: "Good qualities or strong skills", correct: "true" },
+              { text: "Weak qualities or bad habits", correct: "false" }
+            ] 
+          },
+          { 
+            term: "lie", 
+            options: [
+              { text: "To be located or resting in a place", correct: "true" },
+              { text: "To disappear completely from a place", correct: "false" }
+            ] 
+          },
+          { 
+            term: "beneath", 
+            options: [
+              { text: "Under or below something else", correct: "true" },
+              { text: "High above or over something else", correct: "false" }
+            ] 
+          }
+        ],
+        examples: [
+          { term: "leaks", ex: "When it rains hard, water leaks from our kitchen roof.", trans: "Quando chove forte, água vaza do teto da nossa cozinha." },
+          { term: "fronds", ex: "We sat under the large palm fronds to rest in the shade.", trans: "Nós sentamos debaixo das grandes folhas de palmeira para descansar na sombra." },
+          { term: "shifted", ex: "I shifted my chair to see the screen better.", trans: "Eu mudei minha cadeira de lugar para ver a tela melhor." },
+          { term: "lack", ex: "If you lack sleep, you will feel tired during the day.", trans: "Se você tiver falta de sono, vai se sentir cansado durante o dia." },
+          { term: "strengths", ex: "Speaking English and helping people are her main strengths.", trans: "Falar inglês e ajudar as pessoas são as principais forças dela." },
+          { term: "lie", ex: "The keys lie on the table next to the front door.", trans: "As chaves estão sobre a mesa ao lado da porta da frente." },
+          { term: "beneath", ex: "My cat likes to sleep right beneath my bed.", trans: "Meu gato gosta de dormir logo debaixo da minha cama." }
+        ],
+        gaps: ["leaks", "fronds", "shifted", "lack", "strengths", "lie", "beneath"],
+        fullScript: `
+          <p><strong>Villager:</strong> In every storm, this roof <span class="gap-target" data-answer="leaks"></span> no matter how many <span class="gap-target" data-answer="fronds"></span> I add.</p>
+          <p><strong>Moana:</strong> Fixed! Not the fronds. The wind <span class="gap-target" data-answer="shifted"></span> the post. Mmm, that's good pork.</p>
+          <p><strong>Pua:</strong> (Oinks)</p>
+          <p><strong>Moana:</strong> Pua! I didn't mean... I wasn't... What? They're calling me, so I've got to go. Bye!</p>
+          <p><strong>Villager:</strong> I'm curious about that chicken eating the rock. He seems to <span class="gap-target" data-answer="lack"></span> the basic intelligence required for pretty much everything. Should we maybe just cook him?</p>
+          <p><strong>Moana:</strong> Sometimes our <span class="gap-target" data-answer="strengths"></span> <span class="gap-target" data-answer="lie"></span> beneath the surface. Far <span class="gap-target" data-answer="beneath"></span> in some cases. But I'm sure there's more to Heihei than meets the eye.</p>
+        `
+      },
+      3: {
+        title: "Part 3 (2:01 - 3:09)", start: 121, end: 189, vocabType: "select",
+        vocab: [
+          { 
+            term: "harvest", 
+            options: [
+              { text: "The time to collect ripe fruits and crops from plants", correct: "true" },
+              { text: "The time to plant new seeds in the ground", correct: "false" },
+              { text: "The process of cooking food for a big dinner", correct: "false" }
+            ] 
+          },
+          { 
+            term: "husking", 
+            options: [
+              { text: "Removing the outer dry cover from fruits or seeds", correct: "true" },
+              { text: "Washing and cutting vegetables into small pieces", correct: "false" },
+              { text: "Buying fresh food from the local supermarket", correct: "false" }
+            ] 
+          },
+          { 
+            term: "diseased", 
+            options: [
+              { text: "Sick, unhealthy, or affected by an illness", correct: "true" },
+              { text: "Very fresh, green, and growing quickly", correct: "false" },
+              { text: "Small, dry, and easy to carry", correct: "false" }
+            ] 
+          },
+          { 
+            term: "grove", 
+            options: [
+              { text: "A small group or field of trees growing together", correct: "true" },
+              { text: "A big mountain made of hard rocks", correct: "false" },
+              { text: "A deep river that goes into the ocean", correct: "false" }
+            ] 
+          },
+          { 
+            term: "suits you", 
+            options: [
+              { text: "Looks good on you or fits your personality well", correct: "true" },
+              { text: "Makes you feel tired or uncomfortable", correct: "false" },
+              { text: "Costs a lot of money to buy in a shop", correct: "false" }
+            ] 
+          },
+          { 
+            term: "traps", 
+            options: [
+              { text: "Devices or boxes used to catch animals or fish", correct: "true" },
+              { text: "Small boats used to travel across rivers", correct: "false" },
+              { text: "Heavy stones used to build strong houses", correct: "false" }
+            ] 
+          },
+          { 
+            term: "pulling up", 
+            options: [
+              { text: "Lifting or bringing something out from underwater or the ground", correct: "true" },
+              { text: "Pushing or hiding something under the water", correct: "false" },
+              { text: "Throwing objects away into the deep ocean", correct: "false" }
+            ] 
+          },
+          { 
+            term: "windward", 
+            options: [
+              { text: "The side or direction facing where the wind blows from", correct: "true" },
+              { text: "The calm area completely protected from all weather", correct: "false" },
+              { text: "The bottom part of a valley near a lake", correct: "false" }
+            ] 
+          },
+          { 
+            term: "leeward", 
+            options: [
+              { text: "The side or direction sheltered and protected from the wind", correct: "true" },
+              { text: "The highest point on top of a windy hill", correct: "false" },
+              { text: "The middle of the open ocean with high waves", correct: "false" }
+            ] 
+          },
+          { 
+            term: "shallows", 
+            options: [
+              { text: "Areas of water that are not deep", correct: "true" },
+              { text: "Very deep parts of the ocean floor", correct: "false" },
+              { text: "High waves near the ocean shore", correct: "false" }
+            ] 
+          }
+        ],
+        examples: [
+          { term: "harvest", ex: "Farmers work hard during the autumn harvest.", trans: "Os agricultores trabalham duro durante a colheita de outono." },
+          { term: "husking", ex: "My grandfather was husking corn in the garden.", trans: "Meu avô estava descascando milho no jardim." },
+          { term: "diseased", ex: "We had to cut down the diseased tree in our backyard.", trans: "Nós tivemos que cortar a árvore doente no nosso quintal." },
+          { term: "grove", ex: "We walked through a lovely grove of orange trees.", trans: "Nós caminhamos por um lindo pomar de laranjeiras." },
+          { term: "suits you", ex: "That new jacket really suits you!", trans: "Aquela jaqueta nova realmente combina com você!" },
+          { term: "traps", ex: "Fishermen check their crab traps early every morning.", trans: "Os pescadores checam suas armadilhas de caranguejo bem cedo todas as manhãs." },
+          { term: "pulling up", ex: "They are pulling up heavy nets full of fresh fish.", trans: "Eles estão puxando redes pesadas cheias de peixe fresco." },
+          { term: "windward", ex: "Surfers love the strong waves on the windward side of the island.", trans: "Os surfistas adoram as ondas fortes no lado da ilha de onde sobra o vento." },
+          { term: "leeward", ex: "We parked our boat on the quiet leeward side to stay safe.", trans: "Nós estacionamos nosso barco no lado abrigado do vento para ficar em segurança." },
+          { term: "shallows", ex: "Children can play safely in the shallows of the beach.", trans: "As crianças podem brincar em segurança nas partes rasas da praia." }
+        ],
+        gaps: ["harvest", "husking", "diseased", "grove", "suits you", "traps", "pulling up", "windward", "leeward", "shallows"],
+        fullScript: `
+          <p><strong>Villager:</strong> It's the <span class="gap-target" data-answer="harvest"></span>. This morning I was <span class="gap-target" data-answer="husking"></span> the coconuts, and, well...</p>
+          <p><strong>Moana:</strong> Well, we should clear the <span class="gap-target" data-answer="diseased"></span> trees and start a new <span class="gap-target" data-answer="grove"></span> there.</p>
+          <p><strong>Villager:</strong> Thanks, Moana.</p>
+          <p><strong>Villager:</strong> Thanks, Moana. She's doing great.</p>
+          <p><strong>Chief Tui:</strong> This <span class="gap-target" data-answer="suits you"></span>.</p>
+          <p><strong>Villager:</strong> Chief! There's something you need to see. Our <span class="gap-target" data-answer="traps"></span> in the east lagoon. They're <span class="gap-target" data-answer="pulling up"></span> less and less fish.</p>
+          <p><strong>Moana:</strong> Then we'll rotate the fishing ground.</p>
+          <p><strong>Villager:</strong> We have. There's no fish.</p>
+          <p><strong>Moana:</strong> Then we'll fish far side of the island.</p>
+          <p><strong>Villager:</strong> We tried.</p>
+          <p><strong>Moana:</strong> The <span class="gap-target" data-answer="windward"></span> side?</p>
+          <p><strong>Villager:</strong> And the <span class="gap-target" data-answer="leeward"></span> side. The <span class="gap-target" data-answer="shallows"></span>, the channel. We tried the whole lagoon. They're just gone.</p>
+        `
+      },
+      4: {
+        title: "Part 4 (3:09 - 4:03)", start: 189, end: 243, vocabType: "multi",
+        vocab: [
+          { 
+            term: "beyond", 
+            options: [
+              { text: "Further away than a certain place or limit", correct: "true" },
+              { text: "Inside or before reaching a place", correct: "false" }
+            ] 
+          },
+          { 
+            term: "reef", 
+            options: [
+              { text: "A line of rocks or corals near the sea surface", correct: "true" },
+              { text: "A high mountain in the middle of a forest", correct: "false" }
+            ] 
+          },
+          { 
+            term: "instead", 
+            options: [
+              { text: "In place of something or as an alternative choice", correct: "true" },
+              { text: "Doing two different actions at the exact same time", correct: "false" }
+            ] 
+          },
+          { 
+            term: "endangering", 
+            options: [
+              { text: "Putting someone or something in a risky or unsafe position", correct: "true" },
+              { text: "Keeping someone completely safe and protected from harm", correct: "false" }
+            ] 
+          }
+        ],
+        examples: [
+          { term: "beyond", ex: "Our new house is just beyond the central park.", trans: "Nossa casa nova fica logo além do parque central." },
+          { term: "reef", ex: "You can see colorful fish when you swim near the reef.", trans: "Você pode ver peixes coloridos quando nada perto do recife." },
+          { term: "instead", ex: "I didn't drink coffee; I had a warm tea instead.", trans: "Eu não bebi café; eu tomei um chá quente em vez disso." },
+          { term: "endangering", ex: "Driving too fast on this road is endangering other people.", trans: "Dirigir rápido demais nesta estrada é colocar outras pessoas em perigo." }
+        ],
+        gaps: ["beyond", "reef", "instead", "endangering"],
+        fullScript: `
+          <p><strong>Chief Tui:</strong> I will talk to the council. I'm sure we'll..</p>
+          <p><strong>Moana:</strong> What if we fished <span class="gap-target" data-answer="beyond"></span> the reef?</p>
+          <p><strong>Chief Tui:</strong> No one goes beyond the <span class="gap-target" data-answer="reef"></span>.</p>
+          <p><strong>Moana:</strong> I know. But if there are no fish in the lagoon...</p>
+          <p><strong>Chief Tui:</strong> Moana!</p>
+          <p><strong>Moana:</strong> And there's a whole ocean.</p>
+          <p><strong>Chief Tui:</strong> We have one rule.</p>
+          <p><strong>Moana:</strong> An old rule, when there were fish.</p>
+          <p><strong>Chief Tui:</strong> A rule that keeps us safe!</p>
+          <p><strong>Moana:</strong> But Dad!</p>
+          <p><strong>Chief Tui:</strong> <span class="gap-target" data-answer="instead"></span> of <span class="gap-target" data-answer="endangering"></span> our people so you can run right back to the water! Every time I think you're past this. No one goes beyond the reef!</p>
+        `
+      }
+    };
+
+    const questionsByTime = {
+      10: [
+        { q: "1. Have you ever visited a mountain, island, or special place in nature? What was it like?", start: "I visited a place where ______.", ex: "I went to an island with beautiful beaches and clear blue water!" },
+        { q: "2. Do you have a pet or animal that does silly things like Heihei?", start: "My pet always ______.", ex: "My dog always tries to catch flies in the garden and misses every time." }
+      ],
+      20: [
+        { q: "1. Have you ever visited a mountain, island, or special place in nature? What was it like?", start: "I visited a place where ______.", ex: "I went to an island with beautiful beaches and clear blue water!" },
+        { q: "2. Do you have a pet or animal that does silly things like Heihei?", start: "My pet always ______.", ex: "My dog always tries to catch flies in the garden and misses every time." },
+        { q: "3. How do you usually solve problems when things don't work out as planned?", start: "When something goes wrong, I usually ______.", ex: "When something goes wrong, I take a step back and look for alternative solutions." },
+        { q: "4. If you were a leader like Moana, would you explore beyond your comfort zone to find solutions?", start: "If I were a leader, I would ______.", ex: "If I were a leader, I would take calculated risks to help my community grow!" }
+      ]
+    };
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🔥' });
+
+      const maxPart = chosenTime === 10 ? 2 : 4;
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      globalStepsSequence.push({ type: 'retell', maxPart: maxPart, label: 'Retell', num: '🔄' });
+      globalStepsSequence.push({ type: 'watchAll', maxPart: maxPart, label: 'Watch Scene', num: '🎬' });
+      globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      const totalCut = chosenTime === 10 ? 121 : 243;
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = `https://www.youtube.com/embed/XAgbFxUq1xY?start=0&end=${totalCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the snippet and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. What does Chief Tui show Moana at the top of the mountain?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">A sacred place where chiefs place a stone</option>
+              <option value="b">A hidden boat to escape the island</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. Why is Chief Tui against Moana's suggestion to fish beyond the reef?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">Because there are no fish in the ocean</option>
+              <option value="b">Because the rule keeps the people safe from danger</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+
+          let vocabHTML = pData.vocab.map(v => {
+            const shuffledOptions = shuffleArray([...v.options]);
+            
+            if (pData.vocabType === "select") {
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <select class="custom-select" data-correct="true">
+                    <option value="">-- Select correct meaning --</option>
+                    ${shuffledOptions.map(opt => `
+                      <option value="${opt.correct}">${opt.text}</option>
+                    `).join('')}
+                  </select>
+                </div>
+              `;
+            } else {
+              return `
+                <div class="question-block">
+                  <strong>${v.term}:</strong>
+                  <div class="ab-card-container">
+                    ${shuffledOptions.map(opt => `
+                      <button class="ab-btn" data-correct="${opt.correct}" onclick="clickAB(this)">${opt.text}</button>
+                    `).join('')}
+                  </div>
+                </div>
+              `;
+            }
+          }).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Match each key term with its definition:</p>
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to everyday examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/XAgbFxUq1xY?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        let badgeCount = step.maxPart;
+        let badgesHTML = "";
+        for(let i=1; i<=badgeCount; i++) {
+          badgesHTML += `<span class="number-badge">${i}</span>`;
+        }
+
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">${badgesHTML}</div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable(step.maxPart);
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = `https://www.youtube.com/embed/XAgbFxUq1xY?start=0&end=${totalCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+
+        container.innerHTML = `
+          <h3>Watch Whole Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the snippet again without interruptions:</p>
+          <div style="background:#e0f2fe; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#0369a1;">
+            🎉 <strong>Awesome progress!</strong> You've mastered these parts of the scene.
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        const qList = questionsByTime[chosenTime] || questionsByTime[20];
+        let qHTML = qList.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#e0f2fe; color:#0284c7; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#e0f2fe; border-left-color:#0284c7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable(maxPart) {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Chief Tui takes Moana to the sacred peak and explains her future role as chief." },
+        { order: 2, text: "Moana fixes a leaking roof and defends Heihei's hidden potential." },
+        { order: 3, text: "The villagers report a shortage of fish in the lagoons across the island." },
+        { order: 4, text: "Moana suggests fishing beyond the reef, but Chief Tui strictly forbids it." }
+      ];
+
+      const retellData = allRetell.slice(0, maxPart);
+      let shuffled = shuffleArray([...retellData]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'listening'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+
+    // LÓGICA DE PROGRESSÃO E XP
+    const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      const opcoesTempo = [10, 20, 30, 45];
+      const trilhasCobertas = opcoesTempo.filter(t => t <= chosenTime);
+
+      let maxTempoAnterior = 0;
+      progressoLocal[arquivo].forEach(t => {
+        if (t > maxTempoAnterior) maxTempoAnterior = t;
+      });
+      let xpJaGanho = TABELA_XP[maxTempoAnterior] || 0;
+
+      trilhasCobertas.forEach(t => {
+        if (!progressoLocal[arquivo].includes(t)) {
+          progressoLocal[arquivo].push(t);
+        }
+      });
+
+      localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+      let xpNovoTotal = TABELA_XP[chosenTime] || 0;
+      if (xpNovoTotal > xpJaGanho) {
+        let xpDiferenca = xpNovoTotal - xpJaGanho;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpDiferenca;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('moana.html');
+      originalShowCompletionModal();
+    };
+  </script>
+</body>
+</html>
