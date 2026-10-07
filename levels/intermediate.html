@@ -8,18 +8,18 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
     .container { max-width: 800px; margin: 0 auto; }
-    .nav-back { display: inline-block; margin-bottom: 20px; color: #c084fc; text-decoration: none; font-weight: 700; transition: color 0.2s; }
-    .nav-back:hover { color: #d8b4fe; text-decoration: underline; }
+    .nav-back { display: inline-block; margin-bottom: 20px; color: #818cf8; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+    .nav-back:hover { color: #a5b4fc; text-decoration: underline; }
     header { margin-bottom: 30px; }
-    header h1 { font-size: 1.8rem; margin-bottom: 6px; background: linear-gradient(90deg, #9333ea, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header h1 { font-size: 1.8rem; margin-bottom: 6px; background: linear-gradient(90deg, #4f46e5, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     header p { color: #94a3b8; font-size: 1rem; }
     
     .activity-list { display: flex; flex-direction: column; gap: 15px; }
-    .activity-card { background: #1e293b; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #a855f7; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .activity-card { background: #1e293b; border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; border-left: 6px solid #6366f1; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .activity-card.completed { border-left-color: #22c55e; background: #1a2e3b; }
     .card-content { display: flex; align-items: center; gap: 16px; flex-grow: 1; }
     
-    .card-avatar { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #a855f7; background-color: #0f172a; }
+    .card-avatar { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid #6366f1; background-color: #0f172a; }
 
     .activity-card h3 { font-size: 1.1rem; color: #f8fafc; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .activity-card p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; }
@@ -27,13 +27,13 @@
 
     .progress-segments { display: flex; gap: 4px; width: 100%; max-width: 180px; margin-top: 6px; }
     .segment { height: 6px; flex: 1; background-color: #334155; border-radius: 3px; transition: background-color 0.3s; }
-    .segment.filled { background: linear-gradient(90deg, #9333ea, #a855f7); }
+    .segment.filled { background: linear-gradient(90deg, #4f46e5, #6366f1); }
     .segment.completed-all { background-color: #22c55e; }
 
     .card-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; margin-left: 15px; }
     .progress-text { font-size: 0.78rem; color: #94a3b8; font-weight: 600; }
 
-    .btn-start { background: linear-gradient(90deg, #9333ea, #a855f7); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; text-align: center; }
+    .btn-start { background: linear-gradient(90deg, #4f46e5, #6366f1); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: opacity 0.2s; text-align: center; }
     .btn-start:hover { opacity: 0.9; }
 
     @media (max-width: 600px) {
@@ -50,8 +50,8 @@
     <a href="../index.html" class="nav-back">← Voltar para a Homepage</a>
 
     <header>
-      <h1>Nível Intermediário 🚀</h1>
-      <p>Pratique inglês com cenas icónicas de séries e filmes:</p>
+      <h1>I understand, but I get meio travado ⚡</h1>
+      <p>Acelere o ritmo e acostume seu ouvido com o inglês natural do dia a dia:</p>
     </header>
 
     <main class="activity-list" id="activityListContainer"></main>
@@ -60,17 +60,24 @@
   <script>
     const atividades = [
       {
-        serieInfo: "Wednesday • Season 1, Episode 1",
-        tituloAula: "Roommate Rivalry",
+        serieInfo: "Wednesday • Season 1, Episode 01",
+        tituloAula: "Wednesday's Arrival at Nevermore",
         arquivo: "wednesday.html",
-        imagem: "https://i.imgur.com/WD06S2Q.jpeg",
+        imagem: "https://i.imgur.com/K3G8SZT.jpeg",
         trilhasDisponiveis: [10, 20]
       },
       {
-        serieInfo: "Harry Potter • The Half-Blood Prince",
-        tituloAula: "Felix Felicis & Aragog's Farewell",
+        serieInfo: "Harry Potter • Half-Blood Prince",
+        tituloAula: "Aragog's Farewell",
         arquivo: "harrypotter.html",
         imagem: "https://i.imgur.com/t0Dg38A.jpeg",
+        trilhasDisponiveis: [10, 20]
+      },
+      {
+        serieInfo: "K-Pop Demon Hunters",
+        tituloAula: "HUNTR/X: The Rise of Hunters",
+        arquivo: "kpop.html",
+        imagem: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80",
         trilhasDisponiveis: [10, 20]
       },
       {
@@ -88,8 +95,8 @@
         trilhasDisponiveis: [10, 20, 30]
       },
       {
-        serieInfo: "The Pitt • Season 1, Episode 1",
-        tituloAula: "Stomach Pain",
+        serieInfo: "The Pitt • Season 1, Episode 01",
+        tituloAula: "Emergency Room Evaluation",
         arquivo: "thepitt.html",
         imagem: "https://img.youtube.com/vi/6SpAi4SZMLY/maxresdefault.jpg",
         trilhasDisponiveis: [10, 20]
@@ -122,11 +129,11 @@
         });
         segmentsHTML += '</div>';
 
-        let labelBotao = 'Start 🎧';
+        let labelBotao = 'Start 🚀';
         if (is100Percent) {
-          labelBotao = 'Replay 🎧';
+          labelBotao = 'Replay 🚀';
         } else if (concluidasContagem > 0) {
-          labelBotao = 'Continue 🎧';
+          labelBotao = 'Continue 🚀';
         }
 
         return `
