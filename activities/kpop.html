@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PopEnglish - The Hobbit by Teacher Mari</title>
+  <title>PopEnglish - K-Pop Demon Hunters by Teacher Mari</title>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
@@ -96,14 +96,15 @@
     }
 
     .hero-title { 
-      font-size: 1.4em; 
-      margin-bottom: 4px; 
+      font-size: 1.5em; 
+      margin-bottom: 6px; 
       background: var(--gradient-text);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 800;
+      line-height: 1.2;
     }
-    .hero-subtitle { font-size: 0.9em; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px; }
+    .hero-subtitle { font-size: 1em; color: var(--accent-purple); font-weight: 700; margin-bottom: 10px; }
     .hero-desc { font-size: 0.95em; color: #94a3b8; margin-bottom: 18px; }
 
     .time-title { font-size: 0.98em; font-weight: 700; margin-bottom: 12px; color: #e2e8f0; }
@@ -230,9 +231,10 @@
     .translation-text { font-size: 0.92em; color: #64748b; font-style: italic; margin-top: 6px; }
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 6px 12px; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 0.85em; }
 
+    /* Word Bank com rolagens fixas (sticky) */
     .word-bank { 
       position: sticky; 
-      top: 0; 
+      top: -18px; 
       z-index: 100; 
       display: flex; 
       flex-wrap: wrap; 
@@ -328,10 +330,10 @@
 
   <div class="welcome-container" id="welcomeScreen">
     <div class="hero-card">
-      <img src="https://img.youtube.com/vi/8162EsqH-0c/maxresdefault.jpg" class="banner-img" alt="The Hobbit Scene">
-      <h2 class="hero-title">The Hobbit: An Unexpected Journey</h2>
-      <div class="hero-subtitle">• The Shire •</div>
-      <p class="hero-desc">Gandalf arrives at Bag End to invite Bilbo Baggins on an unexpected adventure.</p>
+      <img src="https://img.youtube.com/vi/eXWC0LulkYA/maxresdefault.jpg" class="banner-img" alt="HUNTR/X Scene">
+      <h2 class="hero-title">K-Pop Demon Hunters</h2>
+      <div class="hero-subtitle">HUNTR/X: The Rise of Hunters</div>
+      <p class="hero-desc">Discover the legend of HUNTR/X and how music protects the world from demons!</p>
       
       <div>
         <div class="time-title">How much time do you have to practice today?</div>
@@ -352,7 +354,7 @@
   <div class="workspace" id="workspaceScreen">
     <div class="left-panel">
       <div class="video-box" id="videoBoxWrapper">
-        <iframe id="ytPlayer" src="https://www.youtube.com/embed/8162EsqH-0c?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/eXWC0LulkYA?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
 
@@ -374,7 +376,7 @@
     <div class="modal-card">
       <h2 style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">CONGRATULATIONS! 🎉</h2>
       <br>
-      <p>You've mastered this iconic scene with <strong>Teacher Mari</strong>!</p>
+      <p>You've mastered this scene with <strong>Teacher Mari</strong>!</p>
       <br>
       <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
     </div>
@@ -388,290 +390,302 @@
 
     const partsData = {
       1: {
-        title: "Part 1 (0:00 - 1:18)", start: 0, end: 78, vocabType: "select",
+        title: "Part 1 (0:00 - 0:54)", start: 0, end: 54, vocabType: "select",
         vocab: [
           { 
-            term: "nasty", 
+            term: "haunted", 
             options: [
-              { text: "Clean and shiny", correct: "false" },
-              { text: "Bad, gross, or unpleasant", correct: "true" },
-              { text: "Nice, soft, and pretty", correct: "false" }
+              { text: "Troubled or visited by scary forces", correct: "true" },
+              { text: "Protected and saved by friendly people", correct: "false" },
+              { text: "Cleaned and prepared for visitors", correct: "false" }
             ] 
           },
           { 
-            term: "oozy", 
+            term: "souls", 
             options: [
-              { text: "Hard and solid", correct: "false" },
-              { text: "Dry and dusty", correct: "false" },
-              { text: "Wet, soft, and sticky", correct: "true" }
+              { text: "The spiritual part or inner life of a person", correct: "true" },
+              { text: "The outer physical shoes people wear", correct: "false" },
+              { text: "The vocal songs people sing aloud", correct: "false" }
             ] 
           },
           { 
-            term: "warm hearth", 
+            term: "channeling", 
             options: [
-              { text: "A cozy, heated fireplace area", correct: "true" },
-              { text: "A cold wooden shelf on the wall", correct: "false" },
-              { text: "A small window outside the kitchen", correct: "false" }
+              { text: "Sending or directing power to something", correct: "true" },
+              { text: "Creating or making new power", correct: "false" },
+              { text: "Stopping energy from moving forward", correct: "false" }
             ] 
           },
           { 
-            term: "mean", 
+            term: "arose", 
             options: [
-              { text: "To forget an idea or sentence", correct: "false" },
-              { text: "To intend, express, or signify something", correct: "true" },
-              { text: "To write a letter quickly", correct: "false" }
+              { text: "Appeared or came up to help", correct: "true" },
+              { text: "Ran away from trouble", correct: "false" },
+              { text: "Woke up late in the morning", correct: "false" }
             ] 
           },
           { 
-            term: "wish", 
+            term: "drive back", 
             options: [
-              { text: "To say a friendly greeting or hope for something", correct: "true" },
-              { text: "To complain about the weather", correct: "false" },
-              { text: "To buy something at the store", correct: "false" }
+              { text: "To make an enemy go away", correct: "true" },
+              { text: "To follow an enemy closely", correct: "false" },
+              { text: "To travel back home by car", correct: "false" }
             ] 
           },
           { 
-            term: "whether", 
+            term: "ignites", 
             options: [
-              { text: "A word used to show a choice between two possibilities", correct: "true" },
-              { text: "The temperature outside during the day", correct: "false" },
-              { text: "A type of warm winter jacket", correct: "false" }
+              { text: "Starts or sparks a strong feeling", correct: "true" },
+              { text: "Calms down a strong emotion", correct: "false" },
+              { text: "Hides feelings from others", correct: "false" }
             ] 
           },
           { 
-            term: "perhaps", 
+            term: "shield", 
             options: [
-              { text: "Never at any time", correct: "false" },
-              { text: "Maybe or possibly", correct: "true" },
-              { text: "Always 100% sure", correct: "false" }
-            ] 
-          },
-          { 
-            term: "stating", 
-            options: [
-              { text: "Listening to loud music", correct: "false" },
-              { text: "Asking a question quietly", correct: "false" },
-              { text: "Saying or declaring something clearly", correct: "true" }
+              { text: "A wall or cover that protects you", correct: "true" },
+              { text: "A heavy tool used for building", correct: "false" },
+              { text: "A colorful piece of clothing", correct: "false" }
             ] 
           }
         ],
         examples: [
-          { term: "nasty", ex: "This old milk has a nasty smell.", trans: "Este leite antigo tem um cheiro ruim." },
-          { term: "oozy", ex: "The chocolate cake has an oozy center.", trans: "O bolo de chocolate tem um centro cremoso/viscoso." },
-          { term: "warm hearth", ex: "Our dog likes sleeping near the warm hearth in winter.", trans: "Nosso cachorro gosta de dormir perto da lareira quente no inverno." },
-          { term: "mean", ex: "What do you mean by that word?", trans: "O que você quer dizer com essa palavra?" },
-          { term: "wish", ex: "I wish you a wonderful weekend!", trans: "Desejo a você um fim de semana maravilhoso!" },
-          { term: "whether", ex: "I don't know whether to stay or go.", trans: "Eu não sei se fico ou se vou." },
-          { term: "perhaps", ex: "Perhaps we can go to the park tomorrow.", trans: "Talvez nós possamos ir ao parque amanhã." },
-          { term: "stating", ex: "She is stating her plans for the weekend.", trans: "Ela está declarando seus planos para o fim de semana." }
+          { term: "haunted", ex: "People say that old house is haunted.", trans: "As pessoas dizem que aquela casa antiga é assombrada." },
+          { term: "souls", ex: "The music reached the hearts and souls of the listeners.", trans: "A música alcançou os corações e as almas dos ouvintes." },
+          { term: "channeling", ex: "She is channeling all her energy into her study routine.", trans: "Ela está canalizando toda a sua energia na rotina de estudos." },
+          { term: "arose", ex: "A new opportunity arose at my job this week.", trans: "Uma nova oportunidade surgiu no meu trabalho esta semana." },
+          { term: "drive back", ex: "The bright lights helped drive back the darkness.", trans: "As luzes fortes ajudaram a afastar a escuridão." },
+          { term: "ignites", ex: "Good music always ignites joy in my day.", trans: "Música boa sempre acende/desperta alegria no meu dia." },
+          { term: "shield", ex: "An umbrella is a good shield against rain.", trans: "Um guarda-chuva é um bom escudo contra a chuva." }
         ],
-        gaps: ["nasty", "oozy", "warm hearth", "mean", "wish", "whether", "perhaps", "stating"],
+        gaps: ["haunted", "souls", "channeling", "arose", "drive back", "ignites", "shield"],
         fullScript: `
-          <p><strong>Old Bilbo:</strong> I think it is time for you know what really happened. In a hole in the ground, there lived a hobbit. Not a <span class="gap-target" data-answer="nasty"></span>, dirty wet hole full of worms and <span class="gap-target" data-answer="oozy"></span> smells. This was a hobbit hole. And that means good food, a <span class="gap-target" data-answer="warm hearth"></span>, and all the comforts of home.</p>
-          <p><strong>Bilbo:</strong> Good morning.</p>
-          <p><strong>Gandalf:</strong> What do you <span class="gap-target" data-answer="mean"></span>? Do you mean to <span class="gap-target" data-answer="wish"></span> me a good morning, or do you mean that it is a good morning <span class="gap-target" data-answer="whether"></span> I want it or not? Or <span class="gap-target" data-answer="perhaps"></span> you mean to say that you feel good on this particular morning? Or are you simply <span class="gap-target" data-answer="stating"></span> that this is a morning to be good on?</p>
-          <p><strong>Bilbo:</strong> All of them at once, I suppose.</p>
+          <p><strong>Celine:</strong> Demons have always <span class="gap-target" data-answer="haunted"></span> our world, stealing our <span class="gap-target" data-answer="souls"></span> and <span class="gap-target" data-answer="channeling"></span> strength back to their king, Gwi-Ma, until heroes <span class="gap-target" data-answer="arose"></span> to defend us. Born with voices that could <span class="gap-target" data-answer="drive back"></span> the darkness. Singing songs of courage and hope. But Hunters are more than warriors. Our music <span class="gap-target" data-answer="ignites"></span> the soul and brings people together. With this connection, the first Hunters created a <span class="gap-target" data-answer="shield"></span> to protect our world, the Honmoon.</p>
         `
       },
       2: {
-        title: "Part 2 (1:18 - 2:18)", start: 78, end: 138, vocabType: "multi",
+        title: "Part 2 (0:54 - 1:51)", start: 54, end: 111, vocabType: "multi",
         vocab: [
           { 
-            term: "it remains to be seen", 
+            term: "fulfill", 
             options: [
-              { text: "It is not decided yet and we will find out later", correct: "true" },
-              { text: "It is already 100% known and completely clear right now", correct: "false" }
+              { text: "To complete or carry out a promise or job", correct: "true" },
+              { text: "To cancel, give up, or fail a promise", correct: "false" }
             ] 
           },
           { 
-            term: "share", 
+            term: "duty", 
             options: [
-              { text: "To keep everything strictly for yourself and give nothing to others", correct: "false" },
-              { text: "To take part in or divide something with other people", correct: "true" }
+              { text: "A task or work you are responsible to do", correct: "true" },
+              { text: "A fun hobby you do only when resting", correct: "false" }
             ] 
           },
           { 
-            term: "anyone", 
+            term: "falls to you", 
             options: [
-              { text: "Any person at all", correct: "true" },
-              { text: "No person at all", correct: "false" }
+              { text: "Becomes your responsibility to handle", correct: "true" },
+              { text: "Is completely taken away from you", correct: "false" }
             ] 
           },
           { 
-            term: "disturbing", 
+            term: "reach", 
             options: [
-              { text: "Upsetting, annoying, or breaking peace", correct: "true" },
-              { text: "Calm, peaceful, and pleasant", correct: "false" }
+              { text: "Close enough to obtain or arrive at", correct: "true" },
+              { text: "Far away and impossible to get", correct: "false" }
             ] 
           },
           { 
-            term: "selling buttons at the door", 
+            term: "lead", 
             options: [
-              { text: "Treating someone like an important and respected VIP guest", correct: "false" },
-              { text: "Treating someone like an ordinary door-to-door seller without respect", correct: "true" }
+              { text: "Main, principal, or holding the front position", correct: "true" },
+              { text: "Extra, minor, or playing a secondary role", correct: "false" }
             ] 
           },
           { 
-            term: "beg your pardon", 
+            term: "black sheep", 
             options: [
-              { text: "A polite phrase used to ask someone to repeat what they said", correct: "true" },
-              { text: "A rude demand telling someone to go away immediately", correct: "false" }
+              { text: "The family member who is different from others", correct: "true" },
+              { text: "The family member who follows every rule", correct: "false" }
             ] 
           }
         ],
         examples: [
-          { term: "it remains to be seen", ex: "Whether our team will win the game it remains to be seen.", trans: "Se o nosso time vai ganhar o jogo, ainda resta saber." },
-          { term: "share", ex: "My brother likes to share his toys with me.", trans: "Meu irmão gosta de compartilhar os brinquedos dele comigo." },
-          { term: "anyone", ex: "Is there anyone in the classroom right now?", trans: "Tem alguém na sala de aula agora?" },
-          { term: "disturbing", ex: "There was a disturbing noise in the street last night.", trans: "Houve um barulho incômodo na rua ontem à noite." },
-          { term: "selling buttons at the door", ex: "Don't treat me like I'm selling buttons at the door!", trans: "Não me trate como se eu fosse um zé-ninguém / vendedor qualquer!" },
-          { term: "beg your pardon", ex: "I beg your pardon, could you repeat your sentence?", trans: "Peço desculpas/Como?, você poderia repetir a sua frase?" }
+          { term: "fulfill", ex: "I hope to fulfill my goal of traveling this year.", trans: "Espero cumprir/realizar minha meta de viajar este ano." },
+          { term: "duty", ex: "Cleaning my room is my daily duty at home.", trans: "Limpar meu quarto é meu dever diário em casa." },
+          { term: "falls to you", ex: "Organizing the party falls to you this time.", trans: "Organizar a festa cabe a você desta vez." },
+          { term: "reach", ex: "Keep working hard! Your goals are within reach.", trans: "Continue trabalhando duro! Seus objetivos estão ao seu alcance." },
+          { term: "lead", ex: "She is the lead singer in her school band.", trans: "Ela é a cantora principal na banda da escola dela." },
+          { term: "black sheep", ex: "My cousin feels like the black sheep because he plays guitar.", trans: "Meu primo se sente a ovelha negra porque toca violão." }
         ],
-        gaps: ["it remains to be seen", "share", "anyone", "disturbing", "selling buttons at the door", "beg your pardon"],
+        gaps: ["fulfill", "duty", "falls to you", "reach", "lead", "black sheep"],
         fullScript: `
-          <p><strong>Bilbo:</strong> Can I help you?</p>
-          <p><strong>Gandalf:</strong> <span class="gap-target" data-answer="it remains to be seen"></span>. I'm looking for someone to <span class="gap-target" data-answer="share"></span> in an adventure.</p>
-          <p><strong>Bilbo:</strong> An adventure? No, I don't imagine <span class="gap-target" data-answer="anyone"></span> west of Bree, would have much interest in adventures. Nasty, <span class="gap-target" data-answer="disturbing"></span>, uncomfortable things. Make you late for dinner!</p>
-          <p><strong>Bilbo:</strong> Good morning!</p>
-          <p><strong>Gandalf:</strong> To think that I should have lived to be good- morninged by Belladonna Took's son, as if I was <span class="gap-target" data-answer="selling buttons at the door"></span>!</p>
-          <p><strong>Bilbo:</strong> I <span class="gap-target" data-answer="beg your pardon"></span>?</p>
+          <p><strong>Celine:</strong> Every generation, a new trio of Hunters is chosen to <span class="gap-target" data-answer="fulfill"></span> our ultimate <span class="gap-target" data-answer="duty"></span>. A barrier so strong it is impenetrable, that will keep demons and Gwi-Ma from our world forever, the Golden Honmoon.</p>
+          <p><strong>Celine:</strong> And now, that duty <span class="gap-target" data-answer="falls to you"></span>. That victory is within <span class="gap-target" data-answer="reach"></span>. It is your voices, your song, that will create the Golden Honmoon.</p>
+          <p><strong>HUNTR/X:</strong> Yes, Celine.</p>
+          <p><strong>Fangirl:</strong> Let's go, HUNTR/X!</p>
+          <p><strong>Fans:</strong> We love HUNTR/X!</p>
+          <p><strong>Mira Fangirl:</strong> Mira's my favorite. She's the visual and <span class="gap-target" data-answer="lead"></span> dancer of HUNTR/X. Nobody can move like Mira.</p>
+          <p><strong>Mira Fangirl 2:</strong> Apparently, she was the <span class="gap-target" data-answer="black sheep"></span> of her family.</p>
         `
       },
       3: {
-        title: "Part 3 (2:18 - 2:55)", start: 138, end: 175, vocabType: "select",
+        title: "Part 3 (1:51 - 2:15)", start: 111, end: 135, vocabType: "select",
         vocab: [
           { 
-            term: "changed", 
+            term: "wear", 
             options: [
-              { text: "Stayed completely the same", correct: "false" },
-              { text: "Became different or transformed", correct: "true" },
-              { text: "Disappeared into another place", correct: "false" }
+              { text: "To have clothing, shoes, or items on your body", correct: "true" },
+              { text: "To buy new clothes at a department store", correct: "false" },
+              { text: "To wash or clean clothes with soap", correct: "false" }
             ] 
           },
           { 
-            term: "better", 
+            term: "role model", 
             options: [
-              { text: "Worse or more difficult", correct: "false" },
-              { text: "More excellent or of higher quality", correct: "true" },
-              { text: "Smaller and weaker", correct: "false" }
+              { text: "A person you respect and want to copy", correct: "true" },
+              { text: "A famous actor playing a character on TV", correct: "false" },
+              { text: "A close friend who lives next door", correct: "false" }
             ] 
           },
           { 
-            term: "although", 
+            term: "lyricist", 
             options: [
-              { text: "Even though or despite the fact that", correct: "true" },
-              { text: "Because or for that reason", correct: "false" },
-              { text: "Unless or without option", correct: "false" }
+              { text: "A person who writes the words for songs", correct: "true" },
+              { text: "A musician who plays instruments on stage", correct: "false" },
+              { text: "A fan who listens to music on the internet", correct: "false" }
             ] 
           },
           { 
-            term: "belong", 
+            term: "grew up", 
             options: [
-              { text: "To go away quickly", correct: "false" },
-              { text: "To be connected to or owned by someone", correct: "true" },
-              { text: "To forget a name", correct: "false" }
+              { text: "Spent childhood years and developed into an adult", correct: "true" },
+              { text: "Traveled to a new city for a short vacation", correct: "false" },
+              { text: "Learned a new language at school", correct: "false" }
             ] 
           },
           { 
-            term: "wandering", 
+            term: "sibling", 
             options: [
-              { text: "Moving around without a fixed home or plan", correct: "true" },
-              { text: "Sitting still in an office", correct: "false" },
-              { text: "Sleeping early at night", correct: "false" }
+              { text: "A brother or sister in your family", correct: "true" },
+              { text: "A parent or older relative at home", correct: "false" },
+              { text: "A close classmate or school friend", correct: "false" }
             ] 
           },
           { 
-            term: "fireworks", 
+            term: "watch out", 
             options: [
-              { text: "Small candles on a birthday cake", correct: "false" },
-              { text: "Explosive lights that light up the sky for fun", correct: "true" },
-              { text: "Lamps used inside a kitchen", correct: "false" }
+              { text: "To pay careful attention to possible danger", correct: "true" },
+              { text: "To look at a watch to check the time", correct: "false" },
+              { text: "To look out a window at the street", correct: "false" }
             ] 
           }
         ],
         examples: [
-          { term: "changed", ex: "My cousin changed his hair color last week.", trans: "Meu primo mudou a cor do cabelo dele semana passada." },
-          { term: "better", ex: "I feel much better after sleeping eight hours.", trans: "Eu me sinto muito melhor depois de dormir oito horas." },
-          { term: "although", ex: "Although it was raining, we went for a short walk.", trans: "Embora estivesse chovendo, nós fomos fazer uma caminhada curta." },
-          { term: "belong", ex: "These keys belong to my mother.", trans: "Estas chaves pertencem à minha mãe." },
-          { term: "wandering", ex: "We saw a cat wandering in the garden.", trans: "Nós vimos um gato passeando/vagando no jardim." },
-          { term: "fireworks", ex: "We enjoyed watching the fireworks on New Year's Eve.", trans: "Nós gostamos de assistir aos fogos de artifício na véspera de Ano Novo." }
+          { term: "wear", ex: "I like to wear comfortable shoes when I walk.", trans: "Eu gosto de usar sapatos confortáveis quando caminho." },
+          { term: "role model", ex: "My high school teacher is my main role model.", trans: "Meu professor do ensino médio é meu principal modelo/exemplo." },
+          { term: "lyricist", ex: "She is a talented lyricist who writes beautiful poems.", trans: "Ela é uma letrista talentosa que escreve belos poemas." },
+          { term: "grew up", ex: "He grew up in a small town near the beach.", trans: "Ele cresceu em uma cidade pequena perto da praia." },
+          { term: "sibling", ex: "Do you have any sibling, like a brother or sister?", trans: "Você tem algum irmão ou irmã (sibling)?" },
+          { term: "watch out", ex: "Watch out! The floor is slippery.", trans: "Cuidado! O chão está escorregadio." }
         ],
-        gaps: ["changed", "better", "although", "belong", "wandering", "fireworks"],
+        gaps: ["wear", "role model", "lyricist", "grew up", "sibling", "watch out"],
         fullScript: `
-          <p><strong>Gandalf:</strong> You've <span class="gap-target" data-answer="changed"></span>, and not entirely for the <span class="gap-target" data-answer="better"></span>, Bilbo Baggins.</p>
-          <p><strong>Bilbo:</strong> I'm sorry, do I know you?</p>
-          <p><strong>Gandalf:</strong> Well you know my name, <span class="gap-target" data-answer="although"></span> you don't remember I <span class="gap-target" data-answer="belong"></span> to it. I'm Gandalf, and Gandalf means me!</p>
-          <p><strong>Bilbo:</strong> Gandalf? Not Gandalf, the <span class="gap-target" data-answer="wandering"></span> wizard who made such excellent <span class="gap-target" data-answer="fireworks"></span>? Old Took used to have them on Midsummer's Eve! Well! I had no idea you were still in business.</p>
-          <p><strong>Gandalf:</strong> And where else should I be?</p>
-          <p><strong>Bilbo:</strong> Well...</p>
+          <p><strong>Mira Fanboy:</strong> I don't know why because she's so cool. Who else could <span class="gap-target" data-answer="wear"></span> a sleeping bag to the Met Gala?</p>
+          <p><strong>Mira Fangirl:</strong> Yeah. She's our <span class="gap-target" data-answer="role model"></span>.</p>
+          <p><strong>Mira Fangirls:</strong> She's the best. Love her.</p>
+          <p><strong>Zoey Fangirl:</strong> We're here for Zoey!</p>
+          <p><strong>Zoey Fangirl 2:</strong> She's the rapper and <span class="gap-target" data-answer="lyricist"></span>.</p>
+          <p><strong>Zoey Fanboy:</strong> She <span class="gap-target" data-answer="grew up"></span> in America. Somewhere called Burbank, USA.</p>
+          <p><strong>Zoey Fangirl:</strong> She's the cutest maknae. (막내, youngest <span class="gap-target" data-answer="sibling"></span>)</p>
+          <p><strong>Zoey Fanboy:</strong> But when she raps, she goes hard.</p>
+          <p><strong>Zoey Fangirl 3:</strong> She gets real scary, like so scary, like you'd better <span class="gap-target" data-answer="watch out"></span>.</p>
+          <p><strong>Rumi Fangirls:</strong> We love Rumi!</p>
         `
       },
       4: {
-        title: "Part 4 (2:55 - 3:43)", start: 175, end: 223, vocabType: "multi",
+        title: "Part 4 (2:15 - 2:54)", start: 135, end: 174, vocabType: "multi",
         vocab: [
           { 
-            term: "pleased", 
+            term: "royalty", 
             options: [
-              { text: "Happy, glad, and satisfied", correct: "true" },
-              { text: "Angry, upset, and unhappy", correct: "false" }
+              { text: "People in a royal family or holding high status", correct: "true" },
+              { text: "Ordinary, common people with no status", correct: "false" }
             ] 
           },
           { 
-            term: "even", 
+            term: "passed away", 
             options: [
-              { text: "A word used to emphasize something surprising or extreme", correct: "true" },
-              { text: "A word used to reduce or ignore the importance of something", correct: "false" }
+              { text: "Died or reached the end of life", correct: "true" },
+              { text: "Was born or started life recently", correct: "false" }
             ] 
           },
           { 
-            term: "amusing", 
+            term: "infant", 
             options: [
-              { text: "Boring, sad, and uninteresting", correct: "false" },
-              { text: "Funny, fun, and entertaining", correct: "true" }
+              { text: "A very young baby", correct: "true" },
+              { text: "An elderly person", correct: "false" }
             ] 
           },
           { 
-            term: "try", 
+            term: "built", 
             options: [
-              { text: "To make an effort or attempt to do something", correct: "true" },
-              { text: "To give up immediately without attempting", correct: "false" }
+              { text: "Created, formed, or constructed something", correct: "true" },
+              { text: "Destroyed, broke, or ruined something completely", correct: "false" }
             ] 
           },
           { 
-            term: "hill", 
+            term: "taking a break", 
             options: [
-              { text: "A high area of land smaller than a mountain", correct: "true" },
-              { text: "A deep hole or flat area below ground level", correct: "false" }
+              { text: "Pausing work or activity to rest", correct: "true" },
+              { text: "Working continuously without stopping", correct: "false" }
+            ] 
+          },
+          { 
+            term: "miss them", 
+            options: [
+              { text: "To feel sad because someone is not with you", correct: "true" },
+              { text: "To feel happy because someone went away", correct: "false" }
+            ] 
+          },
+          { 
+            term: "look alive", 
+            options: [
+              { text: "Be active, ready, and pay immediate attention", correct: "true" },
+              { text: "Relax, go to sleep, or ignore everything", correct: "false" }
             ] 
           }
         ],
         examples: [
-          { term: "pleased", ex: "She was very pleased with her test results.", trans: "Ela ficou muito feliz com os resultados da prova dela." },
-          { term: "even", ex: "He likes fruit so much that he even eats lemons.", trans: "Ele gosta tanto de fruta que até come limões." },
-          { term: "amusing", ex: "He told an amusing joke that made everyone laugh.", trans: "Ele contou uma piada divertida que fez todo mundo rir." },
-          { term: "try", ex: "You should try to practice English every day.", trans: "Você deveria tentar praticar inglês todos os dias." },
-          { term: "hill", ex: "We walked up the hill to get a great view of the town.", trans: "Nós subimos o morro para ter uma ótima vista da cidade." }
+          { term: "royalty", ex: "That famous family is considered sports royalty.", trans: "Aquela família famosa é considerada a realeza do esporte." },
+          { term: "passed away", ex: "His old dog passed away last month.", trans: "O cachorro velho dele faleceu no mês passado." },
+          { term: "infant", ex: "The infant slept quietly in the crib.", trans: "O bebê dormiu tranquilamente no berço." },
+          { term: "built", ex: "They built a new house near the park.", trans: "Eles construíram uma casa nova perto do parque." },
+          { term: "taking a break", ex: "We are taking a short break from studying.", trans: "Estamos fazendo uma pequena pausa nos estudos." },
+          { term: "miss them", ex: "My friends are traveling and I really miss them.", trans: "Meus amigos estão viajando e eu realmente sinto falta deles." },
+          { term: "look alive", ex: "Look alive, team! The game is starting.", trans: "Fiquem espertos, time! O jogo está começando." }
         ],
-        gaps: ["pleased", "even", "amusing", "try", "hill"],
+        gaps: ["royalty", "passed away", "infant", "built", "taking a break", "miss them", "look alive"],
         fullScript: `
-          <p><strong>Gandalf:</strong> Well, I'm <span class="gap-target" data-answer="pleased"></span> to find you remember something about me, <span class="gap-target" data-answer="even"></span> if it's only my fireworks.</p>
-          <p><strong>Gandalf:</strong> Well that's decided. It'll be very good for you, and most <span class="gap-target" data-answer="amusing"></span> for me. I shall inform the others.</p>
-          <p><strong>Bilbo:</strong> Inform the who? What?! No! No! No, wait. We do not want any adventures here, thank you. Not today, not... I suggest you <span class="gap-target" data-answer="try"></span> over the <span class="gap-target" data-answer="hill"></span> or...across the water. Good morning.</p>
+          <p><strong>Rumi Fangirl:</strong> She's pop-star <span class="gap-target" data-answer="royalty"></span>.</p>
+          <p><strong>Rumi Fangirl 2:</strong> Her mom was a Sunlight Sister but <span class="gap-target" data-answer="passed away"></span> when she was an <span class="gap-target" data-answer="infant"></span>. But Celine raised her and <span class="gap-target" data-answer="built"></span> HUNTR/X around her.</p>
+          <p><strong>Rumi Fangirl 3:</strong> Rumi's voice is just incredible. Like...</p>
+          <p><strong>Rumi Fanboys:</strong> It brings us to tears!</p>
+          <p><strong>HUNTR/X Fangirl:</strong> They're <span class="gap-target" data-answer="taking a break"></span> after this concert, and they totally need it, but we're going to <span class="gap-target" data-answer="miss them"></span> so much!</p>
+          <p><strong>Bobby:</strong> Everyone, <span class="gap-target" data-answer="look alive"></span>! Alright. Looking good over there. Okay. Ready? Ready. But where are the girls? What? What? Where are they going?</p>
         `
       }
     };
 
     const questionsByTime = {
       10: [
-        { q: "1. Do you prefer staying in your comfortable home or traveling on unpredictable adventures?", start: "I prefer staying/traveling because ______.", ex: "I prefer staying at home because I love comfort, peace, and good food!" },
-        { q: "2. How do you usually react when an unexpected guest or stranger arrives?", start: "When someone unexpected arrives, I usually ______.", ex: "When someone unexpected arrives, I feel a bit surprised, but I try to be polite." }
+        { q: "1. Who is your favorite member in a music group (the dancer, rapper, or main singer)? Why?", start: "My favorite member in a group is usually the ______ because ______.", ex: "My favorite member is usually the rapper because they bring so much energy!" },
+        { q: "2. Do you think music has the power to bring people together or change how we feel?", start: "I think music has the power to ______ because ______.", ex: "I believe music can change our feelings instantly and connect people from different cultures." }
       ],
       20: [
-        { q: "1. Do you prefer staying in your comfortable home or traveling on unpredictable adventures?", start: "I prefer staying/traveling because ______.", ex: "I prefer staying at home because I love comfort, peace, and good food!" },
-        { q: "2. How do you usually react when an unexpected guest or stranger arrives?", start: "When someone unexpected arrives, I usually ______.", ex: "When someone unexpected arrives, I feel a bit surprised, but I try to be polite." },
-        { q: "3. Gandalf remembered Bilbo's family heritage. How important is family tradition to you?", start: "Family tradition is important to me because ______.", ex: "Family tradition is very important because it connects us to our history and memories." },
-        { q: "4. If someone offered you a risky opportunity that could change your routine, would you accept?", start: "If I received a risky offer, I would ______.", ex: "If I received a risky offer, I would think carefully before stepping out of my comfort zone!" }
+        { q: "1. Who is your favorite member in a music group (the dancer, rapper, or main singer)? Why?", start: "My favorite member in a group is usually the ______ because ______.", ex: "My favorite member is usually the rapper because they bring so much energy!" },
+        { q: "2. Do you think music has the power to bring people together or change how we feel?", start: "I think music has the power to ______ because ______.", ex: "I believe music can change our feelings instantly and connect people from different cultures." },
+        { q: "3. Mira wore a sleeping bag to the Met Gala. Would you ever wear bold or unusual fashion?", start: "If I were invited to a red carpet event, I would ______.", ex: "If I went to the Met Gala, I would definitely wear something unique to express myself!" },
+        { q: "4. Why do you think idols and artists need to take breaks after big concerts or tours?", start: "It's important for artists to take a break because ______.", ex: "It's super important for artists to rest so they don't burn out and can recharge their creative energy." }
       ]
     };
 
@@ -734,29 +748,29 @@
       container.innerHTML = "";
       renderCoolStepper();
 
-      const totalCut = chosenTime === 10 ? 138 : 223;
+      const totalCut = chosenTime === 10 ? 111 : 174;
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        player.src = `https://www.youtube.com/embed/8162EsqH-0c?start=0&end=${totalCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+        player.src = `https://www.youtube.com/embed/eXWC0LulkYA?start=0&end=${totalCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
         
         container.innerHTML = `
           <h3>Gist Questions (Warm-up)</h3>
           <p style="color:#64748b; margin-bottom:12px;">Watch the snippet and answer these quick questions:</p>
           <div class="question-block">
-            <strong>1. How does Old Bilbo describe a hobbit hole at the beginning?</strong>
+            <strong>1. According to Celine, what special power do the Hunters have to protect the world?</strong>
             <select class="custom-select" data-correct="a">
               <option value="">-- Select --</option>
-              <option value="a">A comfortable place with good food and a warm hearth</option>
-              <option value="b">A nasty, dirty wet hole full of worms and oozy smells</option>
+              <option value="a">Their singing voices and music create a shield (Honmoon) against demons</option>
+              <option value="b">They use heavy weapons and armor to fight Gwi-Ma</option>
             </select>
           </div>
           <div class="question-block">
-            <strong>2. What is Bilbo's initial reaction when Gandalf mentions an adventure?</strong>
+            <strong>2. Who are the fans talking about in HUNTR/X?</strong>
             <select class="custom-select" data-correct="b">
               <option value="">-- Select --</option>
-              <option value="a">He gets extremely excited and packs his bags right away</option>
-              <option value="b">He rejects it, calling adventures uncomfortable things that make you late for dinner</option>
+              <option value="a">A sports team preparing for an international match</option>
+              <option value="b">The three members of the K-pop idol group (Mira, Zoey, and Rumi)</option>
             </select>
           </div>
         `;
@@ -828,7 +842,7 @@
           `;
         } else if (activeSubTab === 'listening') {
           videoBoxWrapper.style.display = 'block';
-          player.src = `https://www.youtube.com/embed/8162EsqH-0c?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+          player.src = `https://www.youtube.com/embed/eXWC0LulkYA?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
 
           container.innerHTML = `
             ${subTabsHTML}
@@ -861,7 +875,7 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        player.src = `https://www.youtube.com/embed/8162EsqH-0c?start=0&end=${totalCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
+        player.src = `https://www.youtube.com/embed/eXWC0LulkYA?start=0&end=${totalCut}&autoplay=0&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3`;
 
         container.innerHTML = `
           <h3>Watch Whole Scene</h3>
@@ -983,10 +997,10 @@
       listEl.innerHTML = "";
 
       const allRetell = [
-        { order: 1, text: "Old Bilbo explains the cozy nature of a hobbit hole before young Bilbo greets Gandalf." },
-        { order: 2, text: "Gandalf invites Bilbo on an adventure, which Bilbo quickly rejects." },
-        { order: 3, text: "Bilbo slowly realizes that the strange old wizard is Gandalf, creator of famous fireworks." },
-        { order: 4, text: "Gandalf decides Bilbo will join the adventure anyway and leaves despite Bilbo's objections." }
+        { order: 1, text: "Celine explains the legend of the Hunters and how their music creates a shield to protect humanity from demons." },
+        { order: 2, text: "Celine challenges the new Hunter trio to complete the Golden Honmoon, while fans talk about Mira's dance and fashion." },
+        { order: 3, text: "Fans introduce Zoey, the American-raised rapper and lyricist who goes hard during her performances." },
+        { order: 4, text: "Fans talk about Rumi's powerful singing voice, while Bobby gets worried asking where the girls are going." }
       ];
 
       const retellData = allRetell.slice(0, maxPart);
@@ -1102,7 +1116,7 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
-    // LÓGICA DE PROGRESSÃO E XP (CORRIGIDO PARA SALVAR 'hobbit.html')
+    // LÓGICA DE PROGRESSÃO E XP
     const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
 
     function concluirTrilhaAtual(arquivo) {
@@ -1137,7 +1151,7 @@
 
     const originalShowCompletionModal = showCompletionModal;
     showCompletionModal = function() {
-      concluirTrilhaAtual('hobbit.html');
+      concluirTrilhaAtual('kpop.html');
       originalShowCompletionModal();
     };
   </script>
