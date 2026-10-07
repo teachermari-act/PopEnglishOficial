@@ -425,8 +425,8 @@
           { 
             term: "wish", 
             options: [
-              { text: "To say a friendly greeting or hope for something", correct: "true" },
-              { text: "To complain about the weather", correct: "false" },
+              { text: "To want or hope for something to happen", correct: "true" },
+              { text: "To complain about a bad situation", correct: "false" },
               { text: "To buy something at the store", correct: "false" }
             ] 
           },
@@ -1102,7 +1102,7 @@
       document.getElementById('welcomeScreen').style.display = 'block';
     }
 
-    // LÓGICA DE PROGRESSÃO E XP (CORRIGIDO PARA SALVAR 'hobbit.html')
+    // LÓGICA DE PROGRESSÃO E XP
     const TABELA_XP = { 10: 50, 20: 100, 30: 150, 45: 200 };
 
     function concluirTrilhaAtual(arquivo) {
