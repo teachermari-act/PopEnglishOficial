@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PopEnglish - Friends: Monica's Halloween Party by Teacher Mari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-dark: #1e293b;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --accent-gradient: linear-gradient(90deg, #9333ea, #a855f7);
+      --accent-gradient-text: linear-gradient(90deg, #a855f7, #ec4899);
+      --panel-light: #f8fafc;
+      --text-dark: #0f172a;
+      --text-light: #f8fafc;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius-round: 20px;
+      --radius-soft: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #a855f7;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9em;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: #ec4899; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 17px;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+      background-color: #0b0f19;
+      min-height: 55px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 32px; border-radius: 8px; }
+    .brand-text h1 { font-size: 1.1em; color: var(--text-light); font-weight: 700; }
+    .brand-text span { font-size: 0.75em; color: #94a3b8; }
+
+    .welcome-container { max-width: 650px; margin: auto; padding: 16px 12px; text-align: center; position: relative; z-index: 1; width: 100%; }
+    .hero-card {
+      background: var(--card-dark);
+      border-radius: var(--radius-round);
+      padding: 20px 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border: 1px solid #334155;
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-img { 
+      width: 100%; 
+      max-height: 190px; 
+      object-fit: cover; 
+      object-position: center;
+      border-radius: var(--radius-soft); 
+      margin-bottom: 12px; 
+      display: block;
+      pointer-events: none;
+    }
+    .hero-title { 
+      font-size: 1.55em; 
+      margin-bottom: 4px; 
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    .hero-subtitle { font-size: 0.85em; color: #ec4899; font-weight: 600; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.9em; color: #cbd5e1; margin-bottom: 16px; line-height: 1.4; }
+
+    .time-title { font-size: 0.95em; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
+    .time-selector { display: flex; flex-direction: column; gap: 8px; max-width: 440px; margin: 0 auto 18px auto; position: relative; z-index: 3; }
+    
+    .time-btn {
+      background: #334155; color: white; border: 2px solid transparent;
+      padding: 10px 14px; border-radius: var(--radius-soft); font-size: 0.95em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 4; text-align: left;
+    }
+
+    .time-btn:hover, .time-btn.selected {
+      background: var(--accent-gradient); border-color: #c084fc; transform: scale(1.01);
+    }
+
+    .start-btn {
+      background: var(--accent-gradient); color: white; border: none;
+      padding: 12px 32px; border-radius: 30px; font-size: 1em;
+      font-weight: bold; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+      position: relative; z-index: 4; width: 100%; max-width: 280px;
+    }
+
+    .start-btn:hover { opacity: 0.95; transform: scale(1.02); }
+
+    .workspace { 
+      display: none; 
+      flex: 1; 
+      padding: 12px; 
+      gap: 12px; 
+      height: calc(100vh - 55px);
+      overflow: hidden;
+    }
+    
+    .left-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    
+    .right-panel {
+      flex: 1.2; background: var(--panel-light); color: var(--text-dark);
+      border-radius: var(--radius-round); display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-soft); overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .cool-stepper {
+      display: flex; gap: 8px; background: #e2e8f0; padding: 8px 12px;
+      border-bottom: 1px solid #cbd5e0; overflow-x: auto; align-items: center;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cool-step-pill {
+      display: flex; align-items: center; gap: 6px; background: white;
+      padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 700;
+      color: #64748b; border: 1px solid #cbd5e0; white-space: nowrap; cursor: pointer;
+    }
+
+    .cool-step-pill .step-num {
+      background: #cbd5e0; color: #334155; border-radius: 50%; width: 20px; height: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.8em;
+    }
+
+    .cool-step-pill.active { background: var(--bg-dark); color: white; border-color: var(--bg-dark); }
+    .cool-step-pill.active .step-num { background: var(--accent-purple); color: white; }
+
+    .part-subtabs { display: flex; gap: 4px; background: #cbd5e0; padding: 4px; border-radius: 10px; margin-bottom: 12px; }
+    .part-subtab-btn {
+      flex: 1; padding: 8px 4px; border: none; background: transparent;
+      border-radius: 8px; font-weight: 700; font-size: 0.8em; color: #475569;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .part-subtab-btn.active { background: white; color: #9333ea; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+
+    .content-area { flex: 1; padding: 14px; overflow-y: auto; font-size: 0.95em; position: relative; }
+
+    .question-block { margin-bottom: 14px; }
+    .question-block strong { display: block; font-size: 0.95em; margin-bottom: 6px; color: #1e293b; }
+
+    .custom-select {
+      width: 100%; max-width: 100%; padding: 10px 12px; font-size: 0.98em; font-weight: 600;
+      color: #334155; border-radius: 10px; border: 2px solid #cbd5e0; background-color: white; outline: none; cursor: pointer;
+    }
+    .custom-select.correct { border-color: var(--success) !important; background-color: #dcfce7 !important; color: #15803d !important; }
+    .custom-select.incorrect { border-color: var(--error) !important; background-color: #fee2e2 !important; color: #b91c1c !important; }
+
+    .ab-card-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .ab-btn {
+      background: white; border: 2px solid #cbd5e0; padding: 8px 12px; border-radius: 8px;
+      text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.98em; color: #334155;
+    }
+    .ab-btn.selected-option { border-color: #a855f7; background: #f3e8ff; color: #6b21a8; font-weight: 700; }
+    .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    /* Estilo para a caixa de imagens (Catwoman, Clown, Witch, Supergirl, Rabbit) */
+    .visual-vocab-container {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-soft);
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    .visual-vocab-title {
+      font-size: 0.9em;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .visual-vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+    .visual-vocab-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+    .visual-vocab-card img {
+      width: 100%;
+      height: 130px;
+      object-fit: contain;
+      background-color: #f8fafc;
+      display: block;
+      padding: 4px;
+    }
+
+    .vocab-card-example {
+      background: white; border: 1px solid #e2e8f0; border-left: 4px solid #a855f7;
+      padding: 10px 12px; border-radius: var(--radius-soft); margin-bottom: 10px;
+    }
+    .vocab-card-example h4 { font-size: 1em; color: #7e22ce; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .translation-text { font-size: 0.85em; color: #64748b; font-style: italic; margin-top: 4px; }
+    .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
+
+    .word-bank { 
+      position: sticky; top: -14px; z-index: 100; display: flex; flex-wrap: wrap; gap: 6px; 
+      margin-bottom: 12px; padding: 10px; background: #cbd5e1; border: 1px solid #94a3b8;
+      border-radius: var(--radius-soft); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); min-height: 44px; 
+    }
+    .chip { background: white; padding: 5px 10px; border-radius: 14px; font-weight: 700; font-size: 0.85em; cursor: pointer; border: 1px solid #cbd5e0; }
+    .chip.selected { background: #9333ea; color: white; border-color: #9333ea; }
+
+    .gap-target {
+      display: inline-block; min-width: 75px; height: 28px; border-bottom: 2px solid #a855f7;
+      background: #f3e8ff; margin: 0 2px; vertical-align: middle; text-align: center;
+      font-weight: bold; color: #6b21a8; border-radius: 4px; line-height: 2.2; cursor: pointer; font-size: 0.95em; padding: 0 6px;
+    }
+    .gap-target.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .gap-target.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .retell-container { display: flex; gap: 8px; margin-top: 8px; }
+    .retell-numbers { display: flex; flex-direction: column; gap: 8px; }
+    .number-badge {
+      background: #cbd5e0; color: #334155; font-weight: 800; width: 28px; height: 38px;
+      border-radius: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85em;
+    }
+    .retell-list { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .retell-item {
+      background: white; padding: 8px 10px; border-radius: var(--radius-soft); border: 2px solid #cbd5e0;
+      cursor: grab; font-weight: 600; min-height: 38px; display: flex; align-items: center; font-size: 0.85em;
+    }
+    .retell-item.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .retell-item.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
+
+    .whatsapp-banner {
+      background: #dcfce7; border-left: 4px solid var(--success); color: #14532d;
+      padding: 10px; border-radius: var(--radius-soft); font-weight: 600; margin-bottom: 12px; font-size: 0.88em;
+    }
+
+    .toggle-btn { background: #e2e8f0; border: none; color: #334155; padding: 6px 10px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 4px; font-size: 0.8em; }
+    .toggle-box { display: none; background: #f0fdf4; border-left: 3px solid var(--success); padding: 8px; border-radius: 6px; margin-top: 4px; font-size: 0.88em; }
+
+    .panel-footer { padding: 10px 14px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #f1f5f9; gap: 8px; }
+    .btn-group { display: flex; gap: 8px; }
+    .btn-action { background: var(--accent-gradient); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.88em; transition: transform 0.1s, opacity 0.2s; }
+    .btn-action:hover { opacity: 0.95; transform: scale(1.02); }
+    .btn-secondary { background: #64748b; }
+    .btn-check { background: linear-gradient(90deg, #9333ea, #a855f7); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-card { background: white; color: var(--text-dark); padding: 24px; border-radius: var(--radius-round); text-align: center; max-width: 380px; width: 100%; }
+
+    @media (max-width: 768px) {
+      body { font-size: 16px; height: auto; overflow-y: auto; }
+      header { padding: 6px 12px; }
+      .brand-text h1 { font-size: 0.95em; }
+      .brand-text span { font-size: 0.7em; }
+
+      .workspace {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        padding: 8px;
+      }
+
+      .left-panel { flex: none; width: 100%; }
+      .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
+      .content-area { overflow-y: visible; max-height: none; }
+      
+      .word-bank { top: 0; }
+      .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
+    }
+  
+    .content-area h3 {
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      margin-bottom: 8px;
+      font-size: 1.35em;
+    }
+  </style>
+</head>
+<body>
+
+  <div style="padding: 10px 16px; background-color: #0b0f19; border-bottom: 1px solid #1e293b;">
+    <a href="../index.html" class="nav-back">
+      ← Back to Homepage
+    </a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="https://i.imgur.com/ZEmiCu3.png" alt="Teacher Mari Logo">
+      <div class="brand-text">
+        <h1>PopEnglish</h1>
+        <span>Practice with Movies & Series • by Teacher Mari</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="welcome-container" id="welcomeScreen">
+    <div class="hero-card">
+      <img src="https://i.imgur.com/dkejanp.jpeg" class="banner-img" alt="Friends Halloween Party">
+      <h2 class="hero-title">Friends: Monica's Halloween Party</h2>
+      <div class="hero-subtitle">• Iconic Scene • Season 8, Episode 6</div>
+      <p class="hero-desc">The friends meet at Monica's apartment for a Halloween party. They wear funny costumes and give candy to neighborhood kids.</p>
+      
+      <div>
+        <div class="time-title">How much time do you have to practice today?</div>
+        <div class="time-selector">
+          <button class="time-btn" onclick="selectTime(15, this)">
+            <span>⚡ "Tô com pouco tempo!" (Parts 1 & 2)</span> <strong>15 min</strong>
+          </button>
+          <button class="time-btn selected" onclick="selectTime(30, this)">
+            <span>🔥 "Quero a cena completa!" (Parts 1 to 4)</span> <strong>30 min</strong>
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice ➔</button>
+    </div>
+  </div>
+
+  <div class="workspace" id="workspaceScreen">
+    <div class="left-panel">
+      <div class="video-box" id="videoBoxWrapper">
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/eNTs3RrBxfI?enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="cool-stepper" id="coolStepper"></div>
+      <div class="content-area" id="mainContentArea"></div>
+
+      <div class="panel-footer">
+        <button class="btn-action btn-secondary" onclick="prevStep()">Back</button>
+        <div class="btn-group">
+          <button class="btn-action btn-check" id="checkBtn" onclick="checkCurrentStep()">Check Answers</button>
+          <button class="btn-action" id="nextActionBtn" onclick="nextStep()">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="completionModal">
+    <div class="modal-card">
+      <h2>CONGRATULATIONS! 🎉</h2>
+      <p>You're boosting your English step by step with <strong>Teacher Mari</strong>!</p>
+      <br>
+      <button class="start-btn" onclick="resetToMenu()">Go Back to Menu 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    let chosenTime = 30; // 15 ou 30
+    let mainStepIndex = 0;
+    let activeSubTab = 'prepare';
+    let selectedWord = "";
+
+    const partsData = {
+      1: {
+        title: "Part 1 (0:00 - 1:10)", start: 0, end: 70, vocabType: "multi",
+        visualVocab: [
+          { term: "Catwoman", img: "https://i.imgur.com/yTzjgMZ.jpeg" },
+          { term: "Witch", img: "https://i.imgur.com/LzKZlec.jpeg" },
+          { term: "Clown", img: "https://i.imgur.com/kqHoFHx.jpeg" }
+        ],
+        vocab: [
+          { 
+            term: "supposed to", 
+            options: [
+              { text: "Expected or planned to do something", correct: "true" },
+              { text: "Strictly forbidden from doing something", correct: "false" }
+            ]
+          },
+          { 
+            term: "fit into", 
+            options: [
+              { text: "Too big or too small, so clothes cannot go on your body", correct: "false" },
+              { text: "The right size, so clothes can go on your body", correct: "true" }
+            ]
+          },
+          { 
+            term: "to borrow", 
+            options: [
+              { text: "Take something for a short time and give it back later", correct: "true" },
+              { text: "Give something away forever and never get it back", correct: "false" }
+            ]
+          },
+          { 
+            term: "Trick or Treat", 
+            options: [
+              { text: "A phrase adults say to buy food at the supermarket", correct: "false" },
+              { text: "A phrase children say on Halloween to ask for candy", correct: "true" }
+            ]
+          },
+          { 
+            term: "pregnant", 
+            options: [
+              { text: "Having a baby growing inside the body", correct: "true" },
+              { text: "Not having any baby inside the body", correct: "false" }
+            ]
+          },
+          { 
+            term: "maternal instincts", 
+            options: [
+              { text: "Cold feelings of disliking and ignoring children", correct: "false" },
+              { text: "Natural caring feelings to love and protect children", correct: "true" }
+            ]
+          },
+          { 
+            term: "fall line", 
+            options: [
+              { text: "New clothes designed and sold for the autumn season", correct: "true" },
+              { text: "Old swimsuits designed and sold for the hot summer", correct: "false" }
+            ]
+          },
+          { 
+            term: "equestrian", 
+            options: [
+              { text: "Connected with swimming in deep ocean water", correct: "false" },
+              { text: "Connected with horses and horse riding", correct: "true" }
+            ]
+          },
+          { 
+            term: "cover", 
+            options: [
+              { text: "The outside front page of a magazine or book", correct: "true" },
+              { text: "The secret back page hidden inside a magazine or book", correct: "false" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "supposed to", ex: "I am supposed to finish my homework before dinner.", trans: "Era para eu terminar minha lição de casa antes do jantar." },
+          { term: "fit into", ex: "I can't fit into these old shoes anymore because my feet grew.", trans: "Eu não caibo mais nesses sapatos velhos porque meu pé cresceu." },
+          { term: "to borrow", ex: "Can I borrow your pen for a minute, please?", trans: "Posso pegar sua caneta emprestada por um minuto, por favor?" },
+          { term: "Trick or Treat", ex: "The kids knocked on the door and shouted: 'Trick or Treat!'", trans: "As crianças bateram na porta e gritaram: 'Doces ou Travessuras!'" },
+          { term: "pregnant", ex: "My aunt is pregnant and her baby will arrive in December.", trans: "Minha tia está grávida e o bebê dela vai chegar em dezembro." },
+          { term: "maternal instincts", ex: "She showed great maternal instincts when caring for the injured puppy.", trans: "Ela mostrou fortes instintos maternais ao cuidar do cachorrinho machucado." },
+          { term: "fall line", ex: "The fashion store is displaying its new fall line with warm coats.", trans: "A loja de moda está exibindo sua nova linha de outono com casacos quentinhos." },
+          { term: "equestrian", ex: "My cousin loves equestrian sports and rides horses every Saturday.", trans: "Meu primo adora esportes equestres e anda a cavalo todo sábado." },
+          { term: "cover", ex: "The famous singer appeared on the cover of the magazine.", trans: "A cantora famosa apareceu na capa da revista." }
+        ],
+        gaps: ["supposed to", "fit into", "to borrow", "Trick or treat", "pregnant", "maternal instincts", "fall line", "equestrian", "cover"],
+        fullScript: `
+          <p><strong>Rachel:</strong> Hi!</p>
+          <p><strong>Monica:</strong> Wait! You're <span class="gap-target" data-answer="supposed to"></span> wear a costume!</p>
+          <p><strong>Rachel:</strong> I am! I am a woman who spent a lot of money on a dress, and she wants to wear it because soon she won't be able to <span class="gap-target" data-answer="fit into"></span> it.</p>
+          <p><strong>Monica:</strong> Ohh... I'm Catwoman...</p>
+          <p><strong>Rachel:</strong> Ahh...</p>
+          <p><strong>Monica:</strong> ...Who wants <span class="gap-target" data-answer="to borrow"></span> the dress when you're too big for it.</p>
+          <p><strong>Rachel:</strong> Okay.</p>
+          <p><em>(There's a knock on the door.)</em></p>
+          <p><strong>Kids:</strong> <span class="gap-target" data-answer="Trick or treat"></span>!</p>
+          <p><strong>Rachel:</strong> Oh! Oh! Can I give out the candy? I really want to be with the kids right now. You know, ever since I got <span class="gap-target" data-answer="pregnant"></span>, I... I have the strongest <span class="gap-target" data-answer="maternal instincts"></span>.</p>
+          <p><strong>Kids:</strong> Trick or treat!!</p>
+          <p><strong>Rachel:</strong> Just a minute!!! Ohh! Look at you guys! Wow! You are a very scary witch.</p>
+          <p><strong>Witch:</strong> Thank you.</p>
+          <p><strong>Rachel:</strong> And you are a very funny clown.</p>
+          <p><strong>Clown:</strong> Thank you.</p>
+          <p><strong>Rachel:</strong> And you are so in style right now. You know, I work at Ralph Lauren and the whole <span class="gap-target" data-answer="fall line"></span> has got this like <span class="gap-target" data-answer="equestrian"></span> theme going on. I don't suppose you saw the <span class="gap-target" data-answer="cover"></span> of British Vogue, but...</p>
+          <p><strong>Cowgirl:</strong> Can I just have the candy?</p>
+          <p><strong>Rachel:</strong> Yeah. Sure.</p>
+        `
+      },
+      2: {
+        title: "Part 2 (1:10 - 2:10)", start: 70, end: 130, vocabType: "select",
+        visualVocab: [
+          { term: "Supergirl", img: "https://i.imgur.com/2iNcJvo.jpeg" },
+          { term: "Rabbit", img: "https://i.imgur.com/i7tTb2S.jpeg" }
+        ],
+        vocab: [
+          { 
+            term: "appreciate", 
+            correctValue: "b",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "To like someone's personality very much", value: "a" },
+              { text: "To be thankful and grateful for someone's help or kindness", value: "b" },
+              { text: "To pay money for a service you received", value: "c" }
+            ]
+          },
+          { 
+            term: "costume", 
+            correctValue: "a",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "Special clothes worn to look like a character or person", value: "a" },
+              { text: "Formal clothes worn to work in a business office", value: "b" },
+              { text: "Warm clothes worn to protect your body from cold winter", value: "c" }
+            ]
+          },
+          { 
+            term: "either", 
+            correctValue: "c",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "Both of the two choices at the exact same time", value: "a" },
+              { text: "The best choice between many different options", value: "b" },
+              { text: "One or the other of two possible choices", value: "c" }
+            ]
+          },
+          { 
+            term: "bunny", 
+            correctValue: "a",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "A small, cute, and friendly rabbit", value: "a" },
+              { text: "A young cat that loves to play with balls", value: "b" },
+              { text: "A small mouse that likes to eat cheese", value: "c" }
+            ]
+          },
+          { 
+            term: "dress up", 
+            correctValue: "b",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "To buy new clothes at a shopping mall", value: "a" },
+              { text: "To put on a special costume or fancy party clothes", value: "b" },
+              { text: "To put on simple everyday clothes after taking a bath", value: "c" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "appreciate", ex: "I really appreciate your help with my English studies.", trans: "Eu realmente agradeço sua ajuda com os meus estudos de inglês." },
+          { term: "costume", ex: "He wore a funny superhero costume to the carnival party.", trans: "Ele usou uma fantasia engraçada de super-herói na festa de carnaval." },
+          { term: "either", ex: "You can either drink orange juice or tea.", trans: "Você pode ou beber suco de laranja ou chá." },
+          { term: "bunny", ex: "The children were happy to feed the little white bunny.", trans: "As crianças ficaram felizes em alimentar o coelhinho branco." },
+          { term: "dress up", ex: "We love to dress up in elegant clothes for celebration dinners.", trans: "Nós adoramos nos fantasiar/vestir roupas elegantes para jantares de comemoração." }
+        ],
+        gaps: ["costume", "appreciate", "either", "bunny", "dress up"],
+        fullScript: `
+          <p><strong>Phoebe:</strong> Ah, Catwoman! So we meet again.</p>
+          <p><strong>Monica:</strong> So we do, Supergirl!</p>
+          <p><strong>Phoebe:</strong> No, it's me, Phoebe!</p>
+          <p><strong>Chandler:</strong> Monica! Can I talk to you for a second? Listen, I <span class="gap-target" data-answer="appreciate"></span> you getting me the <span class="gap-target" data-answer="costume"></span>...</p>
+          <p><strong>Rachel:</strong> Oh, you did this to him?</p>
+          <p><strong>Monica:</strong> What?! I thought he'd love it! His favorite kid's book was the Velveteen Rabbit!</p>
+          <p><strong>Chandler:</strong> The Velveteen Rabbit was brown and white!</p>
+          <p><strong>Monica:</strong> Well, it was <span class="gap-target" data-answer="either"></span> a pink bunny or no bunny at all.</p>
+          <p><strong>Chandler:</strong> No <span class="gap-target" data-answer="bunny"></span> at all!! Always no bunny at all!!!</p>
+          <p><strong>Joey:</strong> Hey!</p>
+          <p><strong>Monica:</strong> You didn't <span class="gap-target" data-answer="dress up"></span> either?!</p>
+          <p><strong>Joey:</strong> Yes, I did! I'm Chandler... Dude, what happened?</p>
+        `
+      },
+      3: {
+        title: "Part 3 (2:10 - 3:14)", start: 130, end: 194, vocabType: "multi",
+        vocab: [
+          { 
+            term: "ballerina", 
+            options: [
+              { text: "A female dancer who performs classical ballet", correct: "true" },
+              { text: "A heavy boxer who fights people in a boxing ring", correct: "false" }
+            ]
+          },
+          { 
+            term: "deserves", 
+            options: [
+              { text: "Should not receive anything good because of bad actions", correct: "false" },
+              { text: "Should receive something good because of good actions or qualities", correct: "true" }
+            ]
+          },
+          { 
+            term: "earns", 
+            options: [
+              { text: "Gets or gains something through effort, hard work, or good behavior", correct: "true" },
+              { text: "Loses something because of laziness and bad behavior", correct: "false" }
+            ]
+          },
+          { 
+            term: "no wonder", 
+            options: [
+              { text: "It is very surprising, strange, and impossible to understand", correct: "false" },
+              { text: "It is not surprising at all and makes complete sense", correct: "true" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "ballerina", ex: "The young ballerina practiced her dance steps in front of the mirror.", trans: "A jovem bailarina praticava seus passos de dança na frente do espelho." },
+          { term: "deserves", ex: "After working hard all day, she truly deserves a nice rest.", trans: "Depois de trabalhar duro o dia todo, ela realmente merece um bom descanso." },
+          { term: "earns", ex: "Being polite and helpful earns you the respect of others.", trans: "Ser educado e prestativo faz você conquistar/merecer o respeito dos outros." },
+          { term: "no wonder", ex: "It rained all afternoon; no wonder the street is so wet.", trans: "Choveu a tarde toda; não é à toa que a rua está tão molhada." }
+        ],
+        gaps: ["ballerina", "deserves", "earns", "No wonder"],
+        fullScript: `
+          <p><strong>Chandler:</strong> How is that me?</p>
+          <p><strong>Joey:</strong> Okay. I'm Chandler! <em>(makes a growling/gurgling sound)</em></p>
+          <p><strong>Phoebe:</strong> That is so you!</p>
+          <p><strong>Chandler:</strong> When have I ever done that?!</p>
+          <p><strong>Joey:</strong> When have I ever done that?! <em>(does the sound again)</em></p>
+          <p><em>(There's a knock on the door.)</em></p>
+          <p><strong>Ballerina:</strong> Trick or treat!</p>
+          <p><strong>Rachel:</strong> Oh! Well, you're just the prettiest <span class="gap-target" data-answer="ballerina"></span> I've ever seen.</p>
+          <p><strong>Ballerina:</strong> Thank you.</p>
+          <p><strong>Rachel:</strong> Oh wow! That <span class="gap-target" data-answer="deserves"></span> another piece of candy.</p>
+          <p><strong>Ballerina:</strong> Thank you.</p>
+          <p><strong>Rachel:</strong> Well, I have to say that <span class="gap-target" data-answer="earns"></span> "tutu" pieces of candy.</p>
+          <p><strong>Ballerina:</strong> I love you!</p>
+          <p><strong>Rachel:</strong> Ohh... Oh, honey here. Take it all. Monica! We need more candy!</p>
+          <p><strong>Monica:</strong> What?! There's only been like four kids.</p>
+          <p><strong>Rachel:</strong> Yeah, I know, but one of them just said that she loved me, so I just gave her everything.</p>
+          <p><strong>Phoebe:</strong> <span class="gap-target" data-answer="No wonder"></span> you're pregnant.</p>
+        `
+      },
+      4: {
+        title: "Part 4 (3:14 - 4:04)", start: 194, end: 244, vocabType: "select",
+        vocab: [
+          { 
+            term: "spud", 
+            correctValue: "b",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "A green vegetable that grows under the ground", value: "a" },
+              { text: "An informal or slang word for a potato", value: "b" },
+              { text: "A small seed used to plant flowers in a garden", value: "c" }
+            ]
+          },
+          { 
+            term: "antennae", 
+            correctValue: "a",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "Long wires or rods used to receive radio or space signals", value: "a" },
+              { text: "Small lights attached to a bicycle helmet", value: "b" },
+              { text: "Shiny metal glasses worn by pilots", value: "c" }
+            ]
+          },
+          { 
+            term: "the worst", 
+            correctValue: "b",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "Less popular than other things in a group", value: "a" },
+              { text: "Lower in quality than everything else; the most bad", value: "b" },
+              { text: "More expensive than all other items in a store", value: "c" }
+            ]
+          },
+          { 
+            term: "doody", 
+            correctValue: "a",
+            options: [
+              { text: "-- Choose the best meaning --", value: "" },
+              { text: "A silly or childish word for poop / body waste", value: "a" },
+              { text: "Mud and wet dirt found on boots after rain", value: "b" },
+              { text: "Spoiled food left on a kitchen plate", value: "c" }
+            ]
+          }
+        ],
+        examples: [
+          { term: "spud", ex: "We baked a large spud with cheese for dinner.", trans: "Nós assamos uma batata grande com queijo para o jantar." },
+          { term: "antennae", ex: "Old televisions needed long antennae to catch channels.", trans: "Televisores antigos precisavam de antenas compridas para pegar os canais." },
+          { term: "the worst", ex: "That was the worst movie I have ever watched; it was so boring!", trans: "Aquele foi o pior filme que já assisti; foi tão chato!" },
+          { term: "doody", ex: "The little boy laughed after stepping on dog doody in the grass.", trans: "O garotinho riu depois de pisar em cocô de cachorro na grama." }
+        ],
+        gaps: ["spud", "antennae", "worst", "doody"],
+        fullScript: `
+          <p><strong>Ross:</strong> Hey!</p>
+          <p><strong>Monica:</strong> What are you supposed to be?</p>
+          <p><strong>Ross:</strong> Remember the Russian satellite, Sputnik? Well, I'm a potato or a... <span class="gap-target" data-answer="spud"></span>. And these are my <span class="gap-target" data-answer="antennae"></span>. So Sputnik becomes... Spud-nik. Spudnik!</p>
+          <p><strong>Chandler:</strong> Wow! I don't have the <span class="gap-target" data-answer="worst"></span> costume anymore!</p>
+          <p><strong>Joey:</strong> Hey, all right, Ross came as <span class="gap-target" data-answer="doody"></span>.</p>
+          <p><strong>Ross:</strong> No, I... I'm not doody.</p>
+          <p><strong>Monica:</strong> No... Space doody!</p>
+        `
+      }
+    };
+
+    const questionsByTime = [
+      { q: "1. What is your opinion on Halloween costume parties? Do you enjoy dressing up or do you prefer regular clothes?", start: "When it comes to costume parties, I personally ______ because ______.", ex: "When it comes to costume parties, I personally love dressing up because it's a fun chance to be creative!" },
+      { q: "2. Chandler ended up dressed as a pink bunny because of Monica. Have you ever worn an embarrassing outfit to a party?", start: "One time I had to wear ______ and I felt ______.", ex: "One time I had to wear a ridiculous superhero costume that was way too small, and everyone laughed!" },
+      { q: "3. Rachel gave away all the candy because a little girl said 'I love you'. Are you easily persuaded by sweet words or kids?", start: "I think I am / am not easily persuaded when ______ because ______.", ex: "I think I am definitely easily persuaded by cute kids or sweet compliments—I just melt!" },
+      { q: "4. Between Chandler's pink bunny and Ross's 'Spudnik' (Space Doody), which costume was actually worse?", start: "In my opinion, ______'s costume was worse because ______.", ex: "In my opinion, Ross's Spudnik was worse because everyone thought he looked like actual space doody!" }
+    ];
+
+    let globalStepsSequence = [];
+
+    function selectTime(minutes, element) {
+      chosenTime = minutes;
+      document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startPractice() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'flex';
+      
+      buildSequence();
+      renderCoolStepper();
+      mainStepIndex = 0;
+      activeSubTab = 'prepare';
+      renderCurrentStep();
+    }
+
+    function buildSequence() {
+      globalStepsSequence = [];
+      globalStepsSequence.push({ type: 'warmup', label: 'Warm-up', num: '🎃' });
+
+      const isShortTrack = (chosenTime === 15);
+      const maxPart = isShortTrack ? 2 : 4;
+
+      for (let p = 1; p <= maxPart; p++) {
+        globalStepsSequence.push({ type: 'part', partNum: p, label: `Part ${p}`, num: `${p}` });
+      }
+
+      // RETELL APENAS NA TRILHA COMPLETA (PARTS 1 A 4)
+      if (!isShortTrack) {
+        globalStepsSequence.push({ type: 'retell', label: 'Retell', num: '🔄' });
+      }
+
+      globalStepsSequence.push({ type: 'watchAll', isShortTrack: isShortTrack, label: 'Watch Scene', num: '🎬' });
+      globalStepsSequence.push({ type: 'yourTurn', label: 'Your Turn', num: '💬' });
+    }
+
+    function renderCoolStepper() {
+      const stepper = document.getElementById('coolStepper');
+      stepper.innerHTML = globalStepsSequence.map((step, idx) => `
+        <div class="cool-step-pill ${idx === mainStepIndex ? 'active' : ''}" onclick="jumpToMainStep(${idx})">
+          <span class="step-num">${step.num}</span>
+          <span>${step.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function jumpToMainStep(idx) {
+      mainStepIndex = idx;
+      activeSubTab = 'prepare';
+      renderCoolStepper();
+      renderCurrentStep();
+    }
+
+    function renderCurrentStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      const container = document.getElementById('mainContentArea');
+      const player = document.getElementById('ytPlayer');
+      const videoBoxWrapper = document.getElementById('videoBoxWrapper');
+
+      container.innerHTML = "";
+      renderCoolStepper();
+
+      if (step.type === 'warmup') {
+        videoBoxWrapper.style.display = 'block';
+        player.src = "https://www.youtube.com/embed/eNTs3RrBxfI?start=0&end=42&autoplay=0&enablejsapi=1";
+        
+        container.innerHTML = `
+          <h3>Gist Questions (Warm-up)</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
+          <div class="question-block">
+            <strong>1. Why is Rachel wearing an expensive normal dress instead of a Halloween costume?</strong>
+            <select class="custom-select" data-correct="a">
+              <option value="">-- Select --</option>
+              <option value="a">She is pregnant and won't be able to fit into it soon</option>
+              <option value="b">She forgot it was a costume party</option>
+            </select>
+          </div>
+          <div class="question-block">
+            <strong>2. Why does Rachel want to hand out the candy to the children?</strong>
+            <select class="custom-select" data-correct="b">
+              <option value="">-- Select --</option>
+              <option value="a">She wants to eat all the chocolates herself</option>
+              <option value="b">Her maternal instincts are very strong since getting pregnant</option>
+            </select>
+          </div>
+        `;
+      } else if (step.type === 'part') {
+        const pNum = step.partNum;
+        const pData = partsData[pNum];
+
+        let subTabsHTML = `
+          <div class="part-subtabs">
+            <button class="part-subtab-btn ${activeSubTab==='prepare'?'active':''}" onclick="setSubTab('prepare')">1. Prepare (Vocab)</button>
+            <button class="part-subtab-btn ${activeSubTab==='examples'?'active':''}" onclick="setSubTab('examples')">2. Examples</button>
+            <button class="part-subtab-btn ${activeSubTab==='listening'?'active':''}" onclick="setSubTab('listening')">3. Listening</button>
+          </div>
+        `;
+
+        if (activeSubTab === 'prepare') {
+          videoBoxWrapper.style.display = 'none';
+
+          // Caixa com imagens e caixas de seleção interativas para os personagens/fantasias (se houver)
+          let visualBoxHTML = "";
+          if (pData.visualVocab && pData.visualVocab.length > 0) {
+            const optionsList = pData.visualVocab.map(item => `<option value="${item.term}">${item.term}</option>`).join('');
+            visualBoxHTML = `
+              <div class="visual-vocab-container">
+                <div class="visual-vocab-title">🎭 Match the Costumes (Select the correct name for each image):</div>
+                <div class="visual-vocab-grid">
+                  ${pData.visualVocab.map(item => `
+                    <div class="visual-vocab-card">
+                      <img src="${item.img}" alt="Costume">
+                      <div style="padding: 8px 6px;">
+                        <select class="custom-select" data-correct="${item.term}" style="font-size: 0.85em; padding: 6px 8px;">
+                          <option value="">-- Choose --</option>
+                          ${optionsList}
+                        </select>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }
+
+          let vocabHTML = "";
+          if (pData.vocabType === 'select') {
+            vocabHTML = pData.vocab.map(v => `
+              <div class="question-block">
+                <strong>${v.term}:</strong>
+                <select class="custom-select" data-correct="${v.correctValue}">
+                  ${v.options.map(opt => `
+                    <option value="${opt.value}">${opt.text}</option>
+                  `).join('')}
+                </select>
+              </div>
+            `).join('');
+          } else {
+            vocabHTML = pData.vocab.map(v => `
+              <div class="question-block">
+                <strong>${v.term}:</strong>
+                <div class="ab-card-container">
+                  ${v.options.map(opt => `
+                    <button class="ab-btn" data-correct="${opt.correct}" onclick="clickAB(this)">${opt.text}</button>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('');
+          }
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Prepare</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Choose the correct meaning for each term:</p>
+            ${visualBoxHTML}
+            ${vocabHTML}
+          `;
+        } else if (activeSubTab === 'examples') {
+          videoBoxWrapper.style.display = 'none';
+          let examplesHTML = pData.examples.map(v => `
+            <div class="vocab-card-example">
+              <h4>${v.term} <button class="audio-btn" onclick="speakText('${v.ex.replace(/'/g, "\\'")}')">🔊 Listen</button></h4>
+              <p>"${v.ex}"</p>
+              <div class="translation-text">"${v.trans}"</div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Examples</h3>
+            <p style="color:#64748b; margin-bottom:12px;">Read and listen to the everyday examples:</p>
+            ${examplesHTML}
+          `;
+        } else if (activeSubTab === 'listening') {
+          videoBoxWrapper.style.display = 'block';
+          player.src = `https://www.youtube.com/embed/eNTs3RrBxfI?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+
+          container.innerHTML = `
+            ${subTabsHTML}
+            <h3>${pData.title} - Listening</h3>
+            <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
+            
+            <div class="word-bank" id="partWordBank"></div>
+            <div style="line-height:2.2; font-size:1.05em;" id="partScriptContainer">${pData.fullScript}</div>
+          `;
+
+          initPartWordBank(pData.gaps);
+          attachGapEvents();
+        }
+      } else if (step.type === 'retell') {
+        videoBoxWrapper.style.display = 'none';
+        container.innerHTML = `
+          <h3>Order the Story</h3>
+          <p style="color:#64748b; margin-bottom:12px;">Drag and drop the cards to place the events in chronological order:</p>
+          <div class="retell-container">
+            <div class="retell-numbers">
+              <span class="number-badge">1</span>
+              <span class="number-badge">2</span>
+              <span class="number-badge">3</span>
+              <span class="number-badge">4</span>
+              <span class="number-badge">5</span>
+            </div>
+            <div class="retell-list" id="sortableList"></div>
+          </div>
+        `;
+        initSortable();
+      } else if (step.type === 'watchAll') {
+        videoBoxWrapper.style.display = 'block';
+        const endCut = step.isShortTrack ? 130 : 244;
+        player.src = `https://www.youtube.com/embed/eNTs3RrBxfI?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+
+        container.innerHTML = `
+          <h3>Watch Scene</h3>
+          <p style="color:#64748b; margin-bottom:14px;">Watch the scene without interruptions:</p>
+          <div style="background:#f3e8ff; padding:16px; border-radius:var(--radius-soft); text-align:center; color:#6b21a8;">
+            🎉 <strong>Awesome progress!</strong> You've mastered this part of the Halloween party!
+          </div>
+        `;
+      } else if (step.type === 'yourTurn') {
+        videoBoxWrapper.style.display = 'none';
+        let qHTML = questionsByTime.map((item, idx) => `
+          <div style="margin-bottom:16px;">
+            <p style="font-size:1.05em; font-weight:700; color:#1e293b;">${item.q}</p>
+            <button class="toggle-btn" onclick="toggleBox('s_${idx}')">💡 Need help starting?</button>
+            <div class="toggle-box" id="s_${idx}"><strong>Sentence Start:</strong><br>"${item.start}"</div>
+            <button class="toggle-btn" style="background:#f3e8ff; color:#7e22ce; margin-left:4px;" onclick="toggleBox('e_${idx}')">💬 See Example</button>
+            <div class="toggle-box" id="e_${idx}" style="background:#f3e8ff; border-left-color:#a855f7;"><strong>Example Response:</strong><br>"${item.ex}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <h3>Discussion Practice</h3>
+          <div class="whatsapp-banner">
+            📱 <strong>Let's practice!</strong> Answer the questions below. Send them to your teacher on WhatsApp!
+          </div>
+          ${qHTML}
+        `;
+      }
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (step.type === 'watchAll' || step.type === 'yourTurn' || (step.type === 'part' && activeSubTab === 'examples')) {
+        checkBtn.style.display = 'none';
+      } else {
+        checkBtn.style.display = 'inline-block';
+      }
+
+      if (mainStepIndex === globalStepsSequence.length - 1) {
+        document.getElementById('nextActionBtn').innerText = "Finish Lesson 🎉";
+      } else {
+        document.getElementById('nextActionBtn').innerText = "Next ➔";
+      }
+    }
+
+    function setSubTab(sub) {
+      activeSubTab = sub;
+      renderCurrentStep();
+    }
+
+    function clickAB(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.ab-btn').forEach(b => b.classList.remove('selected-option'));
+      btn.classList.add('selected-option');
+    }
+
+    function initPartWordBank(gapsArray) {
+      const bank = document.getElementById('partWordBank');
+      if(!bank) return;
+      bank.innerHTML = "";
+      const shuffled = shuffleArray([...gapsArray]);
+
+      shuffled.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerText = w;
+        chip.onclick = () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          selectedWord = w;
+        };
+        bank.appendChild(chip);
+      });
+    }
+
+    function attachGapEvents() {
+      document.querySelectorAll('.gap-target').forEach(gap => {
+        gap.addEventListener('click', function() {
+          if (selectedWord && !this.innerText.trim()) {
+            this.innerText = selectedWord;
+            document.querySelectorAll('.chip').forEach(c => {
+              if (c.innerText === selectedWord && c.style.display !== 'none') {
+                c.style.display = 'none';
+              }
+            });
+            selectedWord = "";
+          } else if (this.innerText.trim()) {
+            returnWord(this);
+          }
+        });
+      });
+    }
+
+    function returnWord(gap) {
+      const rawVal = gap.innerText.trim();
+      if (rawVal) {
+        gap.innerText = "";
+        gap.classList.remove('correct', 'incorrect');
+        
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.innerText.toLowerCase() === rawVal.toLowerCase()) {
+            c.style.display = 'inline-block';
+          }
+        });
+      }
+    }
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initSortable() {
+      const listEl = document.getElementById('sortableList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const allRetell = [
+        { order: 1, text: "Rachel wears an expensive dress instead of a costume and lectures trick-or-treaters on fashion." },
+        { order: 2, text: "Chandler arrives complaining about his pink bunny costume while Joey impersonates him." },
+        { order: 3, text: "Joey demonstrates his Chandler impression and Chandler insists he never makes that noise." },
+        { order: 4, text: "A cute ballerina tells Rachel 'I love you', prompting Rachel to give away all the remaining candy." },
+        { order: 5, text: "Ross enters dressed as 'Spudnik' (potato satellite), but everyone jokes he looks like space doody." }
+      ];
+
+      let shuffled = shuffleArray([...allRetell]);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'retell-item';
+        card.dataset.order = item.order;
+        card.innerText = item.text;
+        listEl.appendChild(card);
+      });
+
+      new Sortable(listEl, { animation: 150, ghostClass: 'sortable-ghost' });
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkCurrentStep() {
+      const container = document.getElementById('mainContentArea');
+      
+      container.querySelectorAll('.custom-select').forEach(select => {
+        if (select.value === select.dataset.correct) {
+          select.classList.add('correct'); select.classList.remove('incorrect');
+        } else if (select.value !== "") {
+          select.classList.add('incorrect'); select.classList.remove('correct');
+        }
+      });
+
+      container.querySelectorAll('.ab-card-container').forEach(cardGroup => {
+        cardGroup.querySelectorAll('.ab-btn').forEach(btn => {
+          btn.classList.remove('correct', 'incorrect');
+          if (btn.classList.contains('selected-option')) {
+            if (btn.dataset.correct === "true") {
+              btn.classList.add('correct');
+            } else {
+              btn.classList.add('incorrect');
+            }
+          }
+        });
+      });
+
+      container.querySelectorAll('.gap-target').forEach(gap => {
+        if (gap.innerText.toLowerCase() === gap.dataset.answer.toLowerCase()) {
+          gap.classList.add('correct'); gap.classList.remove('incorrect');
+        } else if(gap.innerText !== "") {
+          gap.classList.add('incorrect'); gap.classList.remove('correct');
+        }
+      });
+
+      const items = container.querySelectorAll('#sortableList .retell-item');
+      items.forEach((item, index) => {
+        if (parseInt(item.dataset.order) === index + 1) {
+          item.classList.add('correct'); item.classList.remove('incorrect');
+        } else {
+          item.classList.add('incorrect'); item.classList.remove('correct');
+        }
+      });
+    }
+
+    function prevStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'listening') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { activeSubTab = 'prepare'; renderCurrentStep(); return; }
+      }
+
+      if (mainStepIndex > 0) {
+        mainStepIndex--;
+        const prevStepType = globalStepsSequence[mainStepIndex];
+        activeSubTab = (prevStepType.type === 'part') ? 'listening' : 'prepare';
+        renderCurrentStep();
+      } else {
+        resetToMenu();
+      }
+    }
+
+    function nextStep() {
+      const step = globalStepsSequence[mainStepIndex];
+      if (step.type === 'part') {
+        if (activeSubTab === 'prepare') { activeSubTab = 'examples'; renderCurrentStep(); return; }
+        if (activeSubTab === 'examples') { 
+          activeSubTab = 'listening'; 
+          renderCurrentStep(); 
+          return; 
+        }
+      }
+
+      if (mainStepIndex < globalStepsSequence.length - 1) {
+        mainStepIndex++;
+        activeSubTab = 'prepare';
+        renderCurrentStep();
+      } else {
+        showCompletionModal();
+      }
+    }
+
+    function showCompletionModal() {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      document.getElementById('completionModal').style.display = 'flex';
+    }
+
+    function resetToMenu() {
+      document.getElementById('completionModal').style.display = 'none';
+      document.getElementById('workspaceScreen').style.display = 'none';
+      document.getElementById('welcomeScreen').style.display = 'block';
+    }
+
+    // LÓGICA DE PROGRESSÃO CUMULATIVA E XP INCREMENTAL
+    const TABELA_XP = { 15: 100, 30: 200 };
+
+    function concluirTrilhaAtual(arquivo) {
+      let progressoLocal = JSON.parse(localStorage.getItem('pop_trilhas_concluidas') || '{}');
+      if (!progressoLocal[arquivo]) progressoLocal[arquivo] = [];
+
+      const opcoesTempo = [15, 30];
+      const trilhasCobertas = opcoesTempo.filter(t => t <= chosenTime);
+
+      let maxTempoAnterior = 0;
+      progressoLocal[arquivo].forEach(t => {
+        if (t > maxTempoAnterior) maxTempoAnterior = t;
+      });
+      let xpJaGanho = TABELA_XP[maxTempoAnterior] || 0;
+
+      trilhasCobertas.forEach(t => {
+        if (!progressoLocal[arquivo].includes(t)) {
+          progressoLocal[arquivo].push(t);
+        }
+      });
+
+      localStorage.setItem('pop_trilhas_concluidas', JSON.stringify(progressoLocal));
+
+      let xpNovoTotal = TABELA_XP[chosenTime] || 0;
+      if (xpNovoTotal > xpJaGanho) {
+        let xpDiferenca = xpNovoTotal - xpJaGanho;
+        let xpAtual = parseInt(localStorage.getItem('pop_user_xp') || '0');
+        xpAtual += xpDiferenca;
+        localStorage.setItem('pop_user_xp', xpAtual.toString());
+      }
+    }
+
+    const originalShowCompletionModal = showCompletionModal;
+    showCompletionModal = function() {
+      concluirTrilhaAtual('monicas_halloween_party.html');
+      originalShowCompletionModal();
+    };
+  </script>
+</body>
+</html>

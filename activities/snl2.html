@@ -612,15 +612,15 @@
 
     const questionsByTime = {
       20: [
-        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
-        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
-        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" }
+        { q: "1. Washington says 'donut' can be spelled two ways (and 'Jeff' with a J or G). Do you know other English words with tricky spelling?", start: "Another word that is confusing to spell is ______ because ______.", ex: "Another word that is confusing to spell is 'color' vs 'colour' because American and British English write it differently!" },
+        { q: "2. Why do you think Washington decides that cows are 'beef' and pigs are 'pork', but 'chickens stay chicken'?", start: "I think it's funny because ______.", ex: "I think it's funny because it shows how random and illogical naming food after animals can be!" },
+        { q: "3. Washington says people honor leaders on Presidents' Day by buying a mattress. What strange holiday tradition do you know?", start: "A funny holiday tradition I know is ______.", ex: "A funny holiday tradition I know is Black Friday sales, where people wake up super early just to buy appliances!" }
       ],
       30: [
-        { q: "1. Do you prefer using kilometers and kilograms, or are you used to miles and pounds?", start: "I definitely prefer using ______ because ______.", ex: "I definitely prefer using kilometers and kilograms because they make much more sense to me!" },
-        { q: "2. Why do you think George Washington ignored Soldier 2's questions in this video?", start: "I think he ignored him because ______.", ex: "I think he ignored him because it's a comedic sketch showing how Washington avoided difficult political issues like slavery!" },
-        { q: "3. Which measurement in the US system do you find the most confusing?", start: "For me, the most confusing measurement is ______ because ______.", ex: "For me, the most confusing measurement is Fahrenheit because 0 degrees isn't freezing water!" },
-        { q: "4. If you could invent a new rule or measurement system for your country, what would it be?", start: "If I could invent a new system, I would ______.", ex: "If I could invent a new system, I would make every month have exactly 30 days to make calendars simpler!" }
+        { q: "1. Washington says 'donut' can be spelled two ways (and 'Jeff' with a J or G). Do you know other English words with tricky spelling?", start: "Another word that is confusing to spell is ______ because ______.", ex: "Another word that is confusing to spell is 'color' vs 'colour' because American and British English write it differently!" },
+        { q: "2. Why do you think Washington decides that cows are 'beef' and pigs are 'pork', but 'chickens stay chicken'?", start: "I think it's funny because ______.", ex: "I think it's funny because it shows how random and illogical naming food after animals can be!" },
+        { q: "3. In the video, Washington says the first year of school is 'kindergarten' and the second is 'first grade'. Is your country's school system also confusing?", start: "In my country, school levels are ______.", ex: "In my country, school levels are straightforward because we just count '1st year, 2nd year' from the beginning!" },
+        { q: "4. Why do you think George Washington walks away every time Soldier 2 asks about freeing the slaves?", start: "He walks away because ______.", ex: "He walks away because the sketch uses humor to highlight how Washington avoided answering serious questions about ending slavery!" }
       ]
     };
 
@@ -689,8 +689,17 @@
 
       if (step.type === 'warmup') {
         videoBoxWrapper.style.display = 'block';
-        player.src = "https://www.youtube.com/embed/JYqfVE-fykk?start=0&end=48&autoplay=0&enablejsapi=1";
+        player.src = "https://www.youtube.com/embed/VJ62EfUKI3w?start=0&end=58&autoplay=0&enablejsapi=1";
         
+        const q1Opts = shuffleArray([
+          { val: "a", text: "His dream for a new country with unique English words and rules" },
+          { val: "b", text: "A secret plan to attack the British army at night" }
+        ]);
+        const q2Opts = shuffleArray([
+          { val: "a", text: "1,000" },
+          { val: "b", text: "12" }
+        ]);
+
         container.innerHTML = `
           <h3>Gist Questions (Warm-up)</h3>
           <p style="color:#64748b; margin-bottom:12px;">Watch the first clip and answer these quick questions:</p>
@@ -698,16 +707,14 @@
             <strong>1. What is George Washington talking about with his soldiers?</strong>
             <select class="custom-select" data-correct="a">
               <option value="">-- Select --</option>
-              <option value="a">His dream for a new country with unique weights and measures</option>
-              <option value="b">A secret plan to attack the British army at night</option>
+              ${q1Opts.map(o => `<option value="${o.val}">${o.text}</option>`).join('')}
             </select>
           </div>
           <div class="question-block">
-            <strong>2. How many pounds will make a "ton" in Washington's dream?</strong>
+            <strong>2. What number will have a special word ("a dozen") in Washington's dream?</strong>
             <select class="custom-select" data-correct="b">
               <option value="">-- Select --</option>
-              <option value="a">1,000 pounds</option>
-              <option value="b">2,000 pounds</option>
+              ${q2Opts.map(o => `<option value="${o.val}">${o.text}</option>`).join('')}
             </select>
           </div>
         `;
@@ -801,7 +808,7 @@
           `;
         } else if (activeSubTab === 'listening') {
           videoBoxWrapper.style.display = 'block';
-          player.src = `https://www.youtube.com/embed/JYqfVE-fykk?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
+          player.src = `https://www.youtube.com/embed/VJ62EfUKI3w?start=${pData.start}&end=${pData.end}&autoplay=0&enablejsapi=1`;
 
           container.innerHTML = `
             ${subTabsHTML}
@@ -834,8 +841,8 @@
         initSortable(step.maxPart);
       } else if (step.type === 'watchAll') {
         videoBoxWrapper.style.display = 'block';
-        const endCut = chosenTime === 10 ? 93 : chosenTime === 20 ? 185 : 280;
-        player.src = `https://www.youtube.com/embed/JYqfVE-fykk?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
+        const endCut = chosenTime === 10 ? 138 : chosenTime === 20 ? 234 : 320;
+        player.src = `https://www.youtube.com/embed/VJ62EfUKI3w?start=0&end=${endCut}&autoplay=0&enablejsapi=1`;
 
         container.innerHTML = `
           <h3>Watch Whole Scene</h3>
@@ -957,12 +964,12 @@
       listEl.innerHTML = "";
 
       const allRetell = [
-        { order: 1, text: "Washington explains that a ton will be 2,000 pounds, but 1,000 pounds has no name." },
-        { order: 2, text: "He says soda and alcohol will use liters, but milk will be measured in gallons." },
-        { order: 3, text: "He explains that distance will be measured in feet, yards, and 5,280 feet in a mile." },
-        { order: 4, text: "He explains that meters are only for unpopular sports, while football uses yards." },
-        { order: 5, text: "He mentions rulers with numbers that don't line up and ignores questions about slaves." },
-        { order: 6, text: "He introduces Fahrenheit and decides to keep the 'U' only in the word 'glamour'." }
+        { order: 1, text: "Washington talks about creating a new nation and introducing the word 'a dozen' for the number 12." },
+        { order: 2, text: "He explains spelling rules for 'donut' and 'Jeff', and names for live animals versus food." },
+        { order: 3, text: "He talks about hamburgers and hot dogs, but throws a soldier out of the boat for asking questions." },
+        { order: 4, text: "He describes putting his face on the dollar bill and weird symbols on the back." },
+        { order: 5, text: "He explains kindergarten and first grade for the new school system." },
+        { order: 6, text: "He mentions buying mattresses on Presidents' Day and dodges questions about freeing slaves." }
       ];
 
       const retellData = allRetell.slice(0, maxPart);
