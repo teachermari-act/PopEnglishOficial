@@ -47,7 +47,7 @@
       display: flex;
       flex-direction: column;
       font-size: 17px;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
 
     header {
@@ -190,7 +190,7 @@
     .ab-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
     .ab-btn.incorrect { background: #fee2e2 !important; border-color: var(--error) !important; color: #b91c1c !important; }
 
-    /* Estilo para a caixa de imagens (Catwoman, Clown, Witch, Supergirl, Rabbit) */
+    /* Estilo para a caixa de imagens (Catwoman, Clown, Witch) */
     .visual-vocab-container {
       background: #f1f5f9;
       border: 1px solid #cbd5e1;
@@ -209,7 +209,7 @@
     }
     .visual-vocab-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
     .visual-vocab-card {
@@ -228,6 +228,13 @@
       display: block;
       padding: 4px;
     }
+    .visual-vocab-card span {
+      display: block;
+      padding: 6px 4px;
+      font-size: 0.85em;
+      font-weight: 800;
+      color: #6b21a8;
+    }
 
     .vocab-card-example {
       background: white; border: 1px solid #e2e8f0; border-left: 4px solid #a855f7;
@@ -238,10 +245,31 @@
     .audio-btn { background: #f3e8ff; border: none; color: #7e22ce; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.8em; }
 
     .word-bank { 
-      position: sticky; top: -14px; z-index: 100; display: flex; flex-wrap: wrap; gap: 6px; 
-      margin-bottom: 12px; padding: 10px; background: #cbd5e1; border: 1px solid #94a3b8;
-      border-radius: var(--radius-soft); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); min-height: 44px; 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 6px; 
+      margin-bottom: 14px; 
+      padding: 10px 12px; 
+      background: #cbd5e1; 
+      border: 2px solid #94a3b8; 
+      border-radius: var(--radius-soft); 
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); 
+      min-height: 44px;
+      transition: box-shadow 0.2s, border-color 0.2s;
     }
+
+    /* Fixado estritamente dentro da largura da coluna do listening */
+    .word-bank.docked-floating {
+      position: fixed !important;
+      top: 10px !important;
+      z-index: 9999 !important;
+      background: rgba(203, 213, 225, 0.98) !important;
+      backdrop-filter: blur(8px) !important;
+      border: 2px solid var(--accent-purple) !important;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.3) !important;
+      margin: 0 !important;
+    }
+
     .chip { background: white; padding: 5px 10px; border-radius: 14px; font-weight: 700; font-size: 0.85em; cursor: pointer; border: 1px solid #cbd5e0; }
     .chip.selected { background: #9333ea; color: white; border-color: #9333ea; }
 
@@ -302,7 +330,9 @@
       .right-panel { flex: none; width: 100%; min-height: 450px; overflow: visible; }
       .content-area { overflow-y: visible; max-height: none; }
       
-      .word-bank { top: 0; }
+      .word-bank { 
+        top: 0px; 
+      }
       .panel-footer { position: sticky; bottom: 0; z-index: 20; box-shadow: 0 -4px 10px rgba(0,0,0,0.08); }
     }
   
@@ -314,7 +344,7 @@
       margin-bottom: 8px;
       font-size: 1.35em;
     }
-  </style>
+</style>
 </head>
 <body>
 
@@ -771,6 +801,12 @@
       const player = document.getElementById('ytPlayer');
       const videoBoxWrapper = document.getElementById('videoBoxWrapper');
 
+      const oldBank = document.getElementById('partWordBank');
+      if (oldBank) {
+        oldBank.classList.remove('docked-floating');
+        oldBank.style.left = '';
+        oldBank.style.width = '';
+      }
       container.innerHTML = "";
       renderCoolStepper();
 
@@ -894,12 +930,14 @@
             <h3>${pData.title} - Listening</h3>
             <p style="color:#64748b; margin-bottom:10px;">Watch the clip, click a word chip, then click the blank gap:</p>
             
+            <div id="wordBankAnchor"></div>
             <div class="word-bank" id="partWordBank"></div>
-            <div style="line-height:2.2; font-size:1.05em;" id="partScriptContainer">${pData.fullScript}</div>
+            <div style="line-height:2.2; font-size:1.05em; padding-bottom:60px;" id="partScriptContainer">${pData.fullScript}</div>
           `;
 
           initPartWordBank(pData.gaps);
           attachGapEvents();
+          setupWordBankScroll();
         }
       } else if (step.type === 'retell') {
         videoBoxWrapper.style.display = 'none';
@@ -993,6 +1031,41 @@
         };
         bank.appendChild(chip);
       });
+    }
+
+    function setupWordBankScroll() {
+      const bank = document.getElementById('partWordBank');
+      const anchor = document.getElementById('wordBankAnchor');
+      const panel = document.querySelector('.right-panel') || document.getElementById('mainContentArea');
+      if (!bank || !anchor || !panel) return;
+
+      const updatePos = () => {
+        const anchorRect = anchor.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+
+        // Quando o anchor sai pelo topo da tela ou do painel
+        if (anchorRect.top < 10) {
+          bank.classList.add('docked-floating');
+          // Alinhamento milimétrico com a coluna do listening
+          bank.style.left = (panelRect.left + 14) + 'px';
+          bank.style.width = (panelRect.width - 28) + 'px';
+        } else {
+          bank.classList.remove('docked-floating');
+          bank.style.left = '';
+          bank.style.width = '';
+        }
+      };
+
+      window.removeEventListener('scroll', updatePos);
+      window.addEventListener('scroll', updatePos, { passive: true });
+      window.removeEventListener('resize', updatePos);
+      window.addEventListener('resize', updatePos, { passive: true });
+
+      const contentArea = document.getElementById('mainContentArea');
+      if (contentArea) {
+        contentArea.removeEventListener('scroll', updatePos);
+        contentArea.addEventListener('scroll', updatePos, { passive: true });
+      }
     }
 
     function attachGapEvents() {
@@ -1200,7 +1273,7 @@
 
     const originalShowCompletionModal = showCompletionModal;
     showCompletionModal = function() {
-      concluirTrilhaAtual('monicas_halloween_party.html');
+      concluirTrilhaAtual('friends2.html');
       originalShowCompletionModal();
     };
   </script>
